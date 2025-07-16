@@ -10,6 +10,8 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { useFonts, Urbanist_400Regular, Urbanist_700Bold } from '@expo-google-fonts/urbanist';
 import { View, ActivityIndicator } from 'react-native';
 import LiveScreen from './pages/live/LiveScreen';
+import ProfileScreen from './pages/profile/ProfileScreen';
+import EcoStatsScreen from './pages/ecostats/EcoStatsScreen';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -38,9 +40,9 @@ function MainTabs() {
     >
       <Tab.Screen name="Planner" component={PlannerScreen} />
       <Tab.Screen name="Live" component={LiveScreen} />
-      <Tab.Screen name="EcoStats" component={HomeScreen} />
+      <Tab.Screen name="EcoStats" component={EcoStatsScreen} />
       <Tab.Screen name="Trips" component={HomeScreen} />
-      <Tab.Screen name="Profile" component={HomeScreen} />
+      <Tab.Screen name="Profile" component={ProfileScreen} />
     </Tab.Navigator>
   );
 }
