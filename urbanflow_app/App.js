@@ -7,7 +7,7 @@ import IntroScreen from './pages/home/IntroScreen';
 import HomeScreen from './pages/home/HomeScreen';
 import PlannerScreen from './pages/planner/PlannerScreen';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import { useFonts, Urbanist_400Regular, Urbanist_700Bold } from '@expo-google-fonts/urbanist';
+import { useFonts, Inter_400Regular, Inter_700Bold } from '@expo-google-fonts/inter';
 import { View, ActivityIndicator } from 'react-native';
 import LiveScreen from './pages/live/LiveScreen';
 import ProfileScreen from './pages/profile/ProfileScreen';
@@ -49,8 +49,8 @@ function MainTabs() {
 
 export default function App() {
   let [fontsLoaded] = useFonts({
-    Urbanist_400Regular,
-    Urbanist_700Bold,
+    Inter_400Regular,
+    Inter_700Bold,
   });
 
   if (!fontsLoaded) {
