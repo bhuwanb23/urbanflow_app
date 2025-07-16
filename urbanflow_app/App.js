@@ -9,6 +9,7 @@ import PlannerScreen from './pages/planner/PlannerScreen';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { useFonts, Urbanist_400Regular, Urbanist_700Bold } from '@expo-google-fonts/urbanist';
 import { View, ActivityIndicator } from 'react-native';
+import LiveScreen from './pages/live/LiveScreen';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -36,7 +37,7 @@ function MainTabs() {
       })}
     >
       <Tab.Screen name="Planner" component={PlannerScreen} />
-      <Tab.Screen name="Live" component={HomeScreen} />
+      <Tab.Screen name="Live" component={LiveScreen} />
       <Tab.Screen name="EcoStats" component={HomeScreen} />
       <Tab.Screen name="Trips" component={HomeScreen} />
       <Tab.Screen name="Profile" component={HomeScreen} />

@@ -2,15 +2,18 @@ import React from 'react';
 import { View, Text, StyleSheet, ScrollView, Image, Dimensions, TextInput, TouchableOpacity, Platform } from 'react-native';
 import { Appbar, Card, Chip, Button, Avatar } from 'react-native-paper';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import { LinearGradient } from 'expo-linear-gradient';
+import { BlurView } from 'expo-blur';
+import { MotiView } from 'moti';
 
 const { width } = Dimensions.get('window');
 
 const quickModes = [
-  { label: 'Train', icon: 'train', emoji: '🚉' },
-  { label: 'Bus', icon: 'bus', emoji: '🚌' },
-  { label: 'Auto', icon: 'car', emoji: '🚖' },
-  { label: 'Walk', icon: 'walk', emoji: '🚶' },
-  { label: 'All', icon: 'car-multiple', emoji: '🚗' },
+  { label: 'Train', icon: 'train', emoji: '🚉', color: ['#43cea2', '#185a9d'] },
+  { label: 'Bus', icon: 'bus', emoji: '🚌', color: ['#4fc3f7', '#1976d2'] },
+  { label: 'Auto', icon: 'car', emoji: '🚖', color: ['#fbc02d', '#f59e42'] },
+  { label: 'Walk', icon: 'walk', emoji: '🚶', color: ['#a8edea', '#43cea2'] },
+  { label: 'All', icon: 'car-multiple', emoji: '🚗', color: ['#6a11cb', '#2575fc'] },
 ];
 
 const gallery = [
@@ -23,7 +26,7 @@ const gallery = [
 const suggestions = [
   {
     mode: 'train',
-    modeColor: '#43cea2',
+    modeColor: ['#43cea2', '#185a9d'],
     modeIcon: 'train',
     title: 'Metro + Walk',
     subtitle: 'Fastest route',
@@ -34,7 +37,7 @@ const suggestions = [
   },
   {
     mode: 'bus',
-    modeColor: '#1976d2',
+    modeColor: ['#4fc3f7', '#1976d2'],
     modeIcon: 'bus',
     title: 'Bus Direct',
     subtitle: 'Most comfortable',
@@ -45,7 +48,7 @@ const suggestions = [
   },
   {
     mode: 'car',
-    modeColor: '#fbc02d',
+    modeColor: ['#fbc02d', '#f59e42'],
     modeIcon: 'car',
     title: 'Auto Rickshaw',
     subtitle: 'Budget friendly',
@@ -58,43 +61,51 @@ const suggestions = [
 
 export default function PlannerScreen() {
   return (
-    <View style={styles.container}>
+    <LinearGradient colors={["#e0eafc", "#cfdef3", "#43cea2"]} style={styles.gradient}>
       <Appbar.Header style={styles.header}>
         <Appbar.Content
-          title={<Text style={styles.greeting}>Hello, Bhuwan <Text style={{ fontSize: 22 }}>👋</Text></Text>}
+          title={<Text style={styles.greeting}>Hello, Bhuwan <Text style={{ fontSize: 26 }}>👋</Text></Text>}
           subtitle={<Text style={styles.subtext}>Where do you want to go today?</Text>}
         />
-        <Avatar.Icon size={40} icon="account" style={{ backgroundColor: '#e0f7fa' }} />
+        <Avatar.Icon size={44} icon="account" style={{ backgroundColor: '#e0f7fa' }} />
       </Appbar.Header>
       <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
         {/* Search Bar */}
-        <View style={styles.searchWrap}>
-          <Icon name="magnify" size={22} color="#4fc3f7" style={styles.searchIcon} />
-          <TextInput
-            placeholder="Enter destination"
-            style={styles.searchInput}
-            placeholderTextColor="#b0bec5"
-          />
-        </View>
+        <MotiView from={{ opacity: 0, translateY: -20 }} animate={{ opacity: 1, translateY: 0 }} transition={{ type: 'timing', duration: 700 }}>
+          <BlurView intensity={60} tint="light" style={styles.searchWrap}>
+            <Icon name="magnify" size={22} color="#4fc3f7" style={styles.searchIcon} />
+            <TextInput
+              placeholder="Enter destination"
+              style={styles.searchInput}
+              placeholderTextColor="#b0bec5"
+            />
+          </BlurView>
+        </MotiView>
         {/* Quick Mode */}
         <Text style={styles.sectionTitle}>Quick Mode</Text>
         <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.quickModes}>
           {quickModes.map((mode, i) => (
-            <TouchableOpacity key={mode.label} style={[styles.quickBtn, i === 0 && styles.quickBtnActive]}>
-              <Text style={[styles.quickEmoji, i === 0 && styles.quickEmojiActive]}>{mode.emoji}</Text>
-              <Text style={[styles.quickLabel, i === 0 && styles.quickLabelActive]}>{mode.label}</Text>
-            </TouchableOpacity>
+            <MotiView key={mode.label} from={{ opacity: 0, scale: 0.8 }} animate={{ opacity: 1, scale: 1 }} transition={{ type: 'spring', delay: 200 + i * 60 }}>
+              <TouchableOpacity style={styles.quickBtn} activeOpacity={0.85}>
+                <LinearGradient colors={mode.color} style={styles.quickBtnGradient}>
+                  <Text style={styles.quickEmoji}>{mode.emoji}</Text>
+                  <Text style={styles.quickLabel}>{mode.label}</Text>
+                </LinearGradient>
+              </TouchableOpacity>
+            </MotiView>
           ))}
         </ScrollView>
         {/* Travel Gallery */}
         <Text style={styles.sectionTitle}>Travel Gallery</Text>
         <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.galleryScroll}>
           {gallery.map((item, i) => (
-            <View key={i} style={styles.galleryCard}>
-              <Image source={{ uri: item.src }} style={styles.galleryImg} />
-              <View style={styles.galleryOverlay} />
-              <Text style={styles.galleryLabel}>{item.label}</Text>
-            </View>
+            <MotiView key={i} from={{ opacity: 0, scale: 0.8 }} animate={{ opacity: 1, scale: 1 }} transition={{ type: 'timing', delay: 400 + i * 80 }}>
+              <View style={styles.galleryCard}>
+                <Image source={{ uri: item.src }} style={styles.galleryImg} />
+                <View style={styles.galleryOverlay} />
+                <Text style={styles.galleryLabel}>{item.label}</Text>
+              </View>
+            </MotiView>
           ))}
         </ScrollView>
         <TouchableOpacity style={styles.viewAllBtn}>
@@ -104,72 +115,75 @@ export default function PlannerScreen() {
         {/* Smart Route Suggestions */}
         <Text style={styles.sectionTitle}>Smart Route Suggestions</Text>
         {suggestions.map((s, i) => (
-          <Card key={i} style={styles.suggestionCard}>
-            <View style={styles.suggestionHeader}>
-              <View style={[styles.modeCircle, { backgroundColor: s.modeColor + '22' }]}> {/* 22 for light bg */}
-                <Icon name={s.modeIcon} size={24} color={s.modeColor} />
-              </View>
-              <View style={{ flex: 1 }}>
-                <Text style={styles.suggestionTitle}>{s.title}</Text>
-                <Text style={styles.suggestionSubtitle}>{s.subtitle}</Text>
-              </View>
-              <View style={{ alignItems: 'flex-end' }}>
-                <Text style={styles.suggestionTime}>{s.time}</Text>
-                <Text style={styles.suggestionCost}>{s.cost}</Text>
-              </View>
-            </View>
-            <View style={styles.suggestionMetaRow}>
-              <View style={styles.suggestionMetaGroup}>
-                <Icon name="leaf" size={16} color="#43cea2" />
-                <Text style={styles.suggestionMetaText}>Eco Score: {s.eco}</Text>
-              </View>
-              <View style={styles.suggestionMetaGroup}>
-                <Icon name="cloud" size={16} color="#b0bec5" />
-                <Text style={styles.suggestionMetaText}>{s.co2} saved</Text>
-              </View>
-              <Button mode="contained" style={styles.viewRouteBtn} labelStyle={styles.viewRouteLabel}>View Route</Button>
-            </View>
-          </Card>
+          <MotiView key={i} from={{ opacity: 0, translateY: 30 }} animate={{ opacity: 1, translateY: 0 }} transition={{ type: 'timing', delay: 600 + i * 120 }}>
+            <BlurView intensity={50} tint="light" style={styles.suggestionBlur}>
+              <Card style={styles.suggestionCard}>
+                <View style={styles.suggestionHeader}>
+                  <LinearGradient colors={s.modeColor} style={styles.modeCircle}>
+                    <Icon name={s.modeIcon} size={24} color="#fff" />
+                  </LinearGradient>
+                  <View style={{ flex: 1 }}>
+                    <Text style={styles.suggestionTitle}>{s.title}</Text>
+                    <Text style={styles.suggestionSubtitle}>{s.subtitle}</Text>
+                  </View>
+                  <View style={{ alignItems: 'flex-end' }}>
+                    <Text style={styles.suggestionTime}>{s.time}</Text>
+                    <Text style={styles.suggestionCost}>{s.cost}</Text>
+                  </View>
+                </View>
+                <View style={styles.suggestionMetaRow}>
+                  <View style={styles.suggestionMetaGroup}>
+                    <Icon name="leaf" size={16} color="#43cea2" />
+                    <Text style={styles.suggestionMetaText}>Eco Score: {s.eco}</Text>
+                  </View>
+                  <View style={styles.suggestionMetaGroup}>
+                    <Icon name="cloud" size={16} color="#b0bec5" />
+                    <Text style={styles.suggestionMetaText}>{s.co2} saved</Text>
+                  </View>
+                  <Button mode="contained" style={styles.viewRouteBtn} labelStyle={styles.viewRouteLabel}>View Route</Button>
+                </View>
+              </Card>
+            </BlurView>
+          </MotiView>
         ))}
       </ScrollView>
-    </View>
+    </LinearGradient>
   );
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#f7fafc' },
-  header: { backgroundColor: '#4fc3f7', elevation: 0 },
-  greeting: { fontSize: 22, fontWeight: '700', color: '#185a9d', fontFamily: 'Urbanist_700Bold' },
-  subtext: { fontSize: 15, color: '#388e3c', fontFamily: 'Urbanist_400Regular' },
+  gradient: { flex: 1 },
+  header: { backgroundColor: 'transparent', elevation: 0 },
+  greeting: { fontSize: 26, fontWeight: '700', color: '#185a9d', fontFamily: 'Urbanist_700Bold', marginBottom: 2 },
+  subtext: { fontSize: 17, color: '#388e3c', fontFamily: 'Urbanist_400Regular', marginBottom: 2 },
   scrollContent: { padding: 16, paddingBottom: 80 },
-  searchWrap: { flexDirection: 'row', alignItems: 'center', backgroundColor: '#fff', borderRadius: 18, paddingHorizontal: 16, paddingVertical: 10, marginBottom: 16, shadowColor: '#185a9d', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.06, shadowRadius: 8, elevation: 2 },
+  searchWrap: { flexDirection: 'row', alignItems: 'center', backgroundColor: 'rgba(255,255,255,0.7)', borderRadius: 22, paddingHorizontal: 18, paddingVertical: 12, marginBottom: 18, shadowColor: '#185a9d', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.10, shadowRadius: 10, elevation: 4 },
   searchIcon: { marginRight: 8 },
-  searchInput: { flex: 1, fontSize: 16, color: '#185a9d', fontFamily: 'Urbanist_400Regular', paddingVertical: Platform.OS === 'ios' ? 8 : 0 },
-  sectionTitle: { fontSize: 18, fontWeight: 'bold', marginTop: 18, marginBottom: 8, color: '#1976d2', fontFamily: 'Urbanist_700Bold' },
+  searchInput: { flex: 1, fontSize: 17, color: '#185a9d', fontFamily: 'Urbanist_400Regular', paddingVertical: Platform.OS === 'ios' ? 8 : 0 },
+  sectionTitle: { fontSize: 20, fontWeight: 'bold', marginTop: 22, marginBottom: 10, color: '#1976d2', fontFamily: 'Urbanist_700Bold', letterSpacing: 0.2 },
   quickModes: { flexDirection: 'row', marginBottom: 8 },
-  quickBtn: { flexDirection: 'row', alignItems: 'center', backgroundColor: '#e0f2f1', borderRadius: 16, paddingHorizontal: 16, paddingVertical: 10, marginRight: 10 },
-  quickBtnActive: { backgroundColor: '#43cea2' },
-  quickEmoji: { fontSize: 18, marginRight: 6 },
-  quickEmojiActive: { color: '#fff' },
-  quickLabel: { fontSize: 14, fontWeight: '600', color: '#185a9d', fontFamily: 'Urbanist_700Bold' },
-  quickLabelActive: { color: '#fff' },
+  quickBtn: { marginRight: 12, borderRadius: 18, overflow: 'hidden', elevation: 2 },
+  quickBtnGradient: { flexDirection: 'row', alignItems: 'center', paddingHorizontal: 18, paddingVertical: 12, borderRadius: 18 },
+  quickEmoji: { fontSize: 20, marginRight: 8, color: '#fff', fontFamily: 'Urbanist_700Bold' },
+  quickLabel: { fontSize: 15, fontWeight: '600', color: '#fff', fontFamily: 'Urbanist_700Bold' },
   galleryScroll: { flexDirection: 'row', marginBottom: 8 },
-  galleryCard: { width: 120, height: 120, borderRadius: 18, marginRight: 12, overflow: 'hidden', backgroundColor: '#e0eafc', shadowColor: '#185a9d', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.08, shadowRadius: 8, elevation: 2, position: 'relative' },
+  galleryCard: { width: 130, height: 130, borderRadius: 20, marginRight: 14, overflow: 'hidden', backgroundColor: '#e0eafc', shadowColor: '#185a9d', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.10, shadowRadius: 10, elevation: 3, position: 'relative' },
   galleryImg: { width: '100%', height: '100%' },
   galleryOverlay: { ...StyleSheet.absoluteFillObject, backgroundColor: 'rgba(0,0,0,0.18)' },
-  galleryLabel: { position: 'absolute', left: 0, right: 0, bottom: 8, color: '#fff', fontWeight: '600', fontSize: 13, textAlign: 'center', fontFamily: 'Urbanist_700Bold', textShadowColor: 'rgba(0,0,0,0.18)', textShadowOffset: { width: 0, height: 1 }, textShadowRadius: 4 },
+  galleryLabel: { position: 'absolute', left: 0, right: 0, bottom: 10, color: '#fff', fontWeight: '700', fontSize: 15, textAlign: 'center', fontFamily: 'Urbanist_700Bold', textShadowColor: 'rgba(0,0,0,0.18)', textShadowOffset: { width: 0, height: 1 }, textShadowRadius: 4 },
   viewAllBtn: { flexDirection: 'row', alignItems: 'center', alignSelf: 'center', marginBottom: 8, marginTop: 2 },
-  viewAllText: { color: '#1976d2', fontWeight: '600', fontFamily: 'Urbanist_700Bold', marginRight: 4 },
-  suggestionCard: { marginBottom: 16, borderRadius: 18, backgroundColor: '#fff', elevation: 3, shadowColor: '#185a9d', shadowOffset: { width: 0, height: 4 }, shadowOpacity: 0.08, shadowRadius: 10, padding: 0 },
-  suggestionHeader: { flexDirection: 'row', alignItems: 'center', marginBottom: 8, paddingHorizontal: 8, paddingTop: 8 },
-  modeCircle: { width: 40, height: 40, borderRadius: 20, justifyContent: 'center', alignItems: 'center', marginRight: 12 },
-  suggestionTitle: { fontSize: 16, fontWeight: 'bold', color: '#185a9d', fontFamily: 'Urbanist_700Bold' },
-  suggestionSubtitle: { fontSize: 13, color: '#388e3c', fontFamily: 'Urbanist_400Regular' },
-  suggestionTime: { fontSize: 16, fontWeight: 'bold', color: '#185a9d', fontFamily: 'Urbanist_700Bold' },
-  suggestionCost: { fontSize: 13, color: '#388e3c', fontFamily: 'Urbanist_400Regular' },
-  suggestionMetaRow: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingHorizontal: 8, paddingBottom: 8 },
-  suggestionMetaGroup: { flexDirection: 'row', alignItems: 'center', marginRight: 12 },
-  suggestionMetaText: { fontSize: 13, color: '#388e3c', marginLeft: 4, fontFamily: 'Urbanist_400Regular' },
-  viewRouteBtn: { backgroundColor: '#388e3c', borderRadius: 16, paddingHorizontal: 18, marginLeft: 'auto', elevation: 0, height: 36, justifyContent: 'center' },
-  viewRouteLabel: { fontWeight: 'bold', fontFamily: 'Urbanist_700Bold', fontSize: 14 },
+  viewAllText: { color: '#1976d2', fontWeight: '700', fontFamily: 'Urbanist_700Bold', marginRight: 4, fontSize: 15 },
+  suggestionBlur: { borderRadius: 22, marginBottom: 18, overflow: 'hidden' },
+  suggestionCard: { borderRadius: 22, backgroundColor: 'rgba(255,255,255,0.8)', elevation: 3, shadowColor: '#185a9d', shadowOffset: { width: 0, height: 4 }, shadowOpacity: 0.10, shadowRadius: 12, padding: 0 },
+  suggestionHeader: { flexDirection: 'row', alignItems: 'center', marginBottom: 8, paddingHorizontal: 12, paddingTop: 12 },
+  modeCircle: { width: 44, height: 44, borderRadius: 22, justifyContent: 'center', alignItems: 'center', marginRight: 14 },
+  suggestionTitle: { fontSize: 17, fontWeight: 'bold', color: '#185a9d', fontFamily: 'Urbanist_700Bold' },
+  suggestionSubtitle: { fontSize: 14, color: '#388e3c', fontFamily: 'Urbanist_400Regular' },
+  suggestionTime: { fontSize: 17, fontWeight: 'bold', color: '#185a9d', fontFamily: 'Urbanist_700Bold' },
+  suggestionCost: { fontSize: 14, color: '#388e3c', fontFamily: 'Urbanist_400Regular' },
+  suggestionMetaRow: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingHorizontal: 12, paddingBottom: 12 },
+  suggestionMetaGroup: { flexDirection: 'row', alignItems: 'center', marginRight: 14 },
+  suggestionMetaText: { fontSize: 14, color: '#388e3c', marginLeft: 4, fontFamily: 'Urbanist_400Regular' },
+  viewRouteBtn: { backgroundColor: '#388e3c', borderRadius: 16, paddingHorizontal: 20, marginLeft: 'auto', elevation: 0, height: 38, justifyContent: 'center' },
+  viewRouteLabel: { fontWeight: 'bold', fontFamily: 'Urbanist_700Bold', fontSize: 15 },
 }); 
