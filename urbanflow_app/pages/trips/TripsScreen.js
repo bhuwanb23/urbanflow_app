@@ -189,7 +189,7 @@ export default function TripsScreen() {
                 from={{ opacity: 0, translateY: -20 }}
                 animate={{ opacity: 1, translateY: 0 }}
                 transition={{ type: 'timing', duration: 500 }}
-                style={[styles.tripCard, {borderColor: '#f1f5f9', backgroundColor: '#fff'}]}>
+                style={[styles.tripCard, {borderColor: '#E5E7EB', backgroundColor: '#fff'}]}>
                 <View style={styles.tripCardTop}>
                   <View>
                     <View style={{flexDirection: 'row', alignItems: 'center', marginBottom: 2}}>
@@ -230,7 +230,7 @@ export default function TripsScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f8fafc',
+    backgroundColor: '#F9FAFB',
     paddingTop: 48,
   },
   header: {
@@ -248,13 +248,13 @@ const styles = StyleSheet.create({
   headerTitle: {
     fontSize: 24,
     fontWeight: 'bold',
-    color: '#1e293b',
+    color: '#111827',
     fontFamily: 'Poppins_700Bold',
   },
   headerBtn: {
     padding: 8,
     borderRadius: 999,
-    backgroundColor: '#f1f5f9',
+    backgroundColor: '#E5E7EB',
   },
   filterRow: {
     flexDirection: 'row',
@@ -280,7 +280,7 @@ const styles = StyleSheet.create({
   filterBtn: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#f1f5f9',
+    backgroundColor: '#E5E7EB',
     paddingHorizontal: 14,
     paddingVertical: 8,
     borderRadius: 999,
@@ -306,12 +306,12 @@ const styles = StyleSheet.create({
   sectionTitle: {
     fontSize: 18,
     fontWeight: '600',
-    color: '#1e293b',
+    color: '#111827',
     fontFamily: 'Poppins_700Bold',
   },
   sectionSubtitle: {
     fontSize: 13,
-    color: '#64748b',
+    color: '#6B7280',
     fontWeight: '400',
     fontFamily: 'Urbanist_400Regular',
   },
@@ -330,7 +330,7 @@ const styles = StyleSheet.create({
   favoriteTrip: {
     fontSize: 15,
     fontWeight: '500',
-    color: '#1e293b',
+    color: '#111827',
     fontFamily: 'Poppins_700Bold',
   },
   ecoBadge: {
@@ -379,18 +379,18 @@ const styles = StyleSheet.create({
   tripFrom: {
     fontSize: 14,
     fontWeight: '500',
-    color: '#1e293b',
+    color: '#111827',
     fontFamily: 'Poppins_700Bold',
   },
   tripTo: {
     fontSize: 14,
     fontWeight: '500',
-    color: '#1e293b',
+    color: '#111827',
     fontFamily: 'Poppins_700Bold',
   },
   tripDate: {
     fontSize: 12,
-    color: '#64748b',
+    color: '#6B7280',
     marginTop: 2,
     fontFamily: 'Urbanist_400Regular',
   },

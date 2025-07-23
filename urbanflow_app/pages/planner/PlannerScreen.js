@@ -64,9 +64,9 @@ export default function PlannerScreen() {
   }
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: '#F8FAFC' }}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: '#F9FAFB' }}>
       {/* Gradient Header */}
-      <LinearGradient colors={["#0EA5E9", "#06B6D4"]} style={styles.headerGradient}>
+      <LinearGradient colors={["#6366f1", "#10b981"]} style={styles.headerGradient}>
         <View style={styles.headerRow}>
           <View>
             <Text style={styles.headerTitle}>Hello, Bhuwan <Text style={{ fontSize: 22 }}>👋</Text></Text>
@@ -81,7 +81,7 @@ export default function PlannerScreen() {
         {/* Search Bar */}
         <MotiView from={{ opacity: 0, translateY: -20 }} animate={{ opacity: 1, translateY: 0 }} transition={{ type: 'timing', duration: 700 }}>
           <View style={styles.searchBar}>
-            <Icon name="map-marker" size={20} color="#0EA5E9" style={{ marginRight: 8 }} />
+            <Icon name="map-marker" size={20} color="#6366f1" style={{ marginRight: 8 }} />
             <TextInput
               placeholder="Search destinations..."
               style={styles.searchInput}
@@ -126,7 +126,7 @@ export default function PlannerScreen() {
                   </View>
                   <View style={{ flexDirection: 'row', alignItems: 'center', marginLeft: 12 }}>
                     {route.modes.map((m, idx) => (
-                      <Icon key={idx} name={m} size={22} color={m === 'train' ? '#0EA5E9' : m === 'bus' ? '#06B6D4' : m === 'auto' ? '#f59e42' : '#10B981'} style={{ marginRight: 8 }} />
+                      <Icon key={idx} name={m} size={22} color={m === 'train' ? '#6366f1' : m === 'bus' ? '#10b981' : m === 'auto' ? '#f59e42' : '#10B981'} style={{ marginRight: 8 }} />
                     ))}
                   </View>
                 </View>
@@ -208,7 +208,7 @@ const styles = StyleSheet.create({
     paddingVertical: 12,
     marginBottom: 18,
     borderWidth: 1,
-    borderColor: '#e5e7eb',
+    borderColor: '#E5E7EB',
     shadowColor: '#0EA5E9',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.08,
@@ -218,7 +218,7 @@ const styles = StyleSheet.create({
   searchInput: {
     flex: 1,
     fontSize: 16,
-    color: '#0EA5E9',
+    color: '#6366f1',
     fontFamily: 'Urbanist_400Regular',
   },
   modeScroll: { marginBottom: 18 },
@@ -231,7 +231,7 @@ const styles = StyleSheet.create({
     paddingVertical: 8,
     marginRight: 10,
     borderWidth: 1,
-    borderColor: '#e5e7eb',
+    borderColor: '#E5E7EB',
     shadowColor: '#0EA5E9',
     shadowOffset: { width: 0, height: 1 },
     shadowOpacity: 0.06,
@@ -239,8 +239,8 @@ const styles = StyleSheet.create({
     elevation: 1,
   },
   filterChipActive: {
-    backgroundColor: '#0EA5E9',
-    borderColor: '#0EA5E9',
+    backgroundColor: '#6366f1',
+    borderColor: '#6366f1',
     shadowOpacity: 0.12,
   },
   filterChipText: {
@@ -252,7 +252,7 @@ const styles = StyleSheet.create({
   sectionTitle: {
     fontSize: 18,
     fontWeight: 'bold',
-    color: '#0EA5E9',
+    color: '#6366f1',
     fontFamily: 'Poppins_700Bold',
     marginBottom: 12,
     marginTop: 8,
@@ -263,7 +263,7 @@ const styles = StyleSheet.create({
     padding: 18,
     marginBottom: 18,
     borderWidth: 1,
-    borderColor: '#f3f4f6',
+    borderColor: '#E5E7EB',
     shadowColor: '#0EA5E9',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.10,
@@ -317,11 +317,11 @@ const styles = StyleSheet.create({
   routeStatValue: {
     fontSize: 16,
     fontWeight: 'bold',
-    color: '#0EA5E9',
+    color: '#6366f1',
     fontFamily: 'Poppins_700Bold',
   },
   routeBtn: {
-    backgroundColor: '#0EA5E9',
+    backgroundColor: '#6366f1',
     borderRadius: 14,
     paddingVertical: 10,
     alignItems: 'center',

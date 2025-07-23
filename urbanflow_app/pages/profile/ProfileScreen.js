@@ -44,7 +44,7 @@ export default function ProfileScreen() {
         );
     }
     return (
-        <SafeAreaView style={{ flex: 1, backgroundColor: '#f7f8fa' }}>
+        <SafeAreaView style={{ flex: 1, backgroundColor: '#F9FAFB' }}>
             <LinearGradient colors={["#43cea2", "#185a9d", "#6a11cb"]} style={styles.headerGradient}>
                 <View style={styles.headerContent}>
                     <Text style={styles.headerTitle}>Profile</Text>
