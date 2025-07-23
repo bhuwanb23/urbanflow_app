@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, StyleSheet, ScrollView, Dimensions } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, Dimensions, SafeAreaView } from 'react-native';
 import { Card, ProgressBar } from 'react-native-paper';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { LinearGradient } from 'expo-linear-gradient';
@@ -12,7 +12,7 @@ const screenWidth = Dimensions.get('window').width;
 
 export default function EcoStatsScreen() {
     return (
-        <ScrollView style={{ flex: 1, backgroundColor: '#F9FAFB' }} showsVerticalScrollIndicator={false}>
+        <SafeAreaView style={{ flex: 1, backgroundColor: '#F9FAFB' }}>
             {/* Header */}
             <LinearGradient
                 colors={["#10B981", "#059669"]}
@@ -217,7 +217,7 @@ export default function EcoStatsScreen() {
                     </Card>
                 </MotiView>
             </View>
-        </ScrollView>
+        </SafeAreaView>
     );
 }
 
@@ -240,7 +240,7 @@ const styles = StyleSheet.create({
         fontSize: 24,
         fontWeight: 'bold',
         marginBottom: 4,
-        fontFamily: 'Poppins_700Bold',
+        fontFamily: 'Montserrat_700Bold',
     },
     headerSubtitle: {
         color: 'rgba(255,255,255,0.9)',
@@ -322,7 +322,7 @@ const styles = StyleSheet.create({
         fontWeight: '600',
         color: '#111827',
         marginBottom: 12,
-        fontFamily: 'Poppins_700Bold',
+        fontFamily: 'Montserrat_700Bold',
     },
     badgeCard: {
         borderRadius: 20,
@@ -345,7 +345,7 @@ const styles = StyleSheet.create({
         color: '#fff',
         fontWeight: '600',
         fontSize: 15,
-        fontFamily: 'Poppins_700Bold',
+        fontFamily: 'Montserrat_700Bold',
     },
     badgeSubtitle: {
         color: 'rgba(255,255,255,0.8)',

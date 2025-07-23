@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, StyleSheet, ScrollView, Image, TouchableOpacity, Dimensions } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, Image, TouchableOpacity, Dimensions, SafeAreaView } from 'react-native';
 import { Appbar, Card, Chip, ProgressBar } from 'react-native-paper';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { LinearGradient } from 'expo-linear-gradient';
@@ -38,127 +38,129 @@ const transitStatus = [
 export default function LiveScreen() {
   return (
     <LinearGradient colors={["#e0eafc", "#cfdef3", "#43cea2"]} style={styles.gradient}>
-      <Appbar.Header style={styles.header}>
-        <Appbar.Content title={<Text style={styles.headerTitle}>Live Traffic</Text>} />
-        <Chip style={styles.liveChip} textStyle={styles.liveChipText}>
-          <View style={styles.liveDot} /> Live
-        </Chip>
-      </Appbar.Header>
-      <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
-        {/* Map Image */}
-        <MotiView from={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} transition={{ type: 'timing', duration: 700 }}>
-          <BlurView intensity={60} tint="light" style={styles.mapWrap}>
-            <Image source={{ uri: mapImg }} style={styles.mapImg} />
-            <View style={styles.mapOverlay} />
-            <TouchableOpacity style={styles.mapBtn}>
-              <Icon name="crosshairs-gps" size={22} color="#1976d2" />
+      <SafeAreaView style={styles.container}>
+        <Appbar.Header style={styles.header}>
+          <Appbar.Content title={<Text style={styles.headerTitle}>Live Traffic</Text>} />
+          <Chip style={styles.liveChip} textStyle={styles.liveChipText}>
+            <View style={styles.liveDot} /> Live
+          </Chip>
+        </Appbar.Header>
+        <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
+          {/* Map Image */}
+          <MotiView from={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} transition={{ type: 'timing', duration: 700 }}>
+            <BlurView intensity={60} tint="light" style={styles.mapWrap}>
+              <Image source={{ uri: mapImg }} style={styles.mapImg} />
+              <View style={styles.mapOverlay} />
+              <TouchableOpacity style={styles.mapBtn}>
+                <Icon name="crosshairs-gps" size={22} color="#1976d2" />
+              </TouchableOpacity>
+              <View style={styles.mapUpdated}><Text style={styles.mapUpdatedText}>Updated 2 mins ago</Text></View>
+            </BlurView>
+          </MotiView>
+          {/* Traffic Conditions */}
+          <View style={styles.sectionRow}>
+            <Text style={styles.sectionTitle}>Traffic Conditions</Text>
+            <TouchableOpacity style={styles.refreshBtn}>
+              <Icon name="refresh" size={16} color="#1976d2" style={{ marginRight: 4 }} />
+              <Text style={styles.refreshText}>Refresh</Text>
             </TouchableOpacity>
-            <View style={styles.mapUpdated}><Text style={styles.mapUpdatedText}>Updated 2 mins ago</Text></View>
-          </BlurView>
-        </MotiView>
-        {/* Traffic Conditions */}
-        <View style={styles.sectionRow}>
-          <Text style={styles.sectionTitle}>Traffic Conditions</Text>
-          <TouchableOpacity style={styles.refreshBtn}>
-            <Icon name="refresh" size={16} color="#1976d2" style={{ marginRight: 4 }} />
-            <Text style={styles.refreshText}>Refresh</Text>
-          </TouchableOpacity>
-        </View>
-        <View style={styles.trafficGrid}>
-          {trafficConditions.map((t, i) => (
-            <MotiView key={i} from={{ opacity: 0, translateY: 20 }} animate={{ opacity: 1, translateY: 0 }} transition={{ type: 'timing', delay: 200 + i * 80 }}>
-              <BlurView intensity={50} tint="light" style={styles.trafficCardBlur}>
-                <Card style={styles.trafficCard}>
-                  <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 6 }}>
-                    <Icon name={t.icon} size={22} color={t.color} style={{ marginRight: 6 }} />
-                    <Text style={styles.trafficLevel}>{t.level}</Text>
-                  </View>
-                  <Text style={styles.trafficPlace}>{t.place}</Text>
-                  <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginTop: 4 }}>
-                    <Text style={styles.trafficChange}>{t.change}</Text>
-                    <Text style={[styles.trafficDelay, { color: t.delayColor }]}>{t.delay}</Text>
+          </View>
+          <View style={styles.trafficGrid}>
+            {trafficConditions.map((t, i) => (
+              <MotiView key={i} from={{ opacity: 0, translateY: 20 }} animate={{ opacity: 1, translateY: 0 }} transition={{ type: 'timing', delay: 200 + i * 80 }}>
+                <BlurView intensity={50} tint="light" style={styles.trafficCardBlur}>
+                  <Card style={styles.trafficCard}>
+                    <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 6 }}>
+                      <Icon name={t.icon} size={22} color={t.color} style={{ marginRight: 6 }} />
+                      <Text style={styles.trafficLevel}>{t.level}</Text>
+                    </View>
+                    <Text style={styles.trafficPlace}>{t.place}</Text>
+                    <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginTop: 4 }}>
+                      <Text style={styles.trafficChange}>{t.change}</Text>
+                      <Text style={[styles.trafficDelay, { color: t.delayColor }]}>{t.delay}</Text>
+                    </View>
+                  </Card>
+                </BlurView>
+              </MotiView>
+            ))}
+          </View>
+          {/* Recent Updates */}
+          <Text style={styles.sectionTitle}>Recent Updates</Text>
+          {recentUpdates.map((u, i) => (
+            <MotiView key={i} from={{ opacity: 0, translateY: 20 }} animate={{ opacity: 1, translateY: 0 }} transition={{ type: 'timing', delay: 400 + i * 100 }}>
+              <BlurView intensity={50} tint="light" style={styles.updateCardBlur}>
+                <Card style={styles.updateCard}>
+                  <View style={{ flexDirection: 'row', alignItems: 'flex-start' }}>
+                    <View style={[styles.updateIconWrap, { backgroundColor: u.bg }]}> 
+                      <Icon name={u.icon} size={22} color={u.color} />
+                    </View>
+                    <View style={{ flex: 1 }}>
+                      <Text style={styles.updateTitle}>{u.title}</Text>
+                      <Text style={styles.updateDesc}>{u.desc}</Text>
+                      <View style={styles.updateMetaRow}>
+                        <Text style={styles.updateTime}>{u.time}</Text>
+                        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                          <Text style={[styles.updateImpact, { color: u.impactColor }]}>{u.impact}</Text>
+                          <Icon name={u.impactIcon} size={16} color={u.impactColor} style={{ marginLeft: 2 }} />
+                        </View>
+                      </View>
+                    </View>
                   </View>
                 </Card>
               </BlurView>
             </MotiView>
           ))}
-        </View>
-        {/* Recent Updates */}
-        <Text style={styles.sectionTitle}>Recent Updates</Text>
-        {recentUpdates.map((u, i) => (
-          <MotiView key={i} from={{ opacity: 0, translateY: 20 }} animate={{ opacity: 1, translateY: 0 }} transition={{ type: 'timing', delay: 400 + i * 100 }}>
-            <BlurView intensity={50} tint="light" style={styles.updateCardBlur}>
-              <Card style={styles.updateCard}>
-                <View style={{ flexDirection: 'row', alignItems: 'flex-start' }}>
-                  <View style={[styles.updateIconWrap, { backgroundColor: u.bg }]}> 
-                    <Icon name={u.icon} size={22} color={u.color} />
+          {/* Popular Routes */}
+          <Text style={styles.sectionTitle}>Popular Routes</Text>
+          {popularRoutes.map((r, i) => (
+            <MotiView key={i} from={{ opacity: 0, translateY: 20 }} animate={{ opacity: 1, translateY: 0 }} transition={{ type: 'timing', delay: 600 + i * 100 }}>
+              <BlurView intensity={50} tint="light" style={styles.popularCardBlur}>
+                <Card style={styles.popularCard}>
+                  <View style={styles.popularHeader}>
+                    <View style={styles.popularRouteRow}>
+                      <Icon name={r.fromIcon} size={20} color={r.fromColor} />
+                      <Text style={styles.popularRouteText}>{r.from}</Text>
+                      <Text style={styles.popularArrow}>→</Text>
+                      <Icon name={r.toIcon} size={20} color={r.toColor} />
+                      <Text style={styles.popularRouteText}>{r.to}</Text>
+                    </View>
+                    <Text style={styles.popularTime}>{r.time}</Text>
                   </View>
-                  <View style={{ flex: 1 }}>
-                    <Text style={styles.updateTitle}>{u.title}</Text>
-                    <Text style={styles.updateDesc}>{u.desc}</Text>
-                    <View style={styles.updateMetaRow}>
-                      <Text style={styles.updateTime}>{u.time}</Text>
-                      <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                        <Text style={[styles.updateImpact, { color: u.impactColor }]}>{u.impact}</Text>
-                        <Icon name={u.impactIcon} size={16} color={u.impactColor} style={{ marginLeft: 2 }} />
+                  <ProgressBar progress={r.progress} color={r.barColor} style={styles.popularBar} />
+                  <View style={styles.popularMetaRow}>
+                    <Text style={styles.popularUsual}>Usual: {r.usual}</Text>
+                    <Text style={[styles.popularStatus, { color: r.statusColor }]}>{r.status}</Text>
+                  </View>
+                </Card>
+              </BlurView>
+            </MotiView>
+          ))}
+          {/* Transit Status */}
+          <Text style={styles.sectionTitle}>Transit Status</Text>
+          {transitStatus.map((t, i) => (
+            <MotiView key={i} from={{ opacity: 0, translateY: 20 }} animate={{ opacity: 1, translateY: 0 }} transition={{ type: 'timing', delay: 800 + i * 100 }}>
+              <BlurView intensity={50} tint="light" style={styles.transitCardBlur}>
+                <Card style={styles.transitCard}>
+                  <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                    <View style={[styles.transitIconWrap, { backgroundColor: t.bg }]}> 
+                      <Icon name={t.icon} size={22} color={t.color} />
+                    </View>
+                    <View style={{ flex: 1 }}>
+                      <View style={styles.transitHeaderRow}>
+                        <Text style={styles.transitTitle}>{t.title}</Text>
+                        <View style={[styles.transitStatus, { backgroundColor: t.statusBg }]}> 
+                          <Text style={[styles.transitStatusText, { color: t.statusColor }]}>{t.status}</Text>
+                        </View>
                       </View>
+                      <Text style={styles.transitDesc}>{t.desc}</Text>
                     </View>
                   </View>
-                </View>
-              </Card>
-            </BlurView>
-          </MotiView>
-        ))}
-        {/* Popular Routes */}
-        <Text style={styles.sectionTitle}>Popular Routes</Text>
-        {popularRoutes.map((r, i) => (
-          <MotiView key={i} from={{ opacity: 0, translateY: 20 }} animate={{ opacity: 1, translateY: 0 }} transition={{ type: 'timing', delay: 600 + i * 100 }}>
-            <BlurView intensity={50} tint="light" style={styles.popularCardBlur}>
-              <Card style={styles.popularCard}>
-                <View style={styles.popularHeader}>
-                  <View style={styles.popularRouteRow}>
-                    <Icon name={r.fromIcon} size={20} color={r.fromColor} />
-                    <Text style={styles.popularRouteText}>{r.from}</Text>
-                    <Text style={styles.popularArrow}>→</Text>
-                    <Icon name={r.toIcon} size={20} color={r.toColor} />
-                    <Text style={styles.popularRouteText}>{r.to}</Text>
-                  </View>
-                  <Text style={styles.popularTime}>{r.time}</Text>
-                </View>
-                <ProgressBar progress={r.progress} color={r.barColor} style={styles.popularBar} />
-                <View style={styles.popularMetaRow}>
-                  <Text style={styles.popularUsual}>Usual: {r.usual}</Text>
-                  <Text style={[styles.popularStatus, { color: r.statusColor }]}>{r.status}</Text>
-                </View>
-              </Card>
-            </BlurView>
-          </MotiView>
-        ))}
-        {/* Transit Status */}
-        <Text style={styles.sectionTitle}>Transit Status</Text>
-        {transitStatus.map((t, i) => (
-          <MotiView key={i} from={{ opacity: 0, translateY: 20 }} animate={{ opacity: 1, translateY: 0 }} transition={{ type: 'timing', delay: 800 + i * 100 }}>
-            <BlurView intensity={50} tint="light" style={styles.transitCardBlur}>
-              <Card style={styles.transitCard}>
-                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                  <View style={[styles.transitIconWrap, { backgroundColor: t.bg }]}> 
-                    <Icon name={t.icon} size={22} color={t.color} />
-                  </View>
-                  <View style={{ flex: 1 }}>
-                    <View style={styles.transitHeaderRow}>
-                      <Text style={styles.transitTitle}>{t.title}</Text>
-                      <View style={[styles.transitStatus, { backgroundColor: t.statusBg }]}> 
-                        <Text style={[styles.transitStatusText, { color: t.statusColor }]}>{t.status}</Text>
-                      </View>
-                    </View>
-                    <Text style={styles.transitDesc}>{t.desc}</Text>
-                  </View>
-                </View>
-              </Card>
-            </BlurView>
-          </MotiView>
-        ))}
-      </ScrollView>
+                </Card>
+              </BlurView>
+            </MotiView>
+          ))}
+        </ScrollView>
+      </SafeAreaView>
     </LinearGradient>
   );
 }

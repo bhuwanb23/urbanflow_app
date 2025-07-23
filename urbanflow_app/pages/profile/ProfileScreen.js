@@ -149,7 +149,7 @@ const styles = StyleSheet.create({
     editProfileBtn: { flexDirection: 'row', alignItems: 'center', backgroundColor: '#22c55e', borderRadius: 22, paddingHorizontal: 22, paddingVertical: 8, marginBottom: 2 },
     editProfileText: { color: '#fff', fontWeight: '600', fontFamily: 'Poppins_700Bold', fontSize: 15 },
     sectionWrap: { marginTop: 18, paddingHorizontal: 18 },
-    sectionTitle: { fontSize: 22, fontWeight: 'bold', color: '#185a9d', fontFamily: 'Poppins_700Bold', marginBottom: 10 },
+    sectionTitle: { fontSize: 22, fontWeight: 'bold', color: '#185a9d', fontFamily: 'Urbanist_700Bold', marginBottom: 10 },
     settingsCardWrap: { borderRadius: 22, marginBottom: 8, shadowColor: '#185a9d', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.10, shadowRadius: 10, elevation: 2 },
     settingsCard: { borderRadius: 22, backgroundColor: '#fff', overflow: 'hidden' },
     settingItem: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingVertical: 18, paddingHorizontal: 10, backgroundColor: 'transparent' },
