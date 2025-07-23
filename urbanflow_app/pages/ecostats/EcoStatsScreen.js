@@ -29,17 +29,18 @@ export default function EcoStatsScreen() {
         <SafeAreaView style={{ flex: 1, backgroundColor: '#F9FAFB' }}>
             {/* Header */}
             <LinearGradient
-                colors={["#10B981", "#059669"]}
+                colors={["#6366f1", "#10b981"]}
                 start={{ x: 0, y: 0 }}
                 end={{ x: 1, y: 1 }}
                 style={styles.header}
-            >
+                // Add shadow to header
+                >
                 <View style={styles.headerRow}>
                     <Icon name="arrow-left" size={24} color="#fff" />
                     <Icon name="bell" size={24} color="#fff" />
                 </View>
                 <Text style={styles.headerTitle}>Your Sustainability Stats</Text>
-                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 8 }}>
                     <Text style={{ fontSize: 22, marginRight: 8 }}>🌱</Text>
                     <Text style={styles.headerSubtitle}>Keep up the great work!</Text>
                 </View>
@@ -52,36 +53,36 @@ export default function EcoStatsScreen() {
                 showsVerticalScrollIndicator={false}
             >
                 {/* Stat Cards */}
-                <View style={styles.cardsContainer}>
+                <View style={[styles.cardsContainer, { marginTop: 16 }]}> {/* Add more marginTop to prevent overlap */}
                     <View style={{ flexDirection: 'row', gap: 16 }}>
                         {/* CO2 Saved */}
                         <MotiView from={{ opacity: 0, translateY: 30 }} animate={{ opacity: 1, translateY: 0 }} transition={{ type: 'timing', duration: 700, delay: 100 }}>
-                            <Card style={styles.statCard}>
+                            <Card style={[styles.statCard, styles.statCardShadow]}>
                                 <View style={styles.cardIconRow}>
-                                    <View style={[styles.iconBg, { backgroundColor: '#D1FAE5' }]}>
-                                        <Icon name="leaf" size={22} color="#10B981" />
+                                    <View style={[styles.iconBg, { backgroundColor: '#E0E7FF' }]}>
+                                        <Icon name="leaf" size={22} color="#10b981" />
                                     </View>
                                 </View>
                                 <Text style={styles.cardLabel}>CO₂ Saved</Text>
                                 <Text style={styles.cardValue}>14.2 kg</Text>
                                 <View style={styles.cardChangeRow}>
-                                    <Icon name="arrow-up" size={14} color="#10B981" style={{ marginRight: 2 }} />
+                                    <Icon name="arrow-up" size={14} color="#10b981" style={{ marginRight: 2 }} />
                                     <Text style={styles.cardChangeText}>+2.1kg</Text>
                                 </View>
                             </Card>
                         </MotiView>
                         {/* Distance Walked */}
                         <MotiView from={{ opacity: 0, translateY: 30 }} animate={{ opacity: 1, translateY: 0 }} transition={{ type: 'timing', duration: 700, delay: 200 }}>
-                            <Card style={styles.statCard}>
+                            <Card style={[styles.statCard, styles.statCardShadow]}>
                                 <View style={styles.cardIconRow}>
-                                    <View style={[styles.iconBg, { backgroundColor: '#EFF6FF' }]}>
-                                        <Icon name="walk" size={22} color="#3B82F6" />
+                                    <View style={[styles.iconBg, { backgroundColor: '#F1F5F9' }]}>
+                                        <Icon name="walk" size={22} color="#6366f1" />
                                     </View>
                                 </View>
                                 <Text style={styles.cardLabel}>Distance Walked</Text>
                                 <Text style={styles.cardValue}>12.8 km</Text>
                                 <View style={styles.cardChangeRow}>
-                                    <Icon name="arrow-up" size={14} color="#10B981" style={{ marginRight: 2 }} />
+                                    <Icon name="arrow-up" size={14} color="#10b981" style={{ marginRight: 2 }} />
                                     <Text style={styles.cardChangeText}>+3.2km</Text>
                                 </View>
                             </Card>
@@ -89,11 +90,11 @@ export default function EcoStatsScreen() {
                     </View>
                     {/* Public Transport Trips */}
                     <MotiView from={{ opacity: 0, translateY: 30 }} animate={{ opacity: 1, translateY: 0 }} transition={{ type: 'timing', duration: 700, delay: 300 }}>
-                        <Card style={[styles.statCard, { marginTop: 16, width: '100%' }]}>
+                        <Card style={[styles.statCard, styles.statCardShadow, { marginTop: 16, width: '100%' }]}>
                             <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
                                 <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                                    <View style={[styles.iconBg, { backgroundColor: '#FFF7ED', padding: 12, marginRight: 12 }]}>
-                                        <Icon name="bus" size={26} color="#F97316" />
+                                    <View style={[styles.iconBg, { backgroundColor: '#E0E7FF', padding: 12, marginRight: 12 }]}>
+                                        <Icon name="bus" size={26} color="#6366f1" />
                                     </View>
                                     <View>
                                         <Text style={[styles.cardLabel, { fontSize: 15 }]}>Public Transport Trips</Text>
@@ -101,7 +102,7 @@ export default function EcoStatsScreen() {
                                     </View>
                                 </View>
                                 <View style={{ alignItems: 'flex-end' }}>
-                                    <Text style={{ color: '#10B981', fontWeight: '600', fontSize: 14 }}>+5 trips</Text>
+                                    <Text style={{ color: '#10b981', fontWeight: '600', fontSize: 14 }}>+5 trips</Text>
                                     <Text style={{ color: '#6B7280', fontSize: 12 }}>this week</Text>
                                 </View>
                             </View>
@@ -246,6 +247,12 @@ const styles = StyleSheet.create({
         paddingBottom: 28,
         borderBottomLeftRadius: 32,
         borderBottomRightRadius: 32,
+        shadowColor: '#6366f1',
+        shadowOpacity: 0.12,
+        shadowRadius: 16,
+        shadowOffset: { width: 0, height: 6 },
+        elevation: 8,
+        marginBottom: 0,
     },
     headerRow: {
         flexDirection: 'row',
@@ -281,6 +288,15 @@ const styles = StyleSheet.create({
         shadowOpacity: 0.06,
         shadowRadius: 8,
         shadowOffset: { width: 0, height: 2 },
+    },
+    statCardShadow: {
+        borderWidth: 1,
+        borderColor: '#E5E7EB',
+        shadowColor: '#6366f1',
+        shadowOpacity: 0.10,
+        shadowRadius: 12,
+        shadowOffset: { width: 0, height: 4 },
+        elevation: 5,
     },
     cardIconRow: {
         flexDirection: 'row',
