@@ -2,7 +2,7 @@ import * as React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { Provider as PaperProvider } from 'react-native-paper';
+import { MD3LightTheme as DefaultTheme, Provider as PaperProvider } from 'react-native-paper';
 import IntroScreen from './pages/home/IntroScreen';
 import HomeScreen from './pages/home/HomeScreen';
 import PlannerScreen from './pages/planner/PlannerScreen';
@@ -75,12 +75,29 @@ export default function App() {
   }
 
   const theme = {
-    ...PaperProvider.defaultProps?.theme,
+    ...DefaultTheme,
+    colors: {
+      ...DefaultTheme.colors,
+      primary: '#185a9d',
+      secondary: '#43cea2',
+    },
     fonts: {
-      regular: { fontFamily: 'Urbanist_400Regular', fontWeight: 'normal' },
-      medium: { fontFamily: 'Poppins_400Regular', fontWeight: 'normal' },
-      light: { fontFamily: 'Montserrat_400Regular', fontWeight: 'normal' },
-      thin: { fontFamily: 'Urbanist_400Regular', fontWeight: 'normal' },
+      ...DefaultTheme.fonts,
+      displayLarge: { fontFamily: 'Poppins_700Bold', fontWeight: '700' },
+      displayMedium: { fontFamily: 'Poppins_700Bold', fontWeight: '700' },
+      displaySmall: { fontFamily: 'Poppins_700Bold', fontWeight: '700' },
+      headlineLarge: { fontFamily: 'Poppins_700Bold', fontWeight: '700' },
+      headlineMedium: { fontFamily: 'Poppins_700Bold', fontWeight: '700' },
+      headlineSmall: { fontFamily: 'Poppins_700Bold', fontWeight: '700' },
+      titleLarge: { fontFamily: 'Poppins_700Bold', fontWeight: '700' },
+      titleMedium: { fontFamily: 'Poppins_700Bold', fontWeight: '700' },
+      titleSmall: { fontFamily: 'Poppins_700Bold', fontWeight: '700' },
+      labelLarge: { fontFamily: 'Urbanist_400Regular', fontWeight: '400' },
+      labelMedium: { fontFamily: 'Urbanist_400Regular', fontWeight: '400' },
+      labelSmall: { fontFamily: 'Urbanist_400Regular', fontWeight: '400' },
+      bodyLarge: { fontFamily: 'Urbanist_400Regular', fontWeight: '400' },
+      bodyMedium: { fontFamily: 'Urbanist_400Regular', fontWeight: '400' },
+      bodySmall: { fontFamily: 'Urbanist_400Regular', fontWeight: '400' },
     },
   };
 
