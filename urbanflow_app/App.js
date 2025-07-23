@@ -7,11 +7,14 @@ import IntroScreen from './pages/home/IntroScreen';
 import HomeScreen from './pages/home/HomeScreen';
 import PlannerScreen from './pages/planner/PlannerScreen';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import { useFonts, Inter_400Regular, Inter_700Bold } from '@expo-google-fonts/inter';
+import { useFonts as useUrbanist, Urbanist_400Regular, Urbanist_700Bold } from '@expo-google-fonts/urbanist';
+import { useFonts as usePoppins, Poppins_400Regular, Poppins_700Bold } from '@expo-google-fonts/poppins';
+import { useFonts as useMontserrat, Montserrat_400Regular, Montserrat_700Bold } from '@expo-google-fonts/montserrat';
 import { View, ActivityIndicator } from 'react-native';
 import LiveScreen from './pages/live/LiveScreen';
 import ProfileScreen from './pages/profile/ProfileScreen';
 import EcoStatsScreen from './pages/ecostats/EcoStatsScreen';
+import TripsScreen from './pages/trips/TripsScreen';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -41,17 +44,27 @@ function MainTabs() {
       <Tab.Screen name="Planner" component={PlannerScreen} />
       <Tab.Screen name="Live" component={LiveScreen} />
       <Tab.Screen name="EcoStats" component={EcoStatsScreen} />
-      <Tab.Screen name="Trips" component={HomeScreen} />
+      <Tab.Screen name="Trips" component={TripsScreen} />
       <Tab.Screen name="Profile" component={ProfileScreen} />
     </Tab.Navigator>
   );
 }
 
 export default function App() {
-  let [fontsLoaded] = useFonts({
-    Inter_400Regular,
-    Inter_700Bold,
+  let [urbanistLoaded] = useUrbanist({
+    Urbanist_400Regular,
+    Urbanist_700Bold,
   });
+  let [poppinsLoaded] = usePoppins({
+    Poppins_400Regular,
+    Poppins_700Bold,
+  });
+  let [montserratLoaded] = useMontserrat({
+    Montserrat_400Regular,
+    Montserrat_700Bold,
+  });
+
+  const fontsLoaded = urbanistLoaded && poppinsLoaded && montserratLoaded;
 
   if (!fontsLoaded) {
     return (
@@ -61,8 +74,18 @@ export default function App() {
     );
   }
 
+  const theme = {
+    ...PaperProvider.defaultProps?.theme,
+    fonts: {
+      regular: { fontFamily: 'Urbanist_400Regular', fontWeight: 'normal' },
+      medium: { fontFamily: 'Poppins_400Regular', fontWeight: 'normal' },
+      light: { fontFamily: 'Montserrat_400Regular', fontWeight: 'normal' },
+      thin: { fontFamily: 'Urbanist_400Regular', fontWeight: 'normal' },
+    },
+  };
+
   return (
-    <PaperProvider>
+    <PaperProvider theme={theme}>
       <NavigationContainer>
         <Stack.Navigator initialRouteName="Intro" screenOptions={{ headerShown: false }}>
           <Stack.Screen name="Intro" component={IntroScreen} />
