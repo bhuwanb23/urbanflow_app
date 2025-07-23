@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, FlatList, ScrollView, TouchableOpacity } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome5';
+import { MotiView } from 'moti';
 
 const FILTERS = ['All Trips', 'This Week', 'This Month', 'Eco-Friendly'];
 const SORTS = ['Date', 'Mode', 'Eco-Impact'];
@@ -132,7 +133,12 @@ export default function TripsScreen() {
             <Icon name="heart" solid size={18} color="#f87171" />
           </View>
           {favoriteRoutes.map(route => (
-            <View key={route.id} style={[styles.favoriteCard, {borderColor: route.border, backgroundColor: route.gradient[0]}]}>
+            <MotiView
+              key={route.id}
+              from={{ opacity: 0, translateY: -20 }}
+              animate={{ opacity: 1, translateY: 0 }}
+              transition={{ type: 'timing', duration: 500 }}
+              style={[styles.favoriteCard, {borderColor: route.border, backgroundColor: route.gradient[0]}]}>
               <View style={styles.favoriteTopRow}>
                 <View style={{flexDirection: 'row', alignItems: 'center'}}>
                   <Text style={styles.favoriteTrip}>{route.from} → {route.to}</Text>
@@ -149,7 +155,7 @@ export default function TripsScreen() {
                 </View>
                 <TouchableOpacity><Text style={styles.useRouteBtn}>Use Route</Text></TouchableOpacity>
               </View>
-            </View>
+            </MotiView>
           ))}
         </View>
         {/* Trip History */}
@@ -162,7 +168,12 @@ export default function TripsScreen() {
             data={tripHistory}
             keyExtractor={item => item.id}
             renderItem={({item}) => (
-              <View style={[styles.tripCard, {borderColor: '#f1f5f9', backgroundColor: '#fff'}]}>
+              <MotiView
+                key={item.id}
+                from={{ opacity: 0, translateY: -20 }}
+                animate={{ opacity: 1, translateY: 0 }}
+                transition={{ type: 'timing', duration: 500 }}
+                style={[styles.tripCard, {borderColor: '#f1f5f9', backgroundColor: '#fff'}]}>
                 <View style={styles.tripCardTop}>
                   <View>
                     <View style={{flexDirection: 'row', alignItems: 'center', marginBottom: 2}}>
@@ -187,7 +198,7 @@ export default function TripsScreen() {
                     <Icon name="ellipsis-h" size={16} color="#185a9d" />
                   </TouchableOpacity>
                 </View>
-              </View>
+              </MotiView>
             )}
             scrollEnabled={false}
             ItemSeparatorComponent={() => <View style={{height: 12}} />}
@@ -222,6 +233,7 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: 'bold',
     color: '#1e293b',
+    fontFamily: 'Poppins_700Bold',
   },
   headerBtn: {
     padding: 8,
@@ -247,6 +259,7 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontWeight: '600',
     fontSize: 14,
+    fontFamily: 'Poppins_700Bold',
   },
   filterBtn: {
     flexDirection: 'row',
@@ -261,6 +274,7 @@ const styles = StyleSheet.create({
     color: '#64748b',
     fontSize: 14,
     fontWeight: '500',
+    fontFamily: 'Urbanist_400Regular',
   },
   section: {
     marginTop: 12,
@@ -277,11 +291,13 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: '600',
     color: '#1e293b',
+    fontFamily: 'Poppins_700Bold',
   },
   sectionSubtitle: {
     fontSize: 13,
     color: '#64748b',
     fontWeight: '400',
+    fontFamily: 'Urbanist_400Regular',
   },
   favoriteCard: {
     borderWidth: 1,
@@ -299,6 +315,7 @@ const styles = StyleSheet.create({
     fontSize: 15,
     fontWeight: '500',
     color: '#1e293b',
+    fontFamily: 'Poppins_700Bold',
   },
   ecoBadge: {
     backgroundColor: '#10b981',
@@ -312,6 +329,7 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontSize: 12,
     fontWeight: '600',
+    fontFamily: 'Montserrat_700Bold',
   },
   favoriteBottomRow: {
     flexDirection: 'row',
@@ -322,11 +340,13 @@ const styles = StyleSheet.create({
     fontSize: 13,
     color: '#64748b',
     marginLeft: 4,
+    fontFamily: 'Urbanist_400Regular',
   },
   useRouteBtn: {
     color: '#6366f1',
     fontWeight: '600',
     fontSize: 14,
+    fontFamily: 'Urbanist_400Regular',
   },
   tripCard: {
     borderWidth: 1,
@@ -344,16 +364,19 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontWeight: '500',
     color: '#1e293b',
+    fontFamily: 'Poppins_700Bold',
   },
   tripTo: {
     fontSize: 14,
     fontWeight: '500',
     color: '#1e293b',
+    fontFamily: 'Poppins_700Bold',
   },
   tripDate: {
     fontSize: 12,
     color: '#64748b',
     marginTop: 2,
+    fontFamily: 'Urbanist_400Regular',
   },
   tripCardBottom: {
     flexDirection: 'row',
@@ -364,6 +387,7 @@ const styles = StyleSheet.create({
     fontSize: 12,
     color: '#64748b',
     marginLeft: 2,
+    fontFamily: 'Montserrat_700Bold',
   },
   dot: {
     fontSize: 14,
@@ -373,6 +397,7 @@ const styles = StyleSheet.create({
   tripCost: {
     fontSize: 12,
     color: '#64748b',
+    fontFamily: 'Montserrat_700Bold',
   },
   loadMoreBtn: {
     alignItems: 'center',
@@ -383,5 +408,6 @@ const styles = StyleSheet.create({
     color: '#6366f1',
     fontWeight: '600',
     fontSize: 14,
+    fontFamily: 'Urbanist_400Regular',
   },
 }); 

@@ -4,6 +4,7 @@ import { Appbar, Card, Button, Avatar } from 'react-native-paper';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { LinearGradient } from 'expo-linear-gradient';
 import { BlurView } from 'expo-blur';
+import { MotiView } from 'moti';
 
 const { width } = Dimensions.get('window');
 
@@ -134,7 +135,7 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontSize: 26,
     fontWeight: '700',
-    fontFamily: 'Inter_700Bold',
+    fontFamily: 'Poppins_700Bold',
   },
   scrollContent: { paddingBottom: 40 },
   profileInfo: { alignItems: 'center', marginTop: 2 },
@@ -143,27 +144,27 @@ const styles = StyleSheet.create({
   avatarWrap: { position: 'relative', marginBottom: 10 },
   avatarImg: { width: 96, height: 96, borderRadius: 48, borderWidth: 4, borderColor: '#fff', backgroundColor: '#e0eafc', shadowColor: '#000', shadowOffset: { width: 0, height: 4 }, shadowOpacity: 0.12, shadowRadius: 12, elevation: 6 },
   avatarEditBtn: { position: 'absolute', bottom: 0, right: 0, width: 32, height: 32, borderRadius: 16, backgroundColor: '#22c55e', borderWidth: 3, borderColor: '#fff', alignItems: 'center', justifyContent: 'center', shadowColor: '#22c55e', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.18, shadowRadius: 8, elevation: 4 },
-  profileName: { color: '#185a9d', fontSize: 24, fontWeight: '700', fontFamily: 'Inter_700Bold', marginBottom: 2 },
-  profileEmail: { color: '#6b7280', fontSize: 15, fontFamily: 'Inter_400Regular', marginBottom: 10 },
+  profileName: { color: '#185a9d', fontSize: 24, fontWeight: '700', fontFamily: 'Poppins_700Bold', marginBottom: 2 },
+  profileEmail: { color: '#6b7280', fontSize: 15, fontFamily: 'Urbanist_400Regular', marginBottom: 10 },
   editProfileBtn: { flexDirection: 'row', alignItems: 'center', backgroundColor: '#22c55e', borderRadius: 22, paddingHorizontal: 22, paddingVertical: 8, marginBottom: 2 },
-  editProfileText: { color: '#fff', fontWeight: '600', fontFamily: 'Inter_700Bold', fontSize: 15 },
+  editProfileText: { color: '#fff', fontWeight: '600', fontFamily: 'Poppins_700Bold', fontSize: 15 },
   sectionWrap: { marginTop: 18, paddingHorizontal: 18 },
-  sectionTitle: { fontSize: 22, fontWeight: 'bold', color: '#185a9d', fontFamily: 'Inter_700Bold', marginBottom: 10 },
+  sectionTitle: { fontSize: 22, fontWeight: 'bold', color: '#185a9d', fontFamily: 'Poppins_700Bold', marginBottom: 10 },
   settingsCardWrap: { borderRadius: 22, marginBottom: 8, shadowColor: '#185a9d', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.10, shadowRadius: 10, elevation: 2 },
   settingsCard: { borderRadius: 22, backgroundColor: '#fff', overflow: 'hidden' },
   settingItem: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingVertical: 18, paddingHorizontal: 10, backgroundColor: 'transparent' },
   settingItemBorder: { borderBottomWidth: 1, borderBottomColor: '#e0eafc' },
   settingLeft: { flexDirection: 'row', alignItems: 'center' },
   settingIconWrap: { width: 40, height: 40, borderRadius: 20, justifyContent: 'center', alignItems: 'center', marginRight: 14 },
-  settingLabel: { fontSize: 15, color: '#22223b', fontWeight: '600', fontFamily: 'Inter_700Bold' },
+  settingLabel: { fontSize: 15, color: '#22223b', fontWeight: '600', fontFamily: 'Urbanist_400Regular' },
   sustainCardWrap: { borderRadius: 22, marginBottom: 8, shadowColor: '#185a9d', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.10, shadowRadius: 10, elevation: 2 },
   sustainCard: { borderRadius: 22, backgroundColor: '#fff', overflow: 'hidden' },
   sustainItem: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingVertical: 18, paddingHorizontal: 10, backgroundColor: 'transparent' },
   sustainIconWrap: { width: 48, height: 48, borderRadius: 24, justifyContent: 'center', alignItems: 'center', marginRight: 14 },
-  sustainLabel: { fontSize: 15, color: '#22223b', fontWeight: '600', fontFamily: 'Inter_700Bold' },
-  sustainValue: { fontSize: 20, color: '#185a9d', fontWeight: '700', fontFamily: 'Inter_700Bold' },
-  sustainPercent: { fontSize: 15, fontWeight: '700', fontFamily: 'Inter_700Bold' },
-  sustainMonth: { fontSize: 12, color: '#b0bec5', fontFamily: 'Inter_400Regular' },
+  sustainLabel: { fontSize: 15, color: '#22223b', fontWeight: '600', fontFamily: 'Urbanist_400Regular' },
+  sustainValue: { fontSize: 20, color: '#185a9d', fontWeight: '700', fontFamily: 'Montserrat_700Bold' },
+  sustainPercent: { fontSize: 15, fontWeight: '700', fontFamily: 'Montserrat_700Bold' },
+  sustainMonth: { fontSize: 12, color: '#b0bec5', fontFamily: 'Urbanist_400Regular' },
   logoutBtn: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', backgroundColor: '#ef4444', borderRadius: 22, paddingVertical: 16, marginHorizontal: 18, marginTop: 24, marginBottom: 18, elevation: 2 },
-  logoutText: { color: '#fff', fontWeight: '700', fontFamily: 'Inter_700Bold', fontSize: 16 },
+  logoutText: { color: '#fff', fontWeight: '700', fontFamily: 'Montserrat_700Bold', fontSize: 16 },
 }); 
