@@ -1,5 +1,5 @@
-import React from 'react';
-import { View, Text, StyleSheet, ScrollView, Dimensions, SafeAreaView } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, Text, StyleSheet, ScrollView, Dimensions, SafeAreaView, ActivityIndicator } from 'react-native';
 import { Card, ProgressBar } from 'react-native-paper';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { LinearGradient } from 'expo-linear-gradient';
@@ -11,6 +11,20 @@ const ecoLabels = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
 const screenWidth = Dimensions.get('window').width;
 
 export default function EcoStatsScreen() {
+    const [loading, setLoading] = useState(true);
+    useEffect(() => {
+        // Simulate network loading
+        const timer = setTimeout(() => setLoading(false), 1200);
+        return () => clearTimeout(timer);
+    }, []);
+    if (loading) {
+        return (
+            <SafeAreaView style={{ flex: 1, backgroundColor: '#F9FAFB', justifyContent: 'center', alignItems: 'center' }}>
+                <ActivityIndicator size="large" color="#10B981" />
+                <Text style={{ marginTop: 16, color: '#10B981', fontFamily: 'Urbanist_400Regular', fontSize: 16 }}>Loading stats...</Text>
+            </SafeAreaView>
+        );
+    }
     return (
         <SafeAreaView style={{ flex: 1, backgroundColor: '#F9FAFB' }}>
             {/* Header */}

@@ -1,5 +1,5 @@
-import React from 'react';
-import { SafeAreaView, View, Text, StyleSheet, ScrollView, Image, TouchableOpacity, Dimensions } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { SafeAreaView, View, Text, StyleSheet, ScrollView, Image, TouchableOpacity, Dimensions, ActivityIndicator } from 'react-native';
 import { Appbar, Card, Button, Avatar } from 'react-native-paper';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { LinearGradient } from 'expo-linear-gradient';
@@ -29,6 +29,20 @@ const sustainability = [
 ];
 
 export default function ProfileScreen() {
+    const [loading, setLoading] = useState(true);
+    useEffect(() => {
+        // Simulate network loading
+        const timer = setTimeout(() => setLoading(false), 1200);
+        return () => clearTimeout(timer);
+    }, []);
+    if (loading) {
+        return (
+            <SafeAreaView style={{ flex: 1, backgroundColor: '#F9FAFB', justifyContent: 'center', alignItems: 'center' }}>
+                <ActivityIndicator size="large" color="#3B82F6" />
+                <Text style={{ marginTop: 16, color: '#3B82F6', fontFamily: 'Urbanist_400Regular', fontSize: 16 }}>Loading profile...</Text>
+            </SafeAreaView>
+        );
+    }
     return (
         <SafeAreaView style={{ flex: 1, backgroundColor: '#f7f8fa' }}>
             <LinearGradient colors={["#43cea2", "#185a9d", "#6a11cb"]} style={styles.headerGradient}>

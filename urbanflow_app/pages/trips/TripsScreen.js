@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { View, Text, StyleSheet, FlatList, ScrollView, TouchableOpacity } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, Text, StyleSheet, FlatList, ScrollView, TouchableOpacity, ActivityIndicator, SafeAreaView } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import { MotiView } from 'moti';
 
@@ -98,9 +98,25 @@ const tripHistory = [
 export default function TripsScreen() {
   const [filterIdx, setFilterIdx] = useState(0);
   const [sortIdx, setSortIdx] = useState(0);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    // Simulate network loading
+    const timer = setTimeout(() => setLoading(false), 1200);
+    return () => clearTimeout(timer);
+  }, []);
 
   const handleFilter = () => setFilterIdx((filterIdx + 1) % FILTERS.length);
   const handleSort = () => setSortIdx((sortIdx + 1) % SORTS.length);
+
+  if (loading) {
+    return (
+      <SafeAreaView style={{ flex: 1, backgroundColor: '#F9FAFB', justifyContent: 'center', alignItems: 'center' }}>
+        <ActivityIndicator size="large" color="#6366f1" />
+        <Text style={{ marginTop: 16, color: '#6366f1', fontFamily: 'Montserrat_400Regular', fontSize: 16 }}>Loading trips...</Text>
+      </SafeAreaView>
+    );
+  }
 
   return (
     <View style={styles.container}>

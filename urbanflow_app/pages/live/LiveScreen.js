@@ -1,5 +1,5 @@
-import React from 'react';
-import { View, Text, StyleSheet, ScrollView, Image, TouchableOpacity, Dimensions, SafeAreaView } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, Text, StyleSheet, ScrollView, Image, TouchableOpacity, Dimensions, SafeAreaView, ActivityIndicator } from 'react-native';
 import { Appbar, Card, Chip, ProgressBar } from 'react-native-paper';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { LinearGradient } from 'expo-linear-gradient';
@@ -36,6 +36,20 @@ const transitStatus = [
 ];
 
 export default function LiveScreen() {
+    const [loading, setLoading] = useState(true);
+    useEffect(() => {
+        // Simulate network loading
+        const timer = setTimeout(() => setLoading(false), 1200);
+        return () => clearTimeout(timer);
+    }, []);
+    if (loading) {
+        return (
+            <SafeAreaView style={{ flex: 1, backgroundColor: '#F9FAFB', justifyContent: 'center', alignItems: 'center' }}>
+                <ActivityIndicator size="large" color="#2563EB" />
+                <Text style={{ marginTop: 16, color: '#2563EB', fontFamily: 'Montserrat_400Regular', fontSize: 16 }}>Loading live data...</Text>
+            </SafeAreaView>
+        );
+    }
   return (
     <LinearGradient colors={["#e0eafc", "#cfdef3", "#43cea2"]} style={styles.gradient}>
       <SafeAreaView style={styles.container}>
