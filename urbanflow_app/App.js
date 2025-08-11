@@ -4,6 +4,7 @@ import { createStackNavigator } from '@react-navigation/stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { MD3LightTheme as DefaultTheme, Provider as PaperProvider } from 'react-native-paper';
 import IntroScreen from './pages/home/IntroScreen';
+import LoginScreen from './pages/auth/LoginScreen';
 import HomeScreen from './pages/home/HomeScreen';
 import PlannerScreen from './pages/planner/PlannerScreen';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -15,6 +16,7 @@ import LiveScreen from './pages/live/LiveScreen';
 import ProfileScreen from './pages/profile/ProfileScreen';
 import EcoStatsScreen from './pages/ecostats/EcoStatsScreen';
 import TripsScreen from './pages/trips/TripsScreen';
+import { tokenManager } from './utils/auth';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -51,6 +53,9 @@ function MainTabs() {
 }
 
 export default function App() {
+  const [isLoading, setIsLoading] = React.useState(true);
+  const [isLoggedIn, setIsLoggedIn] = React.useState(false);
+
   let [urbanistLoaded] = useUrbanist({
     Urbanist_400Regular,
     Urbanist_700Bold,
@@ -66,7 +71,24 @@ export default function App() {
 
   const fontsLoaded = urbanistLoaded && poppinsLoaded && montserratLoaded;
 
-  if (!fontsLoaded) {
+  // Check authentication status on app start
+  React.useEffect(() => {
+    checkAuthStatus();
+  }, []);
+
+  const checkAuthStatus = async () => {
+    try {
+      const loggedIn = await tokenManager.isLoggedIn();
+      setIsLoggedIn(loggedIn);
+    } catch (error) {
+      console.log('Error checking auth status:', error);
+      setIsLoggedIn(false);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  if (!fontsLoaded || isLoading) {
     return (
       <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: '#fff' }}>
         <ActivityIndicator size="large" color="#185a9d" />
@@ -104,8 +126,12 @@ export default function App() {
   return (
     <PaperProvider theme={theme}>
       <NavigationContainer>
-        <Stack.Navigator initialRouteName="Intro" screenOptions={{ headerShown: false }}>
+        <Stack.Navigator 
+          initialRouteName={isLoggedIn ? "MainTabs" : "Intro"} 
+          screenOptions={{ headerShown: false }}
+        >
           <Stack.Screen name="Intro" component={IntroScreen} />
+          <Stack.Screen name="Login" component={LoginScreen} />
           <Stack.Screen name="MainTabs" component={MainTabs} />
         </Stack.Navigator>
       </NavigationContainer>

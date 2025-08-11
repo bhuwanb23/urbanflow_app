@@ -16,21 +16,7 @@ export default function LoginScreen({ navigation }) {
   const [loading, setLoading] = useState(false);
   const [isLogin, setIsLogin] = useState(true);
 
-  useEffect(() => {
-    checkLoginStatus();
-  }, []);
-
-  const checkLoginStatus = async () => {
-    try {
-      const isLoggedIn = await tokenManager.isLoggedIn();
-      if (isLoggedIn) {
-        // User is already logged in, navigate to main app
-        navigation.replace('MainTabs');
-      }
-    } catch (error) {
-      console.log('Error checking login status:', error);
-    }
-  };
+  // Login status is now checked in App.js, so we don't need to check here
 
   const handleAuth = async () => {
     if (!email || !password) {

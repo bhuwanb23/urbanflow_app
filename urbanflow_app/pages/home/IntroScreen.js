@@ -46,7 +46,7 @@ export default function IntroScreen({ navigation }) {
           mode="contained"
           style={styles.getStartedBtn}
           labelStyle={{ fontSize: 18, fontWeight: 'bold', letterSpacing: 1, fontFamily: 'Urbanist_700Bold' }}
-          onPress={() => navigation.replace('MainTabs')}
+          onPress={() => navigation.replace('Login')}
         >
           Get Started
         </Button>
