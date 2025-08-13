@@ -117,7 +117,16 @@ export default function PreferredTransportScreen({ navigation }) {
         onMenu={() => {}}
       />
       
-      <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
+      <ScrollView 
+        style={{ flex: 1 }}
+        contentContainerStyle={styles.scrollContent} 
+        showsVerticalScrollIndicator={true}
+        bounces={true}
+        alwaysBounceVertical={true}
+        keyboardShouldPersistTaps="handled"
+        nestedScrollEnabled={true}
+        scrollEventThrottle={16}
+      >
         {/* Transport Modes */}
         <MotiView
           from={{ opacity: 0, translateY: 30 }}
@@ -229,7 +238,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#F9FAFB',
   },
   scrollContent: {
-    paddingBottom: 100, // Increased for tab bar
+    paddingBottom: 80, // Reduced to match working screens
   },
   sectionTitle: {
     fontSize: 20,

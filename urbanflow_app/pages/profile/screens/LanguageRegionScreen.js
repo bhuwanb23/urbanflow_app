@@ -45,11 +45,14 @@ export default function LanguageRegionScreen({ navigation }) {
       />
       
       <ScrollView 
+        style={{ flex: 1 }}
         contentContainerStyle={styles.scrollContent} 
-        showsVerticalScrollIndicator={false}
+        showsVerticalScrollIndicator={true}
         bounces={true}
-        alwaysBounceVertical={false}
+        alwaysBounceVertical={true}
         keyboardShouldPersistTaps="handled"
+        nestedScrollEnabled={true}
+        scrollEventThrottle={16}
       >
         {/* Language Section */}
         <MotiView
@@ -140,7 +143,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#F9FAFB',
   },
   scrollContent: {
-    paddingBottom: 100, // Increased for tab bar
+    paddingBottom: 80, // Reduced to match working screens
   },
   sectionTitle: {
     fontSize: 20,

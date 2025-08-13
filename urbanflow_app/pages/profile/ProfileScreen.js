@@ -90,7 +90,7 @@ export default function ProfileScreen({ navigation }) {
     }
 
     return (
-        <SafeAreaView style={{ flex: 1, backgroundColor: '#F9FAFB' }}>
+        <SafeAreaView style={styles.container}>
             <ProfileHeader 
                 title="Profile" 
                 onMenu={handleMenuPress}
@@ -98,11 +98,14 @@ export default function ProfileScreen({ navigation }) {
             />
             
             <ScrollView 
+                style={{ flex: 1 }}
                 contentContainerStyle={styles.scrollContent} 
-                showsVerticalScrollIndicator={false}
+                showsVerticalScrollIndicator={true}
                 bounces={true}
-                alwaysBounceVertical={false}
+                alwaysBounceVertical={true}
                 keyboardShouldPersistTaps="handled"
+                nestedScrollEnabled={true}
+                scrollEventThrottle={16}
             >
                 {/* Profile Info Card */}
                 <ProfileCard 
@@ -132,7 +135,11 @@ export default function ProfileScreen({ navigation }) {
 }
 
 const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        backgroundColor: '#F9FAFB',
+    },
     scrollContent: { 
-        paddingBottom: 100 // Increased for tab bar
+        paddingBottom: 80 // Reduced to match working screens
     },
 }); 

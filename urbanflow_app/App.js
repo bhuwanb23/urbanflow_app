@@ -66,6 +66,7 @@ function MainTabs() {
           shadowOffset: { width: 0, height: -2 },
           shadowOpacity: 0.1,
           shadowRadius: 8,
+          zIndex: 1000,
         },
         tabBarLabelStyle: { fontFamily: 'Urbanist_700Bold', fontSize: 12 },
         tabBarIcon: ({ color, size, focused }) => {
