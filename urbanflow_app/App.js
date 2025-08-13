@@ -18,8 +18,32 @@ import EcoStatsScreen from './pages/ecostats/EcoStatsScreen';
 import TripsScreen from './pages/trips/TripsScreen';
 import { tokenManager } from './utils/auth';
 
+// Import Profile Screens
+import LanguageRegionScreen from './pages/profile/screens/LanguageRegionScreen';
+import PreferredTransportScreen from './pages/profile/screens/PreferredTransportScreen';
+import NotificationsScreen from './pages/profile/screens/NotificationsScreen';
+import MobilityGoalsScreen from './pages/profile/screens/MobilityGoalsScreen';
+import PrivacyScreen from './pages/profile/screens/PrivacyScreen';
+import EditProfileScreen from './pages/profile/screens/EditProfileScreen';
+
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
+const ProfileStack = createStackNavigator();
+
+// Profile Stack Navigator
+function ProfileStackNavigator() {
+  return (
+    <ProfileStack.Navigator screenOptions={{ headerShown: false }}>
+      <ProfileStack.Screen name="ProfileMain" component={ProfileScreen} />
+      <ProfileStack.Screen name="LanguageRegionScreen" component={LanguageRegionScreen} />
+      <ProfileStack.Screen name="PreferredTransportScreen" component={PreferredTransportScreen} />
+      <ProfileStack.Screen name="NotificationsScreen" component={NotificationsScreen} />
+      <ProfileStack.Screen name="MobilityGoalsScreen" component={MobilityGoalsScreen} />
+      <ProfileStack.Screen name="PrivacyScreen" component={PrivacyScreen} />
+      <ProfileStack.Screen name="EditProfileScreen" component={EditProfileScreen} />
+    </ProfileStack.Navigator>
+  );
+}
 
 function MainTabs() {
   return (
@@ -28,7 +52,21 @@ function MainTabs() {
       screenOptions={({ route }) => ({
         headerShown: false,
         tabBarShowLabel: true,
-        tabBarStyle: { borderTopLeftRadius: 24, borderTopRightRadius: 24, height: 64, backgroundColor: '#fff' },
+        tabBarStyle: { 
+          borderTopLeftRadius: 24, 
+          borderTopRightRadius: 24, 
+          height: 64, 
+          backgroundColor: '#fff',
+          position: 'absolute',
+          bottom: 0,
+          left: 0,
+          right: 0,
+          elevation: 8,
+          shadowColor: '#000',
+          shadowOffset: { width: 0, height: -2 },
+          shadowOpacity: 0.1,
+          shadowRadius: 8,
+        },
         tabBarLabelStyle: { fontFamily: 'Urbanist_700Bold', fontSize: 12 },
         tabBarIcon: ({ color, size, focused }) => {
           let iconName;
@@ -47,7 +85,7 @@ function MainTabs() {
       <Tab.Screen name="Live" component={LiveScreen} />
       <Tab.Screen name="EcoStats" component={EcoStatsScreen} />
       <Tab.Screen name="Trips" component={TripsScreen} />
-      <Tab.Screen name="Profile" component={ProfileScreen} />
+      <Tab.Screen name="Profile" component={ProfileStackNavigator} />
     </Tab.Navigator>
   );
 }

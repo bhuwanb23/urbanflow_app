@@ -78,7 +78,17 @@ npm run dev
 
 The server will start on `http://localhost:3000`
 
-### 4. Start the Mobile App
+### 4. Access the Server Dashboard
+Open your browser and visit: `http://localhost:3000/dashboard`
+
+The dashboard provides:
+- 📊 Real-time server statistics
+- 🔍 API endpoint documentation
+- 🔐 Demo credentials display
+- 📈 Request monitoring
+- 🎨 Beautiful, responsive interface
+
+### 5. Start the Mobile App
 ```bash
 # In the urbanflow_app directory
 npm start

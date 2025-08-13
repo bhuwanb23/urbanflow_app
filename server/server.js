@@ -319,7 +319,9 @@ app.use('*', (req, res) => {
 // Start server
 app.listen(PORT, () => {
   console.log(`🚀 UrbanFlow API server running on port ${PORT}`);
+  console.log(`🌐 Dashboard: http://localhost:${PORT}/dashboard`);
   console.log(`📱 Health check: http://localhost:${PORT}/api/health`);
+  console.log(`📊 Server stats: http://localhost:${PORT}/api/stats`);
   console.log(`🔐 Auth endpoints:`);
   console.log(`   POST /api/auth/register`);
   console.log(`   POST /api/auth/login`);
