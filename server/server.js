@@ -10,6 +10,7 @@ const PORT = process.env.PORT || 3000;
 // Middleware
 app.use(cors());
 app.use(express.json());
+app.use(express.static(path.join(__dirname, 'public')));
 
 // JWT Secret (in production, use environment variable)
 const JWT_SECRET = 'urbanflow_secret_key_2024';
@@ -24,6 +25,29 @@ let users = [
     createdAt: new Date()
   }
 ];
+
+// Server statistics
+let serverStats = {
+  startTime: new Date(),
+  totalRequests: 0,
+  authRequests: 0,
+  apiRequests: 0,
+  lastRequest: null
+};
+
+// Middleware to track requests
+app.use((req, res, next) => {
+  serverStats.totalRequests++;
+  serverStats.lastRequest = new Date();
+  
+  if (req.path.startsWith('/api/auth')) {
+    serverStats.authRequests++;
+  } else if (req.path.startsWith('/api/')) {
+    serverStats.apiRequests++;
+  }
+  
+  next();
+});
 
 // Middleware to verify JWT token
 const authenticateToken = (req, res, next) => {
@@ -42,6 +66,24 @@ const authenticateToken = (req, res, next) => {
     next();
   });
 };
+
+// Dashboard route
+app.get('/dashboard', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'dashboard.html'));
+});
+
+// API Stats endpoint
+app.get('/api/stats', (req, res) => {
+  const uptime = Date.now() - serverStats.startTime.getTime();
+  const uptimeHours = Math.floor(uptime / (1000 * 60 * 60));
+  const uptimeMinutes = Math.floor((uptime % (1000 * 60 * 60)) / (1000 * 60));
+  
+  res.json({
+    ...serverStats,
+    uptime: `${uptimeHours}h ${uptimeMinutes}m`,
+    uptimeMs: uptime
+  });
+});
 
 // Routes
 
