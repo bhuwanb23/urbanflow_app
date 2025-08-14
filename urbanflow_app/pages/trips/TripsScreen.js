@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, FlatList, ScrollView, TouchableOpacity, ActivityIndicator, SafeAreaView } from 'react-native';
-import Icon from 'react-native-vector-icons/FontAwesome5';
+import { LinearGradient } from 'expo-linear-gradient';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { MotiView } from 'moti';
 
 const FILTERS = ['All Trips', 'This Week', 'This Month', 'Eco-Friendly'];
@@ -119,14 +120,19 @@ export default function TripsScreen() {
   }
 
   return (
-    <View style={styles.container}>
-      {/* Header */}
-      <View style={styles.header}>
-        <Text style={styles.headerTitle}>Your Trips <Text style={{fontSize: 20}}>🗺️</Text></Text>
-        <TouchableOpacity style={styles.headerBtn}>
-          <Icon name="ellipsis-v" size={18} color="#64748b" />
-        </TouchableOpacity>
-      </View>
+    <SafeAreaView style={{ flex: 1, backgroundColor: '#F9FAFB' }}>
+      {/* Gradient Header */}
+      <LinearGradient colors={["#6366f1", "#10b981"]} style={styles.headerGradient}>
+        <View style={styles.headerRow}>
+          <View>
+            <Text style={styles.headerTitle}>Your Trips <Text style={{ fontSize: 22 }}>🗺️</Text></Text>
+            <Text style={styles.headerSubtitle}>Track your journey history</Text>
+          </View>
+          <View style={styles.headerBellWrap}>
+            <Icon name="bell-outline" size={22} color="#fff" />
+          </View>
+        </View>
+      </LinearGradient>
       {/* Filter/Sort */}
       <View style={styles.filterRow}>
         <TouchableOpacity style={styles.filterActive} onPress={handleFilter}>
@@ -223,38 +229,48 @@ export default function TripsScreen() {
         </View>
       </ScrollView>
       {/* Bottom Nav is handled by app navigation */}
-    </View>
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#F9FAFB',
+  headerGradient: {
     paddingTop: 48,
+    paddingBottom: 24,
+    paddingHorizontal: 24,
+    borderBottomLeftRadius: 32,
+    borderBottomRightRadius: 32,
+    elevation: 6,
+    shadowColor: '#0EA5E9',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.10,
+    shadowRadius: 16,
   },
-  header: {
+  headerRow: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    paddingHorizontal: 20,
-    paddingBottom: 8,
-    backgroundColor: '#fff',
-    shadowColor: '#000',
-    shadowOpacity: 0.04,
-    shadowRadius: 2,
-    elevation: 2,
+    marginBottom: 4,
   },
   headerTitle: {
     fontSize: 24,
     fontWeight: 'bold',
-    color: '#111827',
+    color: '#fff',
     fontFamily: 'Poppins_700Bold',
+    marginBottom: 2,
   },
-  headerBtn: {
-    padding: 8,
-    borderRadius: 999,
-    backgroundColor: '#E5E7EB',
+  headerSubtitle: {
+    fontSize: 14,
+    color: '#dbeafe',
+    fontFamily: 'Urbanist_400Regular',
+  },
+  headerBellWrap: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    backgroundColor: 'rgba(255,255,255,0.18)',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   filterRow: {
     flexDirection: 'row',
