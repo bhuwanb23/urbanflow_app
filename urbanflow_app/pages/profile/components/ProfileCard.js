@@ -54,7 +54,6 @@ export default function ProfileCard({ profile, onEditProfile, onEditAvatar }) {
 const styles = StyleSheet.create({
   profileCardWrap: {
     marginTop: -40,
-    marginHorizontal: 18,
     marginBottom: 18,
     borderRadius: 28,
     shadowColor: '#185a9d',

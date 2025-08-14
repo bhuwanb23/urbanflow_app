@@ -196,6 +196,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#F9FAFB',
   },
   scrollContent: {
+    padding: 20,
     paddingBottom: 80, // Reduced to match working screens
   },
   sectionTitle: {
@@ -204,7 +205,6 @@ const styles = StyleSheet.create({
     color: '#185a9d',
     fontFamily: 'Urbanist_700Bold',
     marginBottom: 16,
-    marginHorizontal: 18,
     marginTop: 20,
   },
   goalsSection: {
@@ -239,7 +239,6 @@ const styles = StyleSheet.create({
     color: '#3b82f6',
   },
   goalsContainer: {
-    marginHorizontal: 18,
     gap: 16,
   },
   goalCard: {
@@ -322,7 +321,6 @@ const styles = StyleSheet.create({
     marginLeft: 4,
   },
   addGoalContainer: {
-    marginHorizontal: 18,
     marginTop: 32,
   },
   addGoalButton: {

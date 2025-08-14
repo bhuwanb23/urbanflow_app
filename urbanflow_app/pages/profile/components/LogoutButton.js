@@ -51,7 +51,6 @@ export default function LogoutButton({ onLogout }) {
 
 const styles = StyleSheet.create({
   container: {
-    marginHorizontal: 18,
     marginTop: 24,
     marginBottom: 18,
   },

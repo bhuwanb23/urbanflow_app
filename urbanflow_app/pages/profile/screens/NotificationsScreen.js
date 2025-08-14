@@ -246,6 +246,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#F9FAFB',
   },
   scrollContent: {
+    padding: 20,
     paddingBottom: 80, // Reduced to match working screens
   },
   sectionTitle: {
@@ -254,7 +255,6 @@ const styles = StyleSheet.create({
     color: '#185a9d',
     fontFamily: 'Urbanist_700Bold',
     marginBottom: 8,
-    marginHorizontal: 18,
     marginTop: 20,
   },
   sectionDescription: {
@@ -262,7 +262,6 @@ const styles = StyleSheet.create({
     color: '#6b7280',
     fontFamily: 'Urbanist_400Regular',
     marginBottom: 16,
-    marginHorizontal: 18,
   },
   settingsSection: {
     marginTop: 20,
@@ -271,7 +270,6 @@ const styles = StyleSheet.create({
     marginTop: 20,
   },
   card: {
-    marginHorizontal: 18,
     borderRadius: 16,
     backgroundColor: '#fff',
     elevation: 2,

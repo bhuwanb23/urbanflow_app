@@ -215,6 +215,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#F9FAFB',
   },
   scrollContent: {
+    padding: 20,
     paddingBottom: 80, // Reduced to match working screens
   },
   avatarSection: {
@@ -263,7 +264,6 @@ const styles = StyleSheet.create({
     fontFamily: 'Urbanist_400Regular',
   },
   formSection: {
-    marginHorizontal: 18,
   },
   formCard: {
     borderRadius: 16,
@@ -301,7 +301,6 @@ const styles = StyleSheet.create({
     textAlignVertical: 'top',
   },
   actionSection: {
-    marginHorizontal: 18,
     marginTop: 24,
   },
   editButton: {
@@ -365,7 +364,6 @@ const styles = StyleSheet.create({
     marginLeft: 8,
   },
   optionsSection: {
-    marginHorizontal: 18,
     marginTop: 24,
   },
   optionsCard: {

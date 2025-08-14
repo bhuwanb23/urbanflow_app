@@ -98,14 +98,8 @@ export default function ProfileScreen({ navigation }) {
             />
             
             <ScrollView 
-                style={{ flex: 1 }}
                 contentContainerStyle={styles.scrollContent} 
-                showsVerticalScrollIndicator={true}
-                bounces={true}
-                alwaysBounceVertical={true}
-                keyboardShouldPersistTaps="handled"
-                nestedScrollEnabled={true}
-                scrollEventThrottle={16}
+                showsVerticalScrollIndicator={false}
             >
                 {/* Profile Info Card */}
                 <ProfileCard 
@@ -140,6 +134,7 @@ const styles = StyleSheet.create({
         backgroundColor: '#F9FAFB',
     },
     scrollContent: { 
+        padding: 20,
         paddingBottom: 80 // Reduced to match working screens
     },
 }); 

@@ -51,7 +51,6 @@ export default function SustainabilityCard({ title, sustainabilityData }) {
 const styles = StyleSheet.create({
   sectionWrap: {
     marginTop: 18,
-    paddingHorizontal: 18,
   },
   sectionTitle: {
     fontSize: 22,

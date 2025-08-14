@@ -143,6 +143,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#F9FAFB',
   },
   scrollContent: {
+    padding: 20,
     paddingBottom: 80, // Reduced to match working screens
   },
   sectionTitle: {
@@ -151,14 +152,12 @@ const styles = StyleSheet.create({
     color: '#185a9d',
     fontFamily: 'Urbanist_700Bold',
     marginBottom: 12,
-    marginHorizontal: 18,
     marginTop: 20,
   },
   regionSection: {
     marginTop: 20,
   },
   card: {
-    marginHorizontal: 18,
     borderRadius: 16,
     backgroundColor: '#fff',
     elevation: 2,

@@ -49,7 +49,6 @@ export default function SettingsCard({ title, settings, onSettingPress }) {
 const styles = StyleSheet.create({
   sectionWrap: {
     marginTop: 18,
-    paddingHorizontal: 18,
   },
   sectionTitle: {
     fontSize: 22,
