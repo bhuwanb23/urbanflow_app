@@ -149,7 +149,7 @@ export default function PlannerScreen({ navigation }) {
                     </View>
                   </View>
                 </View>
-                <TouchableOpacity style={styles.routeBtn} activeOpacity={0.85}>
+                <TouchableOpacity style={styles.routeBtn} activeOpacity={0.85} onPress={() => navigation.navigate('RouteDetailsScreen')}>
                   <Text style={styles.routeBtnText}>View Route</Text>
                 </TouchableOpacity>
               </View>

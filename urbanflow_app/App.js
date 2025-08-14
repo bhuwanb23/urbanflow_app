@@ -17,7 +17,10 @@ import ProfileScreen from './pages/profile/ProfileScreen';
 import EcoStatsScreen from './pages/ecostats/EcoStatsScreen';
 import TripsScreen from './pages/trips/TripsScreen';
 import NotificationsScreen from './pages/notifications/NotificationsScreen';
+import RouteDetailsScreen from './pages/route/RouteDetailsScreen';
 import { tokenManager } from './utils/auth';
+
+
 
 // Import Profile Screens
 import LanguageRegionScreen from './pages/profile/screens/LanguageRegionScreen';
@@ -79,7 +82,7 @@ function MainTabs() {
           else if (route.name === 'Profile') iconName = 'account-circle';
           return <Icon name={iconName} size={size} color={color} />;
         },
-        tabBarActiveTintColor: '#185a9d',
+        tabBarActiveTintColor: '#6366f1',
         tabBarInactiveTintColor: '#b0bec5',
       })}
     >
@@ -174,6 +177,7 @@ export default function App() {
           <Stack.Screen name="Login" component={LoginScreen} />
           <Stack.Screen name="MainTabs" component={MainTabs} />
           <Stack.Screen name="NotificationsScreen" component={NotificationsScreen} />
+          <Stack.Screen name="RouteDetailsScreen" component={RouteDetailsScreen} />
         </Stack.Navigator>
       </NavigationContainer>
     </PaperProvider>
