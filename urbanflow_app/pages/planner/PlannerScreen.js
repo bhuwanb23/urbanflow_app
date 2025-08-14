@@ -44,7 +44,7 @@ const ROUTES = [
   },
 ];
 
-export default function PlannerScreen() {
+export default function PlannerScreen({ navigation }) {
   const [selectedMode, setSelectedMode] = useState('train');
   const [loading, setLoading] = useState(true);
 
@@ -73,7 +73,9 @@ export default function PlannerScreen() {
             <Text style={styles.headerSubtitle}>Where do you want to go today?</Text>
           </View>
           <View style={styles.headerBellWrap}>
-            <Icon name="bell-outline" size={22} color="#fff" />
+            <TouchableOpacity onPress={() => navigation.navigate('NotificationsScreen')}>
+              <Icon name="bell-outline" size={22} color="#fff" />
+            </TouchableOpacity>
           </View>
         </View>
       </LinearGradient>

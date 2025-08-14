@@ -16,12 +16,13 @@ import LiveScreen from './pages/live/LiveScreen';
 import ProfileScreen from './pages/profile/ProfileScreen';
 import EcoStatsScreen from './pages/ecostats/EcoStatsScreen';
 import TripsScreen from './pages/trips/TripsScreen';
+import NotificationsScreen from './pages/notifications/NotificationsScreen';
 import { tokenManager } from './utils/auth';
 
 // Import Profile Screens
 import LanguageRegionScreen from './pages/profile/screens/LanguageRegionScreen';
 import PreferredTransportScreen from './pages/profile/screens/PreferredTransportScreen';
-import NotificationsScreen from './pages/profile/screens/NotificationsScreen';
+import ProfileNotificationsScreen from './pages/profile/screens/NotificationsScreen';
 import MobilityGoalsScreen from './pages/profile/screens/MobilityGoalsScreen';
 import PrivacyScreen from './pages/profile/screens/PrivacyScreen';
 import EditProfileScreen from './pages/profile/screens/EditProfileScreen';
@@ -37,7 +38,7 @@ function ProfileStackNavigator() {
       <ProfileStack.Screen name="ProfileMain" component={ProfileScreen} />
       <ProfileStack.Screen name="LanguageRegionScreen" component={LanguageRegionScreen} />
       <ProfileStack.Screen name="PreferredTransportScreen" component={PreferredTransportScreen} />
-      <ProfileStack.Screen name="NotificationsScreen" component={NotificationsScreen} />
+      <ProfileStack.Screen name="ProfileNotificationsScreen" component={ProfileNotificationsScreen} />
       <ProfileStack.Screen name="MobilityGoalsScreen" component={MobilityGoalsScreen} />
       <ProfileStack.Screen name="PrivacyScreen" component={PrivacyScreen} />
       <ProfileStack.Screen name="EditProfileScreen" component={EditProfileScreen} />
@@ -172,6 +173,7 @@ export default function App() {
           <Stack.Screen name="Intro" component={IntroScreen} />
           <Stack.Screen name="Login" component={LoginScreen} />
           <Stack.Screen name="MainTabs" component={MainTabs} />
+          <Stack.Screen name="NotificationsScreen" component={NotificationsScreen} />
         </Stack.Navigator>
       </NavigationContainer>
     </PaperProvider>

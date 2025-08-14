@@ -82,15 +82,15 @@ export default function ProfileScreen({ navigation }) {
 
     if (loading) {
         return (
-            <SafeAreaView style={{ flex: 1, backgroundColor: '#F9FAFB', justifyContent: 'center', alignItems: 'center' }}>
+            <View style={{ flex: 1, backgroundColor: '#F9FAFB', justifyContent: 'center', alignItems: 'center' }}>
                 <ActivityIndicator size="large" color="#3B82F6" />
                 <Text style={{ marginTop: 16, color: '#3B82F6', fontFamily: 'Urbanist_400Regular', fontSize: 16 }}>Loading profile...</Text>
-            </SafeAreaView>
+            </View>
         );
     }
 
     return (
-        <SafeAreaView style={styles.container}>
+        <View style={styles.container}>
             <ProfileHeader 
                 title="Profile" 
                 onMenu={handleMenuPress}
@@ -124,7 +124,7 @@ export default function ProfileScreen({ navigation }) {
                 {/* Logout Button */}
                 <LogoutButton onLogout={handleLogout} />
             </ScrollView>
-        </SafeAreaView>
+        </View>
     );
 }
 

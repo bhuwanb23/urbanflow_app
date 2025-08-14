@@ -96,7 +96,7 @@ const tripHistory = [
   },
 ];
 
-export default function TripsScreen() {
+export default function TripsScreen({ navigation }) {
   const [filterIdx, setFilterIdx] = useState(0);
   const [sortIdx, setSortIdx] = useState(0);
   const [loading, setLoading] = useState(true);
@@ -129,7 +129,9 @@ export default function TripsScreen() {
             <Text style={styles.headerSubtitle}>Track your journey history</Text>
           </View>
           <View style={styles.headerBellWrap}>
-            <Icon name="bell-outline" size={22} color="#fff" />
+            <TouchableOpacity onPress={() => navigation.navigate('NotificationsScreen')}>
+              <Icon name="bell-outline" size={22} color="#fff" />
+            </TouchableOpacity>
           </View>
         </View>
       </LinearGradient>
