@@ -17,7 +17,6 @@ import NotificationHeader from './components/NotificationHeader';
 import FilterTabs from './components/FilterTabs';
 import NotificationSection from './components/NotificationSection';
 import EmptyState from './components/EmptyState';
-import BottomActions from './components/BottomActions';
 
 const NotificationsScreen = ({ navigation }) => {
   const {
@@ -228,8 +227,6 @@ const NotificationsScreen = ({ navigation }) => {
           renderNotificationSections()
         )}
       </ScrollView>
-
-      <BottomActions />
     </SafeAreaView>
   );
 };
@@ -243,7 +240,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   scrollContent: {
-    paddingBottom: 120, // Increased padding to prevent overlap with bottom navigation
+    paddingBottom: 80, // Adjusted padding to provide proper spacing without BottomActions
   },
   loadingContainer: {
     flex: 1,
