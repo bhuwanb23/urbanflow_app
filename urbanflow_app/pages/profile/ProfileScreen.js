@@ -90,7 +90,7 @@ export default function ProfileScreen({ navigation }) {
     }
 
     return (
-        <View style={styles.container}>
+        <SafeAreaView style={styles.container}>
             <ProfileHeader 
                 title="Profile" 
                 onMenu={handleMenuPress}
@@ -98,6 +98,7 @@ export default function ProfileScreen({ navigation }) {
             />
             
             <ScrollView 
+                style={styles.scrollView}
                 contentContainerStyle={styles.scrollContent} 
                 showsVerticalScrollIndicator={false}
             >
@@ -124,7 +125,7 @@ export default function ProfileScreen({ navigation }) {
                 {/* Logout Button */}
                 <LogoutButton onLogout={handleLogout} />
             </ScrollView>
-        </View>
+        </SafeAreaView>
     );
 }
 
@@ -133,8 +134,12 @@ const styles = StyleSheet.create({
         flex: 1,
         backgroundColor: '#F9FAFB',
     },
+    scrollView: {
+        flex: 1,
+    },
     scrollContent: { 
         padding: 20,
-        paddingBottom: 80 // Reduced to match working screens
+        paddingTop: 16,
+        paddingBottom: 80,
     },
 }); 
