@@ -6,6 +6,18 @@ import { MotiView } from 'moti';
 
 const { width } = Dimensions.get('window');
 
+// Default route data if none is passed
+const DEFAULT_ROUTE = {
+  from: 'Downtown Station',
+  to: 'Airport Terminal',
+  duration: '32 min',
+  distance: '5.2 km',
+  eco: '8.5',
+  ecoColor: '#10B981',
+  cost: '₹35',
+  modes: ['train', 'bus', 'walk'],
+};
+
 const ROUTE_STEPS = [
   {
     id: '1',
@@ -31,10 +43,10 @@ const ROUTE_STEPS = [
     icon: 'train',
     iconColor: '#10b981',
     iconBg: '#d1fae5',
-    cost: '$2.50',
+    cost: '₹20',
     accessibility: true,
     busy: true,
-    features: ['$2.50', '♿ Accessible', '🔥 Busy'],
+    features: ['₹20', '♿ Accessible', '🔥 Busy'],
   },
   {
     id: '3',
@@ -45,10 +57,10 @@ const ROUTE_STEPS = [
     icon: 'bus',
     iconColor: '#8b5cf6',
     iconBg: '#ede9fe',
-    cost: '$1.75',
+    cost: '₹15',
     accessibility: true,
     electric: true,
-    features: ['$1.75', '♿ Accessible', '🌱 Electric'],
+    features: ['₹15', '♿ Accessible', '🌱 Electric'],
   },
   {
     id: '4',
@@ -68,12 +80,21 @@ const ROUTE_STEPS = [
 
 export default function RouteDetailsScreen({ navigation, route }) {
   const [loading, setLoading] = useState(true);
+  const [routeData, setRouteData] = useState(DEFAULT_ROUTE);
 
   useEffect(() => {
+    // Get route data from navigation params
+    if (route?.params?.route) {
+      console.log('Route data received:', route.params.route);
+      setRouteData(route.params.route);
+    } else {
+      console.log('No route data received, using default');
+    }
+    
     // Simulate network loading
     const timer = setTimeout(() => setLoading(false), 800);
     return () => clearTimeout(timer);
-  }, []);
+  }, [route?.params?.route]);
 
   const handleBack = () => {
     navigation.goBack();
@@ -107,7 +128,7 @@ export default function RouteDetailsScreen({ navigation, route }) {
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: '#F9FAFB' }}>
       {/* Gradient Header */}
-      <LinearGradient colors={["#6366f1", "#10b981"]} style={styles.headerGradient}>
+      <LinearGradient colors={["#6366f1", "#8b5cf6"]} style={styles.headerGradient}>
         <View style={styles.headerRow}>
           <View style={styles.headerLeft}>
             <TouchableOpacity onPress={handleBack} style={styles.backButton}>
@@ -129,7 +150,7 @@ export default function RouteDetailsScreen({ navigation, route }) {
               <View style={styles.routePoint}>
                 <View style={[styles.routeDot, { backgroundColor: '#10b981' }]} />
                 <View style={styles.routePointInfo}>
-                  <Text style={styles.routePointText}>Downtown Station</Text>
+                  <Text style={styles.routePointText}>{routeData.from}</Text>
                   <Text style={styles.routePointTime}>8:30 AM</Text>
                 </View>
               </View>
@@ -137,8 +158,8 @@ export default function RouteDetailsScreen({ navigation, route }) {
               <View style={styles.routeStats}>
                 <View style={styles.routeLine} />
                 <View style={styles.routeStatsCenter}>
-                  <Text style={styles.routeDuration}>32 min</Text>
-                  <Text style={styles.routeDistance}>5.2 km</Text>
+                  <Text style={styles.routeDuration}>{routeData.duration}</Text>
+                  <Text style={styles.routeDistance}>{routeData.distance}</Text>
                 </View>
                 <View style={styles.routeFeatures}>
                   <View style={styles.routeFeature}>
@@ -156,7 +177,7 @@ export default function RouteDetailsScreen({ navigation, route }) {
               <View style={styles.routePoint}>
                 <View style={[styles.routeDot, { backgroundColor: '#ef4444' }]} />
                 <View style={styles.routePointInfo}>
-                  <Text style={styles.routePointText}>Airport Terminal</Text>
+                  <Text style={styles.routePointText}>{routeData.to}</Text>
                   <Text style={styles.routePointTime}>9:02 AM</Text>
                 </View>
               </View>
@@ -266,7 +287,7 @@ const styles = StyleSheet.create({
     borderBottomLeftRadius: 32,
     borderBottomRightRadius: 32,
     elevation: 6,
-    shadowColor: '#0EA5E9',
+    shadowColor: '#6366f1',
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.10,
     shadowRadius: 16,
