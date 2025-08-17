@@ -1,175 +1,196 @@
-const mongoose = require('mongoose');
+const { DataTypes } = require('sequelize');
 const bcrypt = require('bcryptjs');
+const { sequelize } = require('../config/database');
 
-const userSchema = new mongoose.Schema({
-  // Basic Information
+const User = sequelize.define('User', {
+  id: {
+    type: DataTypes.INTEGER,
+    primaryKey: true,
+    autoIncrement: true
+  },
   name: {
-    type: String,
-    required: [true, 'Name is required'],
-    trim: true,
-    maxlength: [100, 'Name cannot exceed 100 characters']
+    type: DataTypes.STRING(100),
+    allowNull: false,
+    validate: {
+      notEmpty: true,
+      len: [1, 100]
+    }
   },
   email: {
-    type: String,
-    required: [true, 'Email is required'],
+    type: DataTypes.STRING,
+    allowNull: false,
     unique: true,
-    lowercase: true,
-    trim: true,
-    match: [/^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/, 'Please enter a valid email']
+    validate: {
+      isEmail: true,
+      notEmpty: true
+    }
   },
   password: {
-    type: String,
-    required: [true, 'Password is required'],
-    minlength: [6, 'Password must be at least 6 characters long']
+    type: DataTypes.STRING,
+    allowNull: false,
+    validate: {
+      len: [6, 255]
+    }
   },
   avatar: {
-    type: String,
-    default: null
+    type: DataTypes.STRING,
+    allowNull: true
   },
   phone: {
-    type: String,
-    trim: true
+    type: DataTypes.STRING,
+    allowNull: true
   },
-
-  // Location & Preferences
-  location: {
-    city: { type: String, default: 'Mumbai' },
-    country: { type: String, default: 'India' },
-    coordinates: {
-      latitude: Number,
-      longitude: Number
+  city: {
+    type: DataTypes.STRING,
+    defaultValue: 'Mumbai'
+  },
+  country: {
+    type: DataTypes.STRING,
+    defaultValue: 'India'
+  },
+  latitude: {
+    type: DataTypes.DECIMAL(10, 8),
+    allowNull: true
+  },
+  longitude: {
+    type: DataTypes.DECIMAL(11, 8),
+    allowNull: true
+  },
+  preferredTransport: {
+    type: DataTypes.TEXT,
+    allowNull: true,
+    get() {
+      const value = this.getDataValue('preferredTransport');
+      return value ? JSON.parse(value) : [];
+    },
+    set(value) {
+      this.setDataValue('preferredTransport', JSON.stringify(value));
     }
   },
-  preferredTransport: [{
-    mode: {
-      type: String,
-      enum: ['train', 'bus', 'metro', 'bike', 'walk', 'auto', 'car'],
-      required: true
-    },
-    priority: { type: Number, default: 1 }
-  }],
   language: {
-    type: String,
-    default: 'en'
+    type: DataTypes.STRING(5),
+    defaultValue: 'en'
   },
   region: {
-    type: String,
-    default: 'IN'
+    type: DataTypes.STRING(5),
+    defaultValue: 'IN'
   },
-
-  // Sustainability & Goals
-  sustainabilityGoals: {
-    dailyCO2Target: { type: Number, default: 5.0 }, // kg CO2
-    weeklyWalkingTarget: { type: Number, default: 50 }, // km
-    monthlyPublicTransportTarget: { type: Number, default: 100 }, // trips
-    ecoScoreTarget: { type: Number, default: 80 } // percentage
+  dailyCO2Target: {
+    type: DataTypes.DECIMAL(5, 2),
+    defaultValue: 5.0
   },
-  currentStats: {
-    totalCO2Saved: { type: Number, default: 0 }, // kg CO2
-    totalDistanceWalked: { type: Number, default: 0 }, // km
-    totalPublicTransportTrips: { type: Number, default: 0 },
-    averageEcoScore: { type: Number, default: 0 }
+  weeklyWalkingTarget: {
+    type: DataTypes.INTEGER,
+    defaultValue: 50
   },
-
-  // Notification Preferences
+  monthlyPublicTransportTarget: {
+    type: DataTypes.INTEGER,
+    defaultValue: 100
+  },
+  ecoScoreTarget: {
+    type: DataTypes.INTEGER,
+    defaultValue: 80
+  },
+  totalCO2Saved: {
+    type: DataTypes.DECIMAL(10, 2),
+    defaultValue: 0
+  },
+  totalDistanceWalked: {
+    type: DataTypes.DECIMAL(10, 2),
+    defaultValue: 0
+  },
+  totalPublicTransportTrips: {
+    type: DataTypes.INTEGER,
+    defaultValue: 0
+  },
+  averageEcoScore: {
+    type: DataTypes.DECIMAL(5, 2),
+    defaultValue: 0
+  },
   notifications: {
-    pushEnabled: { type: Boolean, default: true },
-    emailEnabled: { type: Boolean, default: true },
-    smsEnabled: { type: Boolean, default: false },
-    types: {
-      routeUpdates: { type: Boolean, default: true },
-      trafficAlerts: { type: Boolean, default: true },
-      achievementUnlocks: { type: Boolean, default: true },
-      weeklyReports: { type: Boolean, default: true }
+    type: DataTypes.TEXT,
+    allowNull: true,
+    get() {
+      const value = this.getDataValue('notifications');
+      return value ? JSON.parse(value) : {
+        pushEnabled: true,
+        emailEnabled: true,
+        smsEnabled: false,
+        types: {
+          routeUpdates: true,
+          trafficAlerts: true,
+          achievementUnlocks: true,
+          weeklyReports: true
+        }
+      };
+    },
+    set(value) {
+      this.setDataValue('notifications', JSON.stringify(value));
     }
   },
-
-  // Privacy Settings
   privacy: {
-    profileVisibility: {
-      type: String,
-      enum: ['public', 'friends', 'private'],
-      default: 'public'
+    type: DataTypes.TEXT,
+    allowNull: true,
+    get() {
+      const value = this.getDataValue('privacy');
+      return value ? JSON.parse(value) : {
+        profileVisibility: 'public',
+        locationSharing: false,
+        tripHistorySharing: false
+      };
     },
-    locationSharing: { type: Boolean, default: false },
-    tripHistorySharing: { type: Boolean, default: false }
+    set(value) {
+      this.setDataValue('privacy', JSON.stringify(value));
+    }
   },
-
-  // Account Status
   isActive: {
-    type: Boolean,
-    default: true
+    type: DataTypes.BOOLEAN,
+    defaultValue: true
   },
   isVerified: {
-    type: Boolean,
-    default: false
+    type: DataTypes.BOOLEAN,
+    defaultValue: false
   },
   lastLogin: {
-    type: Date,
-    default: Date.now
-  },
-
-  // Timestamps
-  createdAt: {
-    type: Date,
-    default: Date.now
-  },
-  updatedAt: {
-    type: Date,
-    default: Date.now
+    type: DataTypes.DATE,
+    allowNull: true
   }
 }, {
+  tableName: 'users',
   timestamps: true,
-  toJSON: { virtuals: true },
-  toObject: { virtuals: true }
-});
-
-// Virtual for full name
-userSchema.virtual('fullName').get(function() {
-  return this.name;
-});
-
-// Virtual for eco score percentage
-userSchema.virtual('ecoScorePercentage').get(function() {
-  if (this.currentStats.averageEcoScore === 0) return 0;
-  return Math.round((this.currentStats.averageEcoScore / 100) * 100);
-});
-
-// Pre-save middleware to hash password
-userSchema.pre('save', async function(next) {
-  if (!this.isModified('password')) return next();
-  
-  try {
-    const salt = await bcrypt.genSalt(12);
-    this.password = await bcrypt.hash(this.password, salt);
-    next();
-  } catch (error) {
-    next(error);
+  hooks: {
+    beforeCreate: async (user) => {
+      if (user.password) {
+        user.password = await bcrypt.hash(user.password, 12);
+      }
+    },
+    beforeUpdate: async (user) => {
+      if (user.changed('password')) {
+        user.password = await bcrypt.hash(user.password, 12);
+      }
+    }
   }
 });
 
-// Method to compare password
-userSchema.methods.comparePassword = async function(candidatePassword) {
+// Instance method to compare password
+User.prototype.comparePassword = async function(candidatePassword) {
   return await bcrypt.compare(candidatePassword, this.password);
 };
 
-// Method to update stats
-userSchema.methods.updateStats = function(newTripData) {
-  if (newTripData.co2Saved) {
-    this.currentStats.totalCO2Saved += newTripData.co2Saved;
-  }
-  if (newTripData.distanceWalked) {
-    this.currentStats.totalDistanceWalked += newTripData.distanceWalked;
-  }
-  if (newTripData.isPublicTransport) {
-    this.currentStats.totalPublicTransportTrips += 1;
-  }
-  return this.save();
+// Instance method to get public profile
+User.prototype.getPublicProfile = function() {
+  return {
+    id: this.id,
+    name: this.name,
+    email: this.email,
+    avatar: this.avatar,
+    city: this.city,
+    country: this.country,
+    totalCO2Saved: this.totalCO2Saved,
+    totalDistanceWalked: this.totalDistanceWalked,
+    averageEcoScore: this.averageEcoScore,
+    createdAt: this.createdAt
+  };
 };
 
-// Indexes for better query performance
-userSchema.index({ email: 1 });
-userSchema.index({ location: '2dsphere' });
-userSchema.index({ createdAt: -1 });
-
-module.exports = mongoose.model('User', userSchema);
+module.exports = User;
