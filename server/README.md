@@ -40,9 +40,13 @@ The server uses **SQLite** by default for simplicity. The database file will be 
 
 ### Sample Data
 ```bash
-# Populate with sample data
+# Populate with sample data (creates tables and adds demo data)
 npm run seed
 ```
+
+**Demo Credentials:**
+- **Alex Johnson**: `alex@urbanflow.com` / `password123`
+- **Bhuwan B**: `bhuwan.b@urbanflow.com` / `password123`
 
 ## 🔐 API Endpoints
 

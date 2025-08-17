@@ -25,10 +25,15 @@ const testConnection = async () => {
 // Sync database (create tables)
 const syncDatabase = async () => {
   try {
-    await sequelize.sync({ alter: true });
+    // Import all models to ensure they're registered
+    require('../models');
+    
+    // Sync with force: false to avoid dropping existing data
+    await sequelize.sync({ force: false, alter: true });
     console.log('✅ Database synchronized successfully.');
   } catch (error) {
     console.error('❌ Error synchronizing database:', error);
+    throw error;
   }
 };
 

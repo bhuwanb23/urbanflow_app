@@ -4,63 +4,75 @@ const router = express.Router();
 // Import route modules
 const authRoutes = require('./auth');
 const userRoutes = require('./user');
-const tripRoutes = require('./trips');
-const routeRoutes = require('./routes');
-const ecoStatsRoutes = require('./ecostats');
-const notificationRoutes = require('./notifications');
+const tripsRoutes = require('./trips');
+const routesRoutes = require('./routes');
+const ecostatsRoutes = require('./ecostats');
 const trafficRoutes = require('./traffic');
+const notificationsRoutes = require('./notifications');
 const healthRoutes = require('./health');
 
 // API version prefix
-const API_PREFIX = process.env.API_PREFIX || '/api';
 const API_VERSION = process.env.API_VERSION || 'v1';
+const API_PREFIX = `/api/${API_VERSION}`;
 
-// Health check route (no authentication required)
-router.use('/health', healthRoutes);
-
-// API routes with versioning
-router.use(`${API_PREFIX}/${API_VERSION}/auth`, authRoutes);
-router.use(`${API_PREFIX}/${API_VERSION}/user`, userRoutes);
-router.use(`${API_PREFIX}/${API_VERSION}/trips`, tripRoutes);
-router.use(`${API_PREFIX}/${API_VERSION}/routes`, routeRoutes);
-router.use(`${API_PREFIX}/${API_VERSION}/ecostats`, ecoStatsRoutes);
-router.use(`${API_PREFIX}/${API_VERSION}/notifications`, notificationRoutes);
-router.use(`${API_PREFIX}/${API_VERSION}/traffic`, trafficRoutes);
-
-// Root API endpoint
-router.get(`${API_PREFIX}/${API_VERSION}`, (req, res) => {
+// Health check route (no version prefix)
+router.get('/health', (req, res) => {
   res.json({
-    message: 'UrbanFlow API',
+    status: 'OK',
+    message: 'UrbanFlow API is running',
     version: API_VERSION,
-    status: 'active',
-    timestamp: new Date().toISOString(),
-    endpoints: {
-      auth: `${API_PREFIX}/${API_VERSION}/auth`,
-      user: `${API_PREFIX}/${API_VERSION}/user`,
-      trips: `${API_PREFIX}/${API_VERSION}/trips`,
-      routes: `${API_PREFIX}/${API_VERSION}/routes`,
-      ecoStats: `${API_PREFIX}/${API_VERSION}/ecostats`,
-      notifications: `${API_PREFIX}/${API_VERSION}/notifications`,
-      traffic: `${API_PREFIX}/${API_VERSION}/traffic`,
-      health: '/health'
-    }
+    timestamp: new Date().toISOString()
   });
 });
 
-// 404 handler for undefined routes
+// API information route
+router.get(API_PREFIX, (req, res) => {
+  res.json({
+    name: 'UrbanFlow API',
+    version: API_VERSION,
+    description: 'Backend API for UrbanFlow mobile app',
+    endpoints: {
+      auth: `${API_PREFIX}/auth`,
+      user: `${API_PREFIX}/user`,
+      trips: `${API_PREFIX}/trips`,
+      routes: `${API_PREFIX}/routes`,
+      ecostats: `${API_PREFIX}/ecostats`,
+      traffic: `${API_PREFIX}/traffic`,
+      notifications: `${API_PREFIX}/notifications`
+    },
+    documentation: '/api/docs',
+    health: '/health'
+  });
+});
+
+// Mount route modules with version prefix
+router.use(`${API_PREFIX}/auth`, authRoutes);
+router.use(`${API_PREFIX}/user`, userRoutes);
+router.use(`${API_PREFIX}/trips`, tripsRoutes);
+router.use(`${API_PREFIX}/routes`, routesRoutes);
+router.use(`${API_PREFIX}/ecostats`, ecostatsRoutes);
+router.use(`${API_PREFIX}/traffic`, trafficRoutes);
+router.use(`${API_PREFIX}/notifications`, notificationsRoutes);
+
+// Health routes (with version prefix)
+router.use(`${API_PREFIX}/health`, healthRoutes);
+
+// 404 handler for API routes
 router.use('*', (req, res) => {
   res.status(404).json({
-    error: 'Route not found',
-    message: `The requested route ${req.originalUrl} does not exist`,
-    availableRoutes: [
-      `${API_PREFIX}/${API_VERSION}/auth`,
-      `${API_PREFIX}/${API_VERSION}/user`,
-      `${API_PREFIX}/${API_VERSION}/trips`,
-      `${API_PREFIX}/${API_VERSION}/routes`,
-      `${API_PREFIX}/${API_VERSION}/ecostats`,
-      `${API_PREFIX}/${API_VERSION}/notifications`,
-      `${API_PREFIX}/${API_VERSION}/traffic`,
-      '/health'
+    success: false,
+    message: 'API endpoint not found',
+    path: req.originalUrl,
+    method: req.method,
+    availableEndpoints: [
+      `${API_PREFIX}/auth`,
+      `${API_PREFIX}/user`,
+      `${API_PREFIX}/trips`,
+      `${API_PREFIX}/routes`,
+      `${API_PREFIX}/ecostats`,
+      `${API_PREFIX}/traffic`,
+      `${API_PREFIX}/notifications`,
+      `${API_PREFIX}/health`
     ]
   });
 });
