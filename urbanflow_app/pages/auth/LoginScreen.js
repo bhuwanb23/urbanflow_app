@@ -5,7 +5,7 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { LinearGradient } from 'expo-linear-gradient';
 import { BlurView } from 'expo-blur';
 import { MotiView } from 'moti';
-import { authFlow, tokenManager } from '../../utils/auth';
+import { useAuth } from '../../utils/hooks/useAPI';
 
 const { width, height } = Dimensions.get('window');
 
@@ -13,27 +13,33 @@ export default function LoginScreen({ navigation }) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
-  const [loading, setLoading] = useState(false);
   const [isLogin, setIsLogin] = useState(true);
+  
+  const { login, register, loading, error } = useAuth();
 
-  // Login status is now checked in App.js, so we don't need to check here
+  // Show error alert if there's an API error
+  useEffect(() => {
+    if (error) {
+      Alert.alert('Error', error, [
+        { text: 'OK' }
+      ]);
+    }
+  }, [error]);
 
   const handleAuth = async () => {
     if (!email || !password) {
       Alert.alert('Error', 'Please fill in all fields');
       return;
     }
-
-    setLoading(true);
     
     try {
       if (isLogin) {
         // Login
-        await authFlow.login({ email, password });
+        await login({ email, password });
       } else {
         // Register
         const name = email.split('@')[0]; // Use email prefix as name
-        await authFlow.register({ name, email, password });
+        await register({ name, email, password });
       }
       
       // Navigate to main app
@@ -41,8 +47,6 @@ export default function LoginScreen({ navigation }) {
     } catch (error) {
       console.log('Auth error:', error);
       Alert.alert('Error', error.message || 'Authentication failed');
-    } finally {
-      setLoading(false);
     }
   };
 

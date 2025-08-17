@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
   View, 
   ScrollView, 
@@ -9,8 +9,8 @@ import {
 } from 'react-native';
 import notificationTheme from './theme/notificationTheme';
 
-// Custom hooks
-import { useNotifications } from './hooks/useNotifications';
+// Import API hooks
+import { useNotifications } from '../../utils/hooks/useAPI';
 
 // Components
 import NotificationHeader from './components/NotificationHeader';
@@ -19,30 +19,60 @@ import NotificationSection from './components/NotificationSection';
 import EmptyState from './components/EmptyState';
 
 const NotificationsScreen = ({ navigation }) => {
-  const {
-    notifications,
-    groupedNotifications,
-    loading,
-    error,
-    activeFilter,
-    stats,
-    setActiveFilter,
-    markAsRead,
-    toggleImportant,
-    deleteNotification,
-    refreshNotifications,
+  const [refreshing, setRefreshing] = useState(false);
+  const [activeFilter, setActiveFilter] = useState('all');
+
+  // API hooks
+  const { 
+    notifications, 
+    fetchNotifications, 
+    markAsRead, 
+    markAllAsRead,
+    deleteNotification, 
+    loading, 
+    error 
   } = useNotifications();
 
-  const [refreshing, setRefreshing] = useState(false);
+  useEffect(() => {
+    loadNotifications();
+  }, []);
+
+  // Show error alert if there's an API error
+  useEffect(() => {
+    if (error) {
+      Alert.alert('Error', error, [
+        { text: 'Retry', onPress: loadNotifications },
+        { text: 'OK' }
+      ]);
+    }
+  }, [error]);
+
+  const loadNotifications = async () => {
+    try {
+      await fetchNotifications({ limit: 50 });
+    } catch (error) {
+      console.log('Error loading notifications:', error);
+    }
+  };
 
   const handleRefresh = async () => {
     setRefreshing(true);
-    await refreshNotifications();
+    await loadNotifications();
     setRefreshing(false);
   };
 
-  const handleNotificationPress = (notification) => {
+  const handleNotificationPress = async (notification) => {
     console.log('Notification pressed:', notification.title);
+    
+    // Mark as read when pressed
+    if (!notification.isRead) {
+      try {
+        await markAsRead(notification.id);
+      } catch (error) {
+        console.log('Error marking notification as read:', error);
+      }
+    }
+    
     // Here you can navigate to specific screens based on notification type
     // For example: navigation.navigate('RouteDetails', { routeId: notification.routeId });
   };
@@ -61,11 +91,46 @@ const NotificationsScreen = ({ navigation }) => {
         { 
           text: 'Delete', 
           style: 'destructive',
-          onPress: () => deleteNotification(notificationId)
+          onPress: async () => {
+            try {
+              await deleteNotification(notificationId);
+            } catch (error) {
+              console.log('Error deleting notification:', error);
+            }
+          }
         },
       ]
     );
   };
+
+  const handleMarkAllAsRead = async () => {
+    try {
+      await markAllAsRead();
+    } catch (error) {
+      console.log('Error marking all notifications as read:', error);
+    }
+  };
+
+  // Group notifications by date
+  const groupedNotifications = notifications.reduce((groups, notification) => {
+    const date = new Date(notification.createdAt);
+    const today = new Date();
+    const yesterday = new Date(today);
+    yesterday.setDate(yesterday.getDate() - 1);
+    
+    let group = 'older';
+    if (date.toDateString() === today.toDateString()) {
+      group = 'today';
+    } else if (date.toDateString() === yesterday.toDateString()) {
+      group = 'yesterday';
+    }
+    
+    if (!groups[group]) {
+      groups[group] = [];
+    }
+    groups[group].push(notification);
+    return groups;
+  }, {});
 
   const renderNotificationSections = () => {
     if (!groupedNotifications) return null;
@@ -73,7 +138,7 @@ const NotificationsScreen = ({ navigation }) => {
     const sections = [];
 
     // Today section
-    if (groupedNotifications.today.length > 0) {
+    if (groupedNotifications.today && groupedNotifications.today.length > 0) {
       sections.push(
         <NotificationSection
           key="today"
@@ -84,14 +149,13 @@ const NotificationsScreen = ({ navigation }) => {
           delay={200}
           onNotificationPress={handleNotificationPress}
           onMarkRead={markAsRead}
-          onToggleImportant={toggleImportant}
           onDelete={handleDeleteNotification}
         />
       );
     }
 
     // Yesterday section
-    if (groupedNotifications.yesterday.length > 0) {
+    if (groupedNotifications.yesterday && groupedNotifications.yesterday.length > 0) {
       sections.push(
         <NotificationSection
           key="yesterday"
@@ -102,14 +166,13 @@ const NotificationsScreen = ({ navigation }) => {
           delay={400}
           onNotificationPress={handleNotificationPress}
           onMarkRead={markAsRead}
-          onToggleImportant={toggleImportant}
           onDelete={handleDeleteNotification}
         />
       );
     }
 
     // This week section
-    if (groupedNotifications.thisWeek.length > 0) {
+    if (groupedNotifications.thisWeek && groupedNotifications.thisWeek.length > 0) {
       sections.push(
         <NotificationSection
           key="thisWeek"
@@ -120,14 +183,13 @@ const NotificationsScreen = ({ navigation }) => {
           delay={600}
           onNotificationPress={handleNotificationPress}
           onMarkRead={markAsRead}
-          onToggleImportant={toggleImportant}
           onDelete={handleDeleteNotification}
         />
       );
     }
 
     // Older section
-    if (groupedNotifications.older.length > 0) {
+    if (groupedNotifications.older && groupedNotifications.older.length > 0) {
       sections.push(
         <NotificationSection
           key="older"
@@ -138,7 +200,6 @@ const NotificationsScreen = ({ navigation }) => {
           delay={800}
           onNotificationPress={handleNotificationPress}
           onMarkRead={markAsRead}
-          onToggleImportant={toggleImportant}
           onDelete={handleDeleteNotification}
         />
       );
@@ -153,7 +214,7 @@ const NotificationsScreen = ({ navigation }) => {
         <NotificationHeader
           navigation={navigation}
           onFilterPress={handleFilterPress}
-          stats={stats}
+          stats={null} // No stats in this new structure
           showStats={false}
         />
         <View style={styles.loadingContainer}>
@@ -174,7 +235,7 @@ const NotificationsScreen = ({ navigation }) => {
         <NotificationHeader
           navigation={navigation}
           onFilterPress={handleFilterPress}
-          stats={stats}
+          stats={null} // No stats in this new structure
           showStats={false}
         />
         <View style={styles.errorContainer}>
@@ -182,7 +243,7 @@ const NotificationsScreen = ({ navigation }) => {
             title="Something went wrong"
             message={error}
             icon="alert-circle"
-            onRefresh={refreshNotifications}
+            onRefresh={loadNotifications}
           />
         </View>
       </SafeAreaView>
@@ -194,7 +255,7 @@ const NotificationsScreen = ({ navigation }) => {
       <NotificationHeader
         navigation={navigation}
         onFilterPress={handleFilterPress}
-        stats={stats}
+        stats={null} // No stats in this new structure
       />
       
       <FilterTabs
@@ -221,7 +282,7 @@ const NotificationsScreen = ({ navigation }) => {
             title="No notifications yet"
             message="Stay tuned for updates about your routes, traffic conditions, and transit information."
             icon="bell-off"
-            onRefresh={refreshNotifications}
+            onRefresh={loadNotifications}
           />
         ) : (
           renderNotificationSections()

@@ -1,26 +1,85 @@
 const express = require('express');
 const router = express.Router();
+const { EcoStats } = require('../models');
 
-// @route   GET /api/v1/ecostats
-// @desc    Get user eco-stats
-// @access  Private (requires authentication)
-router.get('/', (req, res) => {
-  res.json({
-    success: true,
-    message: 'Eco-stats endpoint - requires authentication middleware implementation',
-    note: 'This endpoint will return user environmental impact data once authentication is implemented'
-  });
+// GET /api/v1/ecostats - Get all eco stats
+router.get('/', async (req, res) => {
+  try {
+    const ecoStats = await EcoStats.findAll({
+      include: [
+        {
+          model: require('../models').User,
+          as: 'user',
+          attributes: ['id', 'name', 'email']
+        }
+      ],
+      order: [['createdAt', 'DESC']]
+    });
+    
+    res.json({
+      success: true,
+      data: ecoStats,
+      count: ecoStats.length
+    });
+  } catch (error) {
+    console.error('Error fetching eco stats:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Error fetching eco stats',
+      error: error.message
+    });
+  }
 });
 
-// @route   GET /api/v1/ecostats/weekly
-// @desc    Get weekly eco-stats
-// @access  Private (requires authentication)
-router.get('/weekly', (req, res) => {
-  res.json({
-    success: true,
-    message: 'Weekly eco-stats endpoint - requires authentication middleware implementation',
-    note: 'This endpoint will return weekly environmental impact data once authentication is implemented'
-  });
+// GET /api/v1/ecostats/count - Get eco stats count
+router.get('/count', async (req, res) => {
+  try {
+    const count = await EcoStats.count();
+    res.json({
+      success: true,
+      count: count
+    });
+  } catch (error) {
+    console.error('Error counting eco stats:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Error counting eco stats',
+      error: error.message
+    });
+  }
+});
+
+// GET /api/v1/ecostats/weekly - Get weekly eco stats
+router.get('/weekly', async (req, res) => {
+  try {
+    const weeklyStats = await EcoStats.findAll({
+      where: {
+        'period.type': 'weekly'
+      },
+      include: [
+        {
+          model: require('../models').User,
+          as: 'user',
+          attributes: ['id', 'name', 'email']
+        }
+      ],
+      order: [['createdAt', 'DESC']],
+      limit: 10
+    });
+    
+    res.json({
+      success: true,
+      data: weeklyStats,
+      count: weeklyStats.length
+    });
+  } catch (error) {
+    console.error('Error fetching weekly eco stats:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Error fetching weekly eco stats',
+      error: error.message
+    });
+  }
 });
 
 module.exports = router;

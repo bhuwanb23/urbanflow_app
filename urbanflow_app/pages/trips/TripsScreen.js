@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, FlatList, ScrollView, TouchableOpacity, ActivityIndicator, SafeAreaView, Dimensions } from 'react-native';
+import { View, Text, StyleSheet, FlatList, ScrollView, TouchableOpacity, ActivityIndicator, SafeAreaView, Dimensions, Alert } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { MotiView } from 'moti';
+import { useTrips } from '../../utils/hooks/useAPI';
 
 const { width, height } = Dimensions.get('window');
 
@@ -38,76 +39,60 @@ const favoriteRoutes = [
   },
 ];
 
-const tripHistory = [
-  {
-    id: '1',
-    from: 'Downtown',
-    to: 'Airport',
-    date: 'Today, 2:30 PM',
-    eco: 72,
-    duration: '45 min',
-    modes: [
-      { name: 'car', color: '#64748b' },
-    ],
-    cost: '$12.50',
-    ecoColor: '#fb923c',
-    ecoBg: '#fef3c7',
-  },
-  {
-    id: '2',
-    from: 'Home',
-    to: 'Gym',
-    date: 'Yesterday, 6:00 AM',
-    eco: 95,
-    duration: '15 min',
-    modes: [
-      { name: 'bike', color: '#10b981' },
-    ],
-    cost: 'Free',
-    ecoColor: '#22c55e',
-    ecoBg: '#dcfce7',
-  },
-  {
-    id: '3',
-    from: 'Office',
-    to: 'Restaurant',
-    date: 'Yesterday, 7:30 PM',
-    eco: 85,
-    duration: '22 min',
-    modes: [
-      { name: 'train', color: '#6366f1' },
-      { name: 'walk', color: '#64748b' },
-    ],
-    cost: '$3.25',
-    ecoColor: '#3b82f6',
-    ecoBg: '#dbeafe',
-  },
-  {
-    id: '4',
-    from: 'Mall',
-    to: 'Park',
-    date: 'Dec 22, 3:15 PM',
-    eco: 92,
-    duration: '12 min',
-    modes: [
-      { name: 'bus', color: '#3b82f6' },
-    ],
-    cost: '$2.75',
-    ecoColor: '#22c55e',
-    ecoBg: '#dcfce7',
-  },
-];
-
 export default function TripsScreen({ navigation }) {
-  const [filterIdx, setFilterIdx] = useState(0);
-  const [sortIdx, setSortIdx] = useState(0);
-  const [loading, setLoading] = useState(true);
+  const [selectedFilter, setSelectedFilter] = useState('All Trips');
+  const [selectedSort, setSelectedSort] = useState('Date');
+  const [showFilters, setShowFilters] = useState(false);
+  const [showSorts, setShowSorts] = useState(false);
+
+  // API hooks
+  const { trips, fetchTrips, createTrip, updateTrip, deleteTrip, loading, error } = useTrips();
 
   useEffect(() => {
-    // Simulate network loading
-    const timer = setTimeout(() => setLoading(false), 1200);
-    return () => clearTimeout(timer);
+    loadTrips();
   }, []);
+
+  // Show error alert if there's an API error
+  useEffect(() => {
+    if (error) {
+      Alert.alert('Error', error, [
+        { text: 'Retry', onPress: loadTrips },
+        { text: 'OK' }
+      ]);
+    }
+  }, [error]);
+
+  const loadTrips = async () => {
+    try {
+      await fetchTrips();
+    } catch (error) {
+      console.log('Error loading trips:', error);
+    }
+  };
+
+  const handleCreateTrip = async (tripData) => {
+    try {
+      await createTrip(tripData);
+    } catch (error) {
+      console.log('Error creating trip:', error);
+    }
+  };
+
+  const handleUpdateTrip = async (tripId, updates) => {
+    try {
+      await updateTrip(tripId, updates);
+    } catch (error) {
+      console.log('Error updating trip:', error);
+    }
+  };
+
+  const handleDeleteTrip = async (tripId) => {
+    try {
+      await deleteTrip(tripId);
+    } catch (error) {
+      console.log('Error deleting trip:', error);
+    }
+  };
 
   const handleFilter = () => setFilterIdx((filterIdx + 1) % FILTERS.length);
   const handleSort = () => setSortIdx((sortIdx + 1) % SORTS.length);

@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { View, ScrollView, StyleSheet, Text, Dimensions, Platform, TouchableOpacity, Animated } from 'react-native';
+import { View, ScrollView, StyleSheet, Text, Dimensions, Platform, TouchableOpacity, Animated, ActivityIndicator } from 'react-native';
 import { Appbar, Card, Avatar, Button } from 'react-native-paper';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { LinearGradient } from 'expo-linear-gradient';
 import { BlurView } from 'expo-blur';
 import { MotiView } from 'moti';
+import { useAuth, useTrips, useRoutes, useEcoStats } from '../../utils/hooks/useAPI';
 
 const { width, height } = Dimensions.get('window');
 
@@ -49,7 +50,16 @@ export default function HomeScreen() {
   const [search, setSearch] = useState('');
   const [pulseAnim] = useState(new Animated.Value(1));
 
+  // API hooks
+  const { user } = useAuth();
+  const { trips, fetchTrips, loading: tripsLoading } = useTrips();
+  const { routes, fetchRoutes, loading: routesLoading } = useRoutes();
+  const { ecoStats, fetchEcoStats, loading: statsLoading } = useEcoStats();
+
   useEffect(() => {
+    // Load home data
+    loadHomeData();
+    
     const pulse = Animated.loop(
       Animated.sequence([
         Animated.timing(pulseAnim, {
@@ -66,6 +76,18 @@ export default function HomeScreen() {
     );
     pulse.start();
   }, []);
+
+  const loadHomeData = async () => {
+    try {
+      await Promise.all([
+        fetchTrips({ limit: 5, status: 'completed' }),
+        fetchRoutes({ limit: 3, isFavorite: true }),
+        fetchEcoStats({ period: 'week' })
+      ]);
+    } catch (error) {
+      console.log('Error loading home data:', error);
+    }
+  };
 
   return (
     <LinearGradient colors={["#43cea2", "#185a9d", "#6a11cb", "#2575fc"]} style={styles.gradient}>

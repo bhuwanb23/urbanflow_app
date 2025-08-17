@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { SafeAreaView, ActivityIndicator, ScrollView, Text, StyleSheet, Dimensions } from 'react-native';
+import { SafeAreaView, ActivityIndicator, ScrollView, Text, StyleSheet, Dimensions, Alert } from 'react-native';
 
 // Import components
 import {
@@ -13,17 +13,57 @@ import {
 // Import styles
 import { plannerStyles } from './styles/plannerStyles';
 
+// Import API hooks
+import { useRoutes } from '../../utils/hooks/useAPI';
+
 const { width } = Dimensions.get('window');
 
 export default function PlannerScreen({ navigation }) {
   const [selectedMode, setSelectedMode] = useState('train');
-  const [loading, setLoading] = useState(true);
+  const [searchQuery, setSearchQuery] = useState('');
+
+  // API hooks
+  const { routes, fetchRoutes, searchRoutes, getPopularRoutes, loading, error } = useRoutes();
 
   useEffect(() => {
-    // Simulate network loading
-    const timer = setTimeout(() => setLoading(false), 1200);
-    return () => clearTimeout(timer);
+    loadPlannerData();
   }, []);
+
+  // Show error alert if there's an API error
+  useEffect(() => {
+    if (error) {
+      Alert.alert('Error', error, [
+        { text: 'Retry', onPress: loadPlannerData },
+        { text: 'OK' }
+      ]);
+    }
+  }, [error]);
+
+  const loadPlannerData = async () => {
+    try {
+      await Promise.all([
+        fetchRoutes({ isActive: true }),
+        getPopularRoutes()
+      ]);
+    } catch (error) {
+      console.log('Error loading planner data:', error);
+    }
+  };
+
+  const handleSearch = async (query) => {
+    setSearchQuery(query);
+    if (query.trim()) {
+      try {
+        await searchRoutes({ query, limit: 10 });
+      } catch (error) {
+        console.log('Error searching routes:', error);
+      }
+    }
+  };
+
+  const handleRoutePress = (route) => {
+    navigation.navigate('RouteDetailsScreen', { route });
+  };
 
   if (loading) {
     return (
@@ -42,7 +82,7 @@ export default function PlannerScreen({ navigation }) {
       {/* Main Content */}
       <ScrollView contentContainerStyle={plannerStyles.scrollContent} showsVerticalScrollIndicator={false}>
         {/* Search Bar Component */}
-        <SearchBar />
+        <SearchBar onSearch={handleSearch} value={searchQuery} />
         
         {/* Mode Filters Component */}
         <ModeFilters 
@@ -54,7 +94,11 @@ export default function PlannerScreen({ navigation }) {
         <QuickActions />
 
         {/* Popular Routes Component */}
-        <PopularRoutes navigation={navigation} />
+        <PopularRoutes 
+          navigation={navigation} 
+          routes={routes}
+          onRoutePress={handleRoutePress}
+        />
       </ScrollView>
     </SafeAreaView>
   );

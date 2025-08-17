@@ -305,14 +305,38 @@
             document.getElementById('overviewData').innerHTML = '<div class="loading">Loading overview...</div>';
             
             try {
-                const data = await fetchData('user');
-                const userCount = data?.data?.length || 0;
+                // Fetch all data to get counts
+                const [users, trips, routes, ecoStats, notifications, traffic] = await Promise.all([
+                    fetchData('user'),
+                    fetchData('trips'),
+                    fetchData('routes'),
+                    fetchData('ecostats'),
+                    fetchData('notifications'),
+                    fetchData('traffic')
+                ]);
+
+                const userCount = users?.data?.length || 0;
+                const tripCount = trips?.data?.length || 0;
+                const routeCount = routes?.data?.length || 0;
+                const notificationCount = notifications?.data?.length || 0;
+                const ecoStatsCount = ecoStats?.data?.length || 0;
+                const trafficCount = traffic?.data?.length || 0;
+
+                // Update stats cards
                 document.getElementById('userCount').textContent = userCount;
+                document.getElementById('tripCount').textContent = tripCount;
+                document.getElementById('routeCount').textContent = routeCount;
+                document.getElementById('notificationCount').textContent = notificationCount;
                 
                 document.getElementById('overviewData').innerHTML = `
                     <div style="background: #f8f9fa; padding: 20px; border-radius: 10px; margin-top: 20px;">
                         <h3>Database Status</h3>
                         <p>Total Users: ${userCount}</p>
+                        <p>Total Trips: ${tripCount}</p>
+                        <p>Total Routes: ${routeCount}</p>
+                        <p>Total Notifications: ${notificationCount}</p>
+                        <p>Total Eco Stats: ${ecoStatsCount}</p>
+                        <p>Total Traffic Records: ${trafficCount}</p>
                         <p>Last Updated: ${new Date().toLocaleString()}</p>
                     </div>
                 `;
@@ -327,7 +351,7 @@
             
             try {
                 const data = await fetchData('user');
-                if (data && data.data) {
+                if (data && data.success && data.data) {
                     const table = `
                         <table>
                             <thead>
@@ -335,17 +359,17 @@
                                     <th>ID</th>
                                     <th>Name</th>
                                     <th>Email</th>
-                                    <th>Location</th>
+                                    <th>City</th>
                                     <th>Status</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 ${data.data.map(user => `
                                     <tr>
-                                        <td>${user._id || user.id || 'N/A'}</td>
+                                        <td>${user.id || 'N/A'}</td>
                                         <td>${user.name || 'N/A'}</td>
                                         <td>${user.email || 'N/A'}</td>
-                                        <td>${user.location?.city || 'N/A'}</td>
+                                        <td>${user.city || 'N/A'}</td>
                                         <td>${user.isActive ? 'Active' : 'Inactive'}</td>
                                     </tr>
                                 `).join('')}
@@ -367,7 +391,7 @@
             
             try {
                 const data = await fetchData('trips');
-                if (data && data.data) {
+                if (data && data.success && data.data) {
                     const table = `
                         <table>
                             <thead>
@@ -382,10 +406,10 @@
                             <tbody>
                                 ${data.data.map(trip => `
                                     <tr>
-                                        <td>${trip.tripId || trip._id || 'N/A'}</td>
-                                        <td>${trip.from?.name || 'N/A'}</td>
-                                        <td>${trip.to?.name || 'N/A'}</td>
-                                        <td>${trip.duration?.actual || 'N/A'} min</td>
+                                        <td>${trip.id || 'N/A'}</td>
+                                        <td>${trip.fromName || trip.from?.name || 'N/A'}</td>
+                                        <td>${trip.toName || trip.to?.name || 'N/A'}</td>
+                                        <td>${trip.duration || 'N/A'} min</td>
                                         <td>${trip.status || 'N/A'}</td>
                                     </tr>
                                 `).join('')}
@@ -407,7 +431,7 @@
             
             try {
                 const data = await fetchData('routes');
-                if (data && data.data) {
+                if (data && data.success && data.data) {
                     const table = `
                         <table>
                             <thead>
@@ -422,11 +446,11 @@
                             <tbody>
                                 ${data.data.map(route => `
                                     <tr>
-                                        <td>${route.routeId || route._id || 'N/A'}</td>
+                                        <td>${route.id || 'N/A'}</td>
                                         <td>${route.name || 'N/A'}</td>
-                                        <td>${route.origin?.name || 'N/A'}</td>
-                                        <td>${route.destination?.name || 'N/A'}</td>
-                                        <td>${route.distance?.total || 'N/A'} km</td>
+                                        <td>${route.originName || route.origin?.name || 'N/A'}</td>
+                                        <td>${route.destinationName || route.destination?.name || 'N/A'}</td>
+                                        <td>${route.distance || 'N/A'} km</td>
                                     </tr>
                                 `).join('')}
                             </tbody>
@@ -447,7 +471,7 @@
             
             try {
                 const data = await fetchData('ecostats');
-                if (data && data.data) {
+                if (data && data.success && data.data) {
                     const table = `
                         <table>
                             <thead>
@@ -461,10 +485,10 @@
                             <tbody>
                                 ${data.data.map(stat => `
                                     <tr>
-                                        <td>${stat.period?.type || 'N/A'}</td>
-                                        <td>${stat.co2Saved?.total || 'N/A'} kg</td>
-                                        <td>${stat.distanceWalked?.total || 'N/A'} km</td>
-                                        <td>${stat.ecoScore?.current || 'N/A'}</td>
+                                        <td>${stat.periodType || 'N/A'}</td>
+                                        <td>${stat.co2Saved || 'N/A'} kg</td>
+                                        <td>${stat.distanceWalked || 'N/A'} km</td>
+                                        <td>${stat.ecoScore || 'N/A'}</td>
                                     </tr>
                                 `).join('')}
                             </tbody>
@@ -485,7 +509,7 @@
             
             try {
                 const data = await fetchData('notifications');
-                if (data && data.data) {
+                if (data && data.success && data.data) {
                     const table = `
                         <table>
                             <thead>
@@ -523,7 +547,7 @@
             
             try {
                 const data = await fetchData('traffic');
-                if (data && data.data) {
+                if (data && data.success && data.data) {
                     const table = `
                         <table>
                             <thead>
@@ -537,9 +561,9 @@
                             <tbody>
                                 ${data.data.map(traffic => `
                                     <tr>
-                                        <td>${traffic.location?.city || 'N/A'}</td>
-                                        <td>${traffic.trafficConditions?.level || 'N/A'}</td>
-                                        <td>${traffic.currentMetrics?.averageSpeed || 'N/A'} km/h</td>
+                                        <td>${traffic.locationCity || traffic.location?.city || 'N/A'}</td>
+                                        <td>${traffic.trafficLevel || traffic.trafficConditions?.level || 'N/A'}</td>
+                                        <td>${traffic.averageSpeed || traffic.currentMetrics?.averageSpeed || 'N/A'} km/h</td>
                                         <td>${traffic.isActive ? 'Active' : 'Inactive'}</td>
                                     </tr>
                                 `).join('')}
