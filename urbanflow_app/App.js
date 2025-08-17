@@ -3,6 +3,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { MD3LightTheme as DefaultTheme, Provider as PaperProvider } from 'react-native-paper';
+import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import IntroScreen from './pages/home/IntroScreen';
 import LoginScreen from './pages/auth/LoginScreen';
 import HomeScreen from './pages/home/HomeScreen';
@@ -37,61 +38,61 @@ const ProfileStack = createStackNavigator();
 // Profile Stack Navigator
 function ProfileStackNavigator() {
   return (
-    <ProfileStack.Navigator screenOptions={{ headerShown: false }}>
-      <ProfileStack.Screen name="ProfileMain" component={ProfileScreen} />
-      <ProfileStack.Screen name="LanguageRegionScreen" component={LanguageRegionScreen} />
-      <ProfileStack.Screen name="PreferredTransportScreen" component={PreferredTransportScreen} />
-      <ProfileStack.Screen name="ProfileNotificationsScreen" component={ProfileNotificationsScreen} />
-      <ProfileStack.Screen name="MobilityGoalsScreen" component={MobilityGoalsScreen} />
-      <ProfileStack.Screen name="PrivacyScreen" component={PrivacyScreen} />
-      <ProfileStack.Screen name="EditProfileScreen" component={EditProfileScreen} />
-    </ProfileStack.Navigator>
+    <SafeAreaView style={{ flex: 1, backgroundColor: '#fff' }}>
+      <ProfileStack.Navigator screenOptions={{ headerShown: false }}>
+        <ProfileStack.Screen name="ProfileMain" component={ProfileScreen} />
+        <ProfileStack.Screen name="LanguageRegionScreen" component={LanguageRegionScreen} />
+        <ProfileStack.Screen name="PreferredTransportScreen" component={PreferredTransportScreen} />
+        <ProfileStack.Screen name="ProfileNotificationsScreen" component={ProfileNotificationsScreen} />
+        <ProfileStack.Screen name="MobilityGoalsScreen" component={MobilityGoalsScreen} />
+        <ProfileStack.Screen name="PrivacyScreen" component={PrivacyScreen} />
+        <ProfileStack.Screen name="EditProfileScreen" component={EditProfileScreen} />
+      </ProfileStack.Navigator>
+    </SafeAreaView>
   );
 }
 
 function MainTabs() {
   return (
-    <Tab.Navigator
-      initialRouteName="Planner"
-      screenOptions={({ route }) => ({
-        headerShown: false,
-        tabBarShowLabel: true,
-        tabBarStyle: { 
-          borderTopLeftRadius: 24, 
-          borderTopRightRadius: 24, 
-          height: 64, 
-          backgroundColor: '#fff',
-          position: 'absolute',
-          bottom: 0,
-          left: 0,
-          right: 0,
-          elevation: 8,
-          shadowColor: '#000',
-          shadowOffset: { width: 0, height: -2 },
-          shadowOpacity: 0.1,
-          shadowRadius: 8,
-          zIndex: 1000,
-        },
-        tabBarLabelStyle: { fontFamily: 'Urbanist_700Bold', fontSize: 12 },
-        tabBarIcon: ({ color, size, focused }) => {
-          let iconName;
-          if (route.name === 'Planner') iconName = 'compass';
-          else if (route.name === 'Live') iconName = 'traffic-light';
-          else if (route.name === 'EcoStats') iconName = 'leaf';
-          else if (route.name === 'Trips') iconName = 'map';
-          else if (route.name === 'Profile') iconName = 'account-circle';
-          return <Icon name={iconName} size={size} color={color} />;
-        },
-        tabBarActiveTintColor: '#6366f1',
-        tabBarInactiveTintColor: '#b0bec5',
-      })}
-    >
-      <Tab.Screen name="Planner" component={PlannerScreen} />
-      <Tab.Screen name="Live" component={LiveScreen} />
-      <Tab.Screen name="EcoStats" component={EcoStatsScreen} />
-      <Tab.Screen name="Trips" component={TripsScreen} />
-      <Tab.Screen name="Profile" component={ProfileStackNavigator} />
-    </Tab.Navigator>
+    <SafeAreaView style={{ flex: 1, backgroundColor: '#fff' }}>
+      <Tab.Navigator
+        initialRouteName="Planner"
+        screenOptions={({ route }) => ({
+          headerShown: false,
+          tabBarShowLabel: true,
+          tabBarStyle: { 
+            borderTopLeftRadius: 24, 
+            borderTopRightRadius: 24, 
+            height: 64, 
+            backgroundColor: '#fff',
+            elevation: 8,
+            shadowColor: '#000',
+            shadowOffset: { width: 0, height: -2 },
+            shadowOpacity: 0.1,
+            shadowRadius: 8,
+            zIndex: 1000,
+          },
+          tabBarLabelStyle: { fontFamily: 'Urbanist_700Bold', fontSize: 12 },
+          tabBarIcon: ({ color, size, focused }) => {
+            let iconName;
+            if (route.name === 'Planner') iconName = 'compass';
+            else if (route.name === 'Live') iconName = 'traffic-light';
+            else if (route.name === 'EcoStats') iconName = 'leaf';
+            else if (route.name === 'Trips') iconName = 'map';
+            else if (route.name === 'Profile') iconName = 'account-circle';
+            return <Icon name={iconName} size={size} color={color} />;
+          },
+          tabBarActiveTintColor: '#6366f1',
+          tabBarInactiveTintColor: '#b0bec5',
+        })}
+      >
+        <Tab.Screen name="Planner" component={PlannerScreen} />
+        <Tab.Screen name="Live" component={LiveScreen} />
+        <Tab.Screen name="EcoStats" component={EcoStatsScreen} />
+        <Tab.Screen name="Trips" component={TripsScreen} />
+        <Tab.Screen name="Profile" component={ProfileStackNavigator} />
+      </Tab.Navigator>
+    </SafeAreaView>
   );
 }
 
@@ -133,9 +134,11 @@ export default function App() {
 
   if (!fontsLoaded || isLoading) {
     return (
-      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: '#fff' }}>
-        <ActivityIndicator size="large" color="#185a9d" />
-      </View>
+      <SafeAreaProvider>
+        <SafeAreaView style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: '#fff' }}>
+          <ActivityIndicator size="large" color="#185a9d" />
+        </SafeAreaView>
+      </SafeAreaProvider>
     );
   }
 
@@ -167,19 +170,21 @@ export default function App() {
   };
 
   return (
-    <PaperProvider theme={theme}>
-      <NavigationContainer>
-        <Stack.Navigator 
-          initialRouteName={isLoggedIn ? "MainTabs" : "Intro"} 
-          screenOptions={{ headerShown: false }}
-        >
-          <Stack.Screen name="Intro" component={IntroScreen} />
-          <Stack.Screen name="Login" component={LoginScreen} />
-          <Stack.Screen name="MainTabs" component={MainTabs} />
-          <Stack.Screen name="NotificationsScreen" component={NotificationsScreen} />
-          <Stack.Screen name="RouteDetailsScreen" component={RouteDetailsScreen} />
-        </Stack.Navigator>
-      </NavigationContainer>
-    </PaperProvider>
+    <SafeAreaProvider>
+      <PaperProvider theme={theme}>
+        <NavigationContainer>
+          <Stack.Navigator 
+            initialRouteName={isLoggedIn ? "MainTabs" : "Intro"} 
+            screenOptions={{ headerShown: false }}
+          >
+            <Stack.Screen name="Intro" component={IntroScreen} />
+            <Stack.Screen name="Login" component={LoginScreen} />
+            <Stack.Screen name="MainTabs" component={MainTabs} />
+            <Stack.Screen name="NotificationsScreen" component={NotificationsScreen} />
+            <Stack.Screen name="RouteDetailsScreen" component={RouteDetailsScreen} />
+          </Stack.Navigator>
+        </NavigationContainer>
+      </PaperProvider>
+    </SafeAreaProvider>
   );
 }
