@@ -8,7 +8,7 @@ const { width, height } = Dimensions.get('window');
 export default function EcoHeader() {
     return (
         <LinearGradient
-            colors={["#6366f1", "#10b981"]}
+            colors={["#6366f1", "#8b5cf6"]}
             style={styles.headerGradient}
         >
             <View style={styles.headerRow}>

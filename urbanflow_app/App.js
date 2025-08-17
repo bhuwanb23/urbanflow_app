@@ -259,7 +259,14 @@ export default function App() {
               <Stack.Screen name="Intro" component={IntroScreen} />
               <Stack.Screen name="Login" component={LoginScreen} />
               <Stack.Screen name="MainTabs" component={MainTabs} />
-              <Stack.Screen name="NotificationsScreen" component={NotificationsScreen} />
+              <Stack.Screen 
+                name="NotificationsScreen" 
+                component={NotificationsScreen}
+                options={{
+                  headerShown: false,
+                  presentation: 'modal',
+                }}
+              />
               <Stack.Screen name="RouteDetailsScreen" component={RouteDetailsScreen} />
             </Stack.Navigator>
           </SafeAreaView>

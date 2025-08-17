@@ -4,7 +4,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { MotiView } from 'moti';
 
-const { width } = Dimensions.get('window');
+const { width, height } = Dimensions.get('window');
 
 const NOTIFICATIONS = [
   {
@@ -139,16 +139,24 @@ export default function NotificationsScreen({ navigation }) {
     );
   }
 
-    return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: '#F9FAFB' }}>
-      {/* Gradient Header */}
-      <LinearGradient colors={["#6366f1", "#10b981"]} style={styles.headerGradient}>
+  return (
+    <SafeAreaView style={{ flex: 1, backgroundColor: '#F9FAFB' }} edges={['top']}>
+      {/* Enhanced Gradient Header */}
+      <LinearGradient 
+        colors={["#6366f1", "#8b5cf6", "#10b981"]} 
+        start={{ x: 0, y: 0 }}
+        end={{ x: 1, y: 1 }}
+        style={styles.headerGradient}
+      >
         <View style={styles.headerRow}>
           <View style={styles.headerLeft}>
             <TouchableOpacity onPress={handleBack} style={styles.backButton}>
               <Icon name="arrow-left" size={24} color="#fff" />
             </TouchableOpacity>
-            <Text style={styles.headerTitle}>Notifications</Text>
+            <View style={styles.titleContainer}>
+              <Text style={styles.headerTitle}>Notifications</Text>
+              <Text style={styles.headerSubtitle}>Stay updated with your journey</Text>
+            </View>
           </View>
           <View style={styles.headerRight}>
             <TouchableOpacity onPress={handleFilter} style={styles.headerButton}>
@@ -161,8 +169,13 @@ export default function NotificationsScreen({ navigation }) {
         </View>
       </LinearGradient>
       <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
-        {/* Tabs */}
-        <View style={styles.tabsContainer}>
+        {/* Enhanced Tabs */}
+        <MotiView 
+          from={{ opacity: 0, translateY: -20 }} 
+          animate={{ opacity: 1, translateY: 0 }} 
+          transition={{ type: 'timing', duration: 600 }}
+          style={styles.tabsContainer}
+        >
           <View style={styles.tabsWrapper}>
             {TABS.map((tab, index) => (
               <TouchableOpacity
@@ -173,14 +186,22 @@ export default function NotificationsScreen({ navigation }) {
                 <Text style={[styles.tabText, activeTab === index && styles.tabTextActive]}>
                   {tab}
                 </Text>
+                {activeTab === index && (
+                  <View style={styles.tabIndicator} />
+                )}
               </TouchableOpacity>
             ))}
           </View>
-        </View>
+        </MotiView>
 
-        {/* Notifications List */}
+        {/* Enhanced Notifications List */}
         {filteredNotifications.length === 0 ? (
-          <View style={styles.emptyState}>
+          <MotiView 
+            from={{ opacity: 0, scale: 0.9 }} 
+            animate={{ opacity: 1, scale: 1 }} 
+            transition={{ type: 'timing', duration: 600 }}
+            style={styles.emptyState}
+          >
             <View style={styles.emptyIcon}>
               <Icon name="bell-off" size={48} color="#9ca3af" />
             </View>
@@ -188,136 +209,159 @@ export default function NotificationsScreen({ navigation }) {
             <Text style={styles.emptyMessage}>
               Stay tuned for updates about your routes, traffic conditions, and transit information.
             </Text>
-          </View>
+          </MotiView>
         ) : (
           <>
-            {/* Today Section */}
-            <View style={styles.section}>
+            {/* Enhanced Today Section */}
+            <MotiView 
+              from={{ opacity: 0, translateY: 20 }} 
+              animate={{ opacity: 1, translateY: 0 }} 
+              transition={{ type: 'timing', duration: 600, delay: 200 }}
+              style={styles.section}
+            >
               <View style={styles.sectionHeader}>
-                <Text style={styles.sectionTitle}>Today</Text>
+                <View style={styles.sectionTitleRow}>
+                  <View style={styles.sectionTitleDot} />
+                  <Text style={styles.sectionTitle}>Today</Text>
+                </View>
+                <Text style={styles.sectionCount}>{filteredNotifications.slice(0, 3).length} notifications</Text>
               </View>
-              {filteredNotifications.slice(0, 3).map((notification, index) => (
-                <MotiView
-                  key={notification.id}
-                  from={{ opacity: 0, translateY: 20 }}
-                  animate={{ opacity: 1, translateY: 0 }}
-                  transition={{ type: 'timing', duration: 500, delay: index * 100 }}
-                  style={styles.notificationItem}
-                >
-                  <TouchableOpacity
-                    style={styles.notificationContent}
-                    onPress={() => handleNotificationPress(notification)}
-                    activeOpacity={0.7}
+                              {filteredNotifications.slice(0, 3).map((notification, index) => (
+                  <MotiView
+                    key={notification.id}
+                    from={{ opacity: 0, translateY: 20 }}
+                    animate={{ opacity: 1, translateY: 0 }}
+                    transition={{ type: 'timing', duration: 500, delay: index * 100 }}
+                    style={styles.notificationItem}
                   >
-                    <View style={styles.notificationLeft}>
-                      <View style={[styles.iconContainer, { backgroundColor: notification.iconBg }]}>
-                        <Icon name={notification.icon} size={20} color={notification.iconColor} />
-                      </View>
-                    </View>
-                    <View style={styles.notificationRight}>
-                      <View style={styles.notificationHeader}>
-                        <Text style={styles.notificationTitle}>{notification.title}</Text>
-                        <Text style={styles.notificationTime}>{notification.time}</Text>
-                      </View>
-                      <Text style={styles.notificationMessage}>{notification.message}</Text>
-                      <View style={styles.notificationFooter}>
-                        <View style={[styles.categoryBadge, { backgroundColor: notification.categoryBg }]}>
-                          <Text style={[styles.categoryText, { color: notification.categoryColor }]}>
-                            {notification.category}
-                          </Text>
-                        </View>
-                      </View>
-                    </View>
-                  </TouchableOpacity>
-                  {notification.swipeAction && (
                     <TouchableOpacity
-                      style={[styles.swipeAction, { backgroundColor: notification.swipeColor }]}
-                      onPress={() => handleSwipeAction(notification)}
+                      style={styles.notificationContent}
+                      onPress={() => handleNotificationPress(notification)}
+                      activeOpacity={0.7}
                     >
-                      <Icon 
-                        name={notification.swipeAction === 'delete' ? 'delete' : 
-                              notification.swipeAction === 'bookmark' ? 'bookmark' : 'check'} 
-                        size={20} 
-                        color="#fff" 
-                      />
-                    </TouchableOpacity>
-                  )}
-                </MotiView>
-              ))}
-            </View>
-
-            {/* Yesterday Section */}
-            <View style={styles.section}>
-              <View style={styles.sectionHeader}>
-                <Text style={styles.sectionTitle}>Yesterday</Text>
-              </View>
-              {filteredNotifications.slice(3).map((notification, index) => (
-                <MotiView
-                  key={notification.id}
-                  from={{ opacity: 0, translateY: 20 }}
-                  animate={{ opacity: 1, translateY: 0 }}
-                  transition={{ type: 'timing', duration: 500, delay: (index + 3) * 100 }}
-                  style={styles.notificationItem}
-                >
-                  <TouchableOpacity
-                    style={styles.notificationContent}
-                    onPress={() => handleNotificationPress(notification)}
-                    activeOpacity={0.7}
-                  >
-                    <View style={styles.notificationLeft}>
-                      <View style={[styles.iconContainer, { backgroundColor: notification.iconBg }]}>
-                        <Icon name={notification.icon} size={20} color={notification.iconColor} />
-                      </View>
-                    </View>
-                    <View style={styles.notificationRight}>
-                      <View style={styles.notificationHeader}>
-                        <Text style={styles.notificationTitle}>{notification.title}</Text>
-                        <Text style={styles.notificationTime}>{notification.time}</Text>
-                      </View>
-                      <Text style={styles.notificationMessage}>{notification.message}</Text>
-                      <View style={styles.notificationFooter}>
-                        <View style={[styles.categoryBadge, { backgroundColor: notification.categoryBg }]}>
-                          <Text style={[styles.categoryText, { color: notification.categoryColor }]}>
-                            {notification.category}
-                          </Text>
+                      <View style={styles.notificationLeft}>
+                        <View style={[styles.iconContainer, { backgroundColor: notification.iconBg }]}>
+                          <Icon name={notification.icon} size={20} color={notification.iconColor} />
                         </View>
                       </View>
-                    </View>
-                  </TouchableOpacity>
-                </MotiView>
-              ))}
-            </View>
+                      <View style={styles.notificationRight}>
+                        <View style={styles.notificationHeader}>
+                          <Text style={styles.notificationTitle}>{notification.title}</Text>
+                          <Text style={styles.notificationTime}>{notification.time}</Text>
+                        </View>
+                        <Text style={styles.notificationMessage}>{notification.message}</Text>
+                        <View style={styles.notificationFooter}>
+                          <View style={[styles.categoryBadge, { backgroundColor: notification.categoryBg }]}>
+                            <Text style={[styles.categoryText, { color: notification.categoryColor }]}>
+                              {notification.category}
+                            </Text>
+                          </View>
+                        </View>
+                      </View>
+                    </TouchableOpacity>
+                    {notification.swipeAction && (
+                      <TouchableOpacity
+                        style={[styles.swipeAction, { backgroundColor: notification.swipeColor }]}
+                        onPress={() => handleSwipeAction(notification)}
+                      >
+                        <Icon 
+                          name={notification.swipeAction === 'delete' ? 'delete' : 
+                                notification.swipeAction === 'bookmark' ? 'bookmark' : 'check'} 
+                          size={20} 
+                          color="#fff" 
+                        />
+                      </TouchableOpacity>
+                    )}
+                  </MotiView>
+                ))}
+              </MotiView>
+
+            {/* Enhanced Yesterday Section */}
+            <MotiView 
+              from={{ opacity: 0, translateY: 20 }} 
+              animate={{ opacity: 1, translateY: 0 }} 
+              transition={{ type: 'timing', duration: 600, delay: 400 }}
+              style={styles.section}
+            >
+              <View style={styles.sectionHeader}>
+                <View style={styles.sectionTitleRow}>
+                  <View style={[styles.sectionTitleDot, { backgroundColor: '#8b5cf6' }]} />
+                  <Text style={styles.sectionTitle}>Yesterday</Text>
+                </View>
+                <Text style={styles.sectionCount}>{filteredNotifications.slice(3).length} notifications</Text>
+              </View>
+                              {filteredNotifications.slice(3).map((notification, index) => (
+                  <MotiView
+                    key={notification.id}
+                    from={{ opacity: 0, translateY: 20 }}
+                    animate={{ opacity: 1, translateY: 0 }}
+                    transition={{ type: 'timing', duration: 500, delay: (index + 3) * 100 }}
+                    style={styles.notificationItem}
+                  >
+                    <TouchableOpacity
+                      style={styles.notificationContent}
+                      onPress={() => handleNotificationPress(notification)}
+                      activeOpacity={0.7}
+                    >
+                      <View style={styles.notificationLeft}>
+                        <View style={[styles.iconContainer, { backgroundColor: notification.iconBg }]}>
+                          <Icon name={notification.icon} size={20} color={notification.iconColor} />
+                        </View>
+                      </View>
+                      <View style={styles.notificationRight}>
+                        <View style={styles.notificationHeader}>
+                          <Text style={styles.notificationTitle}>{notification.title}</Text>
+                          <Text style={styles.notificationTime}>{notification.time}</Text>
+                        </View>
+                        <Text style={styles.notificationMessage}>{notification.message}</Text>
+                        <View style={styles.notificationFooter}>
+                          <View style={[styles.categoryBadge, { backgroundColor: notification.categoryBg }]}>
+                            <Text style={[styles.categoryText, { color: notification.categoryColor }]}>
+                              {notification.category}
+                            </Text>
+                          </View>
+                        </View>
+                      </View>
+                    </TouchableOpacity>
+                  </MotiView>
+                ))}
+              </MotiView>
           </>
         )}
       </ScrollView>
 
-      {/* Bottom Actions */}
-      <View style={styles.bottomActions}>
+      {/* Enhanced Bottom Actions */}
+      <MotiView 
+        from={{ opacity: 0, translateY: 20 }} 
+        animate={{ opacity: 1, translateY: 0 }} 
+        transition={{ type: 'timing', duration: 600, delay: 600 }}
+        style={styles.bottomActions}
+      >
         <TouchableOpacity style={styles.actionButton} onPress={handleMarkAllRead}>
           <Icon name="check-all" size={16} color="#64748b" style={{ marginRight: 8 }} />
           <Text style={styles.actionButtonText}>Mark All Read</Text>
         </TouchableOpacity>
         <TouchableOpacity style={[styles.actionButton, styles.primaryAction]} onPress={handleSettings}>
           <Icon name="cog" size={16} color="#fff" style={{ marginRight: 8 }} />
-                   <Text style={[styles.actionButtonText, { color: '#fff' }]}>Settings</Text>
-       </TouchableOpacity>
-     </View>
+          <Text style={[styles.actionButtonText, { color: '#fff' }]}>Settings</Text>
+        </TouchableOpacity>
+      </MotiView>
    </SafeAreaView>
  );
 }
 
 const styles = StyleSheet.create({
   headerGradient: {
-    paddingTop: 48,
-    paddingBottom: 24,
-    paddingHorizontal: 24,
+    paddingTop: Math.max(48, height * 0.06),
+    paddingBottom: Math.max(24, height * 0.03),
+    paddingHorizontal: Math.max(24, width * 0.06),
     borderBottomLeftRadius: 32,
     borderBottomRightRadius: 32,
-    elevation: 6,
-    shadowColor: '#0EA5E9',
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.10,
-    shadowRadius: 16,
+    elevation: 8,
+    shadowColor: '#6366f1',
+    shadowOffset: { width: 0, height: 6 },
+    shadowOpacity: 0.15,
+    shadowRadius: 20,
   },
   headerRow: {
     flexDirection: 'row',
@@ -327,38 +371,64 @@ const styles = StyleSheet.create({
   headerLeft: {
     flexDirection: 'row',
     alignItems: 'center',
+    flex: 1,
   },
   backButton: {
-    padding: 8,
-    marginRight: 12,
+    padding: Math.max(8, width * 0.02),
+    marginRight: Math.max(12, width * 0.03),
     borderRadius: 12,
     backgroundColor: 'rgba(255,255,255,0.2)',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 3,
+  },
+  titleContainer: {
+    flex: 1,
   },
   headerTitle: {
-    fontSize: 24,
+    fontSize: Math.max(24, width * 0.06),
     fontWeight: 'bold',
     color: '#fff',
     fontFamily: 'Poppins_700Bold',
+    marginBottom: 4,
+  },
+  headerSubtitle: {
+    fontSize: Math.max(12, width * 0.03),
+    color: 'rgba(255,255,255,0.8)',
+    fontFamily: 'Urbanist_400Regular',
   },
   headerRight: {
     flexDirection: 'row',
     alignItems: 'center',
   },
   headerButton: {
-    padding: 8,
-    marginLeft: 8,
+    padding: Math.max(8, width * 0.02),
+    marginLeft: Math.max(8, width * 0.02),
     borderRadius: 12,
     backgroundColor: 'rgba(255,255,255,0.2)',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 3,
   },
-     tabsContainer: {
-     backgroundColor: '#fff',
-     paddingHorizontal: 20,
-     paddingVertical: 16,
-     marginBottom: 16,
-     borderRadius: 12,
-     borderWidth: 1,
-     borderColor: '#f1f5f9',
-   },
+  tabsContainer: {
+    backgroundColor: '#fff',
+    paddingHorizontal: Math.max(20, width * 0.05),
+    paddingVertical: Math.max(16, height * 0.02),
+    marginBottom: Math.max(16, height * 0.02),
+    marginHorizontal: Math.max(20, width * 0.05),
+    borderRadius: 16,
+    borderWidth: 1,
+    borderColor: '#f1f5f9',
+    shadowColor: '#6366f1',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.08,
+    shadowRadius: 12,
+    elevation: 4,
+  },
   tabsWrapper: {
     flexDirection: 'row',
     backgroundColor: '#f1f5f9',
@@ -367,71 +437,121 @@ const styles = StyleSheet.create({
   },
   tab: {
     flex: 1,
-    paddingVertical: 8,
-    paddingHorizontal: 16,
+    paddingVertical: Math.max(8, height * 0.01),
+    paddingHorizontal: Math.max(16, width * 0.04),
     borderRadius: 8,
     alignItems: 'center',
+    position: 'relative',
   },
   tabActive: {
     backgroundColor: '#fff',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 1 },
+    shadowColor: '#6366f1',
+    shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
-    shadowRadius: 2,
-    elevation: 2,
+    shadowRadius: 4,
+    elevation: 3,
+  },
+  tabIndicator: {
+    position: 'absolute',
+    bottom: -4,
+    left: '50%',
+    marginLeft: -8,
+    width: 16,
+    height: 3,
+    backgroundColor: '#6366f1',
+    borderRadius: 2,
   },
   tabText: {
-    fontSize: 14,
+    fontSize: Math.max(14, width * 0.035),
     fontWeight: '500',
     color: '#64748b',
     fontFamily: 'Urbanist_400Regular',
   },
-     tabTextActive: {
-     color: '#6366f1',
-     fontFamily: 'Poppins_700Bold',
-   },
-   scrollContent: { 
-     padding: 20, 
-     paddingBottom: 80 
-   },
+  tabTextActive: {
+    color: '#6366f1',
+    fontFamily: 'Poppins_700Bold',
+  },
+  scrollContent: { 
+    padding: Math.max(20, width * 0.05), 
+    paddingBottom: Math.max(100, height * 0.12) 
+  },
   section: {
     backgroundColor: '#fff',
-    marginTop: 8,
+    marginTop: Math.max(8, height * 0.01),
+    borderRadius: 16,
+    marginHorizontal: Math.max(20, width * 0.05),
+    shadowColor: '#6366f1',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.05,
+    shadowRadius: 8,
+    elevation: 2,
   },
   sectionHeader: {
-    paddingHorizontal: 20,
-    paddingVertical: 12,
+    paddingHorizontal: Math.max(20, width * 0.05),
+    paddingVertical: Math.max(12, height * 0.015),
     borderBottomWidth: 1,
     borderBottomColor: '#f8fafc',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  sectionTitleRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  sectionTitleDot: {
+    width: 8,
+    height: 8,
+    borderRadius: 4,
+    backgroundColor: '#6366f1',
+    marginRight: Math.max(8, width * 0.02),
   },
   sectionTitle: {
-    fontSize: 14,
+    fontSize: Math.max(14, width * 0.035),
     fontWeight: '600',
     color: '#111827',
     fontFamily: 'Poppins_700Bold',
     textTransform: 'uppercase',
     letterSpacing: 0.5,
   },
+  sectionCount: {
+    fontSize: Math.max(12, width * 0.03),
+    color: '#64748b',
+    fontFamily: 'Urbanist_400Regular',
+  },
   notificationItem: {
     position: 'relative',
     backgroundColor: '#fff',
+    marginHorizontal: Math.max(20, width * 0.05),
+    marginBottom: Math.max(8, height * 0.01),
+    borderRadius: 12,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.05,
+    shadowRadius: 3,
+    elevation: 1,
   },
   notificationContent: {
     flexDirection: 'row',
-    paddingHorizontal: 20,
-    paddingVertical: 16,
+    paddingHorizontal: Math.max(20, width * 0.05),
+    paddingVertical: Math.max(16, height * 0.02),
     borderBottomWidth: 1,
     borderBottomColor: '#f8fafc',
   },
   notificationLeft: {
-    marginRight: 12,
+    marginRight: Math.max(12, width * 0.03),
   },
   iconContainer: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
+    width: Math.max(40, width * 0.1),
+    height: Math.max(40, width * 0.1),
+    borderRadius: Math.max(20, width * 0.05),
     alignItems: 'center',
     justifyContent: 'center',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 2,
   },
   notificationRight: {
     flex: 1,
@@ -440,24 +560,24 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginBottom: 4,
+    marginBottom: Math.max(4, height * 0.005),
   },
   notificationTitle: {
-    fontSize: 14,
+    fontSize: Math.max(14, width * 0.035),
     fontWeight: '500',
     color: '#111827',
     fontFamily: 'Poppins_700Bold',
   },
   notificationTime: {
-    fontSize: 12,
+    fontSize: Math.max(12, width * 0.03),
     color: '#64748b',
     fontFamily: 'Urbanist_400Regular',
   },
   notificationMessage: {
-    fontSize: 14,
+    fontSize: Math.max(14, width * 0.035),
     color: '#64748b',
-    lineHeight: 20,
-    marginBottom: 8,
+    lineHeight: Math.max(20, height * 0.025),
+    marginBottom: Math.max(8, height * 0.01),
     fontFamily: 'Urbanist_400Regular',
   },
   notificationFooter: {
@@ -465,12 +585,17 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   categoryBadge: {
-    paddingHorizontal: 8,
-    paddingVertical: 4,
+    paddingHorizontal: Math.max(8, width * 0.02),
+    paddingVertical: Math.max(4, height * 0.005),
     borderRadius: 12,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.1,
+    shadowRadius: 2,
+    elevation: 1,
   },
   categoryText: {
-    fontSize: 12,
+    fontSize: Math.max(12, width * 0.03),
     fontWeight: '500',
     fontFamily: 'Urbanist_400Regular',
   },
@@ -479,62 +604,84 @@ const styles = StyleSheet.create({
     right: 0,
     top: 0,
     bottom: 0,
-    width: 80,
+    width: Math.max(80, width * 0.2),
     alignItems: 'center',
     justifyContent: 'center',
+    borderTopRightRadius: 12,
+    borderBottomRightRadius: 12,
   },
   emptyState: {
     alignItems: 'center',
-    paddingVertical: 60,
-    paddingHorizontal: 40,
+    paddingVertical: Math.max(60, height * 0.08),
+    paddingHorizontal: Math.max(40, width * 0.1),
   },
   emptyIcon: {
-    width: 80,
-    height: 80,
-    borderRadius: 40,
+    width: Math.max(80, width * 0.2),
+    height: Math.max(80, width * 0.2),
+    borderRadius: Math.max(40, width * 0.1),
     backgroundColor: '#f1f5f9',
     alignItems: 'center',
     justifyContent: 'center',
-    marginBottom: 16,
+    marginBottom: Math.max(16, height * 0.02),
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 2,
   },
   emptyTitle: {
-    fontSize: 18,
+    fontSize: Math.max(18, width * 0.045),
     fontWeight: '500',
     color: '#111827',
-    marginBottom: 8,
+    marginBottom: Math.max(8, height * 0.01),
     fontFamily: 'Poppins_700Bold',
   },
   emptyMessage: {
-    fontSize: 14,
+    fontSize: Math.max(14, width * 0.035),
     color: '#64748b',
     textAlign: 'center',
-    lineHeight: 20,
+    lineHeight: Math.max(20, height * 0.025),
     fontFamily: 'Urbanist_400Regular',
   },
   bottomActions: {
     flexDirection: 'row',
-    paddingHorizontal: 20,
-    paddingVertical: 16,
+    paddingHorizontal: Math.max(20, width * 0.05),
+    paddingVertical: Math.max(16, height * 0.02),
     backgroundColor: '#fff',
     borderTopWidth: 1,
     borderTopColor: '#e2e8f0',
-    gap: 12,
+    gap: Math.max(12, width * 0.03),
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: -2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 8,
+    elevation: 8,
   },
   actionButton: {
     flex: 1,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    paddingVertical: 12,
-    paddingHorizontal: 16,
+    paddingVertical: Math.max(12, height * 0.015),
+    paddingHorizontal: Math.max(16, width * 0.04),
     borderRadius: 12,
     backgroundColor: '#f1f5f9',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 2,
   },
   primaryAction: {
     backgroundColor: '#6366f1',
+    shadowColor: '#6366f1',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.3,
+    shadowRadius: 8,
+    elevation: 4,
   },
   actionButtonText: {
-    fontSize: 14,
+    fontSize: Math.max(14, width * 0.035),
     fontWeight: '500',
     color: '#64748b',
     fontFamily: 'Urbanist_400Regular',

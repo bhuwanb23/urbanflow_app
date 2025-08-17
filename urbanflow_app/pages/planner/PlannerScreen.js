@@ -66,7 +66,7 @@ export default function PlannerScreen({ navigation }) {
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: '#F9FAFB' }}>
       {/* Gradient Header */}
-      <LinearGradient colors={["#6366f1", "#10b981"]} style={styles.headerGradient}>
+      <LinearGradient colors={["#6366f1", "#8b5cf6"]} style={styles.headerGradient}>
         <View style={styles.headerRow}>
           <View style={styles.headerLeft}>
             <Text style={styles.headerTitle}>Hello, Bhuwan <Text style={{ fontSize: Math.max(18, width * 0.05) }}>👋</Text></Text>

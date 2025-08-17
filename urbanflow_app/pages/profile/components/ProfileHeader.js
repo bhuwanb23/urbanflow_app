@@ -8,7 +8,7 @@ const { width, height } = Dimensions.get('window');
 
 export default function ProfileHeader({ title, onBack, onMenu, showBack = false }) {
   return (
-    <LinearGradient colors={["#6366f1", "#10b981"]} style={styles.headerGradient}>
+    <LinearGradient colors={["#6366f1", "#8b5cf6"]} style={styles.headerGradient}>
       <MotiView
         from={{ opacity: 0, translateY: -20 }}
         animate={{ opacity: 1, translateY: 0 }}
