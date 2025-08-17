@@ -42,7 +42,7 @@ const ScreenWrapper = ({ children }) => {
   return (
     <View style={{ 
       flex: 1, 
-      paddingBottom: 60 + insets.bottom,
+      paddingBottom: 0, // Remove padding to prevent interference with tab bar
       backgroundColor: '#fff'
     }}>
       {children}
@@ -72,6 +72,12 @@ const WrappedEcoStatsScreen = (props) => (
 const WrappedTripsScreen = (props) => (
   <ScreenWrapper>
     <TripsScreen {...props} />
+  </ScreenWrapper>
+);
+
+const WrappedRouteDetailsScreen = (props) => (
+  <ScreenWrapper>
+    <RouteDetailsScreen {...props} />
   </ScreenWrapper>
 );
 
@@ -120,7 +126,9 @@ function MainTabs() {
           right: 0,
           paddingBottom: insets.bottom,
           paddingTop: 8,
-          paddingHorizontal: 16,
+          paddingHorizontal: 0,
+          paddingLeft: 0,
+          paddingRight: 0,
         },
         tabBarLabelStyle: { 
           fontFamily: 'Urbanist_700Bold', 
@@ -129,6 +137,13 @@ function MainTabs() {
         },
         tabBarIconStyle: {
           marginTop: 4,
+        },
+        tabBarItemStyle: {
+          alignItems: 'center',
+          justifyContent: 'center',
+          flex: 1,
+          paddingHorizontal: 0,
+          marginHorizontal: 0,
         },
         tabBarIcon: ({ color, size, focused }) => {
           let iconName;
@@ -267,7 +282,13 @@ export default function App() {
                   presentation: 'modal',
                 }}
               />
-              <Stack.Screen name="RouteDetailsScreen" component={RouteDetailsScreen} />
+              <Stack.Screen 
+                name="RouteDetailsScreen" 
+                component={RouteDetailsScreen}
+                options={{
+                  headerShown: false,
+                }}
+              />
             </Stack.Navigator>
           </SafeAreaView>
         </NavigationContainer>

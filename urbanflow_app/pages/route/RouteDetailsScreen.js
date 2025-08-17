@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { SafeAreaView, ActivityIndicator, ScrollView, Text } from 'react-native';
+import { SafeAreaView, ActivityIndicator, ScrollView, Text, View, StatusBar } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 // Import components
 import {
@@ -19,6 +20,7 @@ import { routeStyles } from './styles/routeStyles';
 export default function RouteDetailsScreen({ navigation, route }) {
   const [loading, setLoading] = useState(true);
   const [routeData, setRouteData] = useState(DEFAULT_ROUTE);
+  const insets = useSafeAreaInsets();
 
   useEffect(() => {
     // Get route data from navigation params
@@ -60,7 +62,8 @@ export default function RouteDetailsScreen({ navigation, route }) {
 
   if (loading) {
     return (
-      <SafeAreaView style={{ flex: 1, backgroundColor: '#F9FAFB', justifyContent: 'center', alignItems: 'center' }}>
+      <SafeAreaView style={{ flex: 1, backgroundColor: '#F9FAFB', justifyContent: 'center', alignItems: 'center' }} edges={['top', 'left', 'right']}>
+        <StatusBar barStyle="dark-content" backgroundColor="#F9FAFB" />
         <ActivityIndicator size="large" color="#6366f1" />
         <Text style={{ marginTop: 16, color: '#6366f1', fontFamily: 'Urbanist_400Regular', fontSize: 16 }}>Loading route details...</Text>
       </SafeAreaView>
@@ -68,11 +71,24 @@ export default function RouteDetailsScreen({ navigation, route }) {
   }
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: '#F9FAFB' }}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: '#F9FAFB' }} edges={['left', 'right']}>
+      <StatusBar barStyle="light-content" backgroundColor="#6366f1" />
+      
       {/* Header Component */}
       <RouteHeader onBack={handleBack} onMenu={handleMenu} />
 
-      <ScrollView contentContainerStyle={routeStyles.scrollContent} showsVerticalScrollIndicator={false}>
+      <ScrollView 
+        contentContainerStyle={[
+          routeStyles.scrollContent, 
+          { 
+            paddingBottom: Math.max(80 + insets.bottom, 100),
+            paddingTop: 8
+          }
+        ]} 
+        showsVerticalScrollIndicator={false}
+        bounces={false}
+        keyboardShouldPersistTaps="handled"
+      >
         {/* Route Overview Component */}
         <RouteOverview routeData={routeData} />
 
