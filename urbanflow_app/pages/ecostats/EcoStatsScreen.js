@@ -148,7 +148,7 @@ const styles = StyleSheet.create({
     },
     cardsContainer: {
         paddingHorizontal: 20,
-        marginTop: -28,
+        marginTop: 16,
         marginBottom: 20,
     },
     statCardsRow: {
