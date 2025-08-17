@@ -50,6 +50,37 @@ const ScreenWrapper = ({ children }) => {
   );
 };
 
+// Wrapped screen components to avoid inline functions
+const WrappedPlannerScreen = (props) => (
+  <ScreenWrapper>
+    <PlannerScreen {...props} />
+  </ScreenWrapper>
+);
+
+const WrappedLiveScreen = (props) => (
+  <ScreenWrapper>
+    <LiveScreen {...props} />
+  </ScreenWrapper>
+);
+
+const WrappedEcoStatsScreen = (props) => (
+  <ScreenWrapper>
+    <EcoStatsScreen {...props} />
+  </ScreenWrapper>
+);
+
+const WrappedTripsScreen = (props) => (
+  <ScreenWrapper>
+    <TripsScreen {...props} />
+  </ScreenWrapper>
+);
+
+const WrappedProfileStackNavigator = (props) => (
+  <ScreenWrapper>
+    <ProfileStackNavigator {...props} />
+  </ScreenWrapper>
+);
+
 // Profile Stack Navigator
 function ProfileStackNavigator() {
   return (
@@ -121,43 +152,23 @@ function MainTabs() {
     >
       <Tab.Screen 
         name="Planner" 
-        component={(props) => (
-          <ScreenWrapper>
-            <PlannerScreen {...props} />
-          </ScreenWrapper>
-        )} 
+        component={WrappedPlannerScreen} 
       />
       <Tab.Screen 
         name="Live" 
-        component={(props) => (
-          <ScreenWrapper>
-            <LiveScreen {...props} />
-          </ScreenWrapper>
-        )} 
+        component={WrappedLiveScreen} 
       />
       <Tab.Screen 
         name="EcoStats" 
-        component={(props) => (
-          <ScreenWrapper>
-            <EcoStatsScreen {...props} />
-          </ScreenWrapper>
-        )} 
+        component={WrappedEcoStatsScreen} 
       />
       <Tab.Screen 
         name="Trips" 
-        component={(props) => (
-          <ScreenWrapper>
-            <TripsScreen {...props} />
-          </ScreenWrapper>
-        )} 
+        component={WrappedTripsScreen} 
       />
       <Tab.Screen 
         name="Profile" 
-        component={(props) => (
-          <ScreenWrapper>
-            <ProfileStackNavigator {...props} />
-          </ScreenWrapper>
-        )} 
+        component={WrappedProfileStackNavigator} 
       />
     </Tab.Navigator>
   );

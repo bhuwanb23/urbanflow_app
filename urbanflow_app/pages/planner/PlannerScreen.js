@@ -11,7 +11,7 @@ const MODES = [
   { key: 'bus', label: 'Bus', icon: 'bus' },
   { key: 'auto', label: 'Auto', icon: 'car' },
   { key: 'walk', label: 'Walk', icon: 'walk' },
-  { key: 'all', label: 'All', icon: 'grip' },
+  { key: 'all', label: 'All', icon: 'view-grid' },
 ];
 
 const ROUTES = [
@@ -165,9 +165,16 @@ export default function PlannerScreen({ navigation }) {
                 </View>
                 <View style={styles.routeFooter}>
                   <View style={styles.routeModes}>
-                    {route.modes.map((mode, i) => (
-                      <Icon key={i} name={mode} size={16} color="#6366f1" style={{ marginRight: 8 }} />
-                    ))}
+                    {route.modes.map((mode, i) => {
+                      let iconName;
+                      if (mode === 'train') iconName = 'train';
+                      else if (mode === 'bus') iconName = 'bus';
+                      else if (mode === 'auto') iconName = 'car';
+                      else if (mode === 'walk') iconName = 'walk';
+                      else iconName = 'car';
+                      
+                      return <Icon key={i} name={iconName} size={16} color="#6366f1" style={{ marginRight: 8 }} />;
+                    })}
                   </View>
                   <View style={[styles.ecoBadge, { backgroundColor: route.ecoColor + '20' }]}>
                     <Text style={[styles.ecoText, { color: route.ecoColor }]}>{route.eco} Eco</Text>

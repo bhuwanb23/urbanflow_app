@@ -17,7 +17,7 @@ const favoriteRoutes = [
     eco: 95,
     duration: '25 min',
     modes: [
-      { name: 'bicycle', color: '#10b981' },
+      { name: 'bike', color: '#10b981' },
       { name: 'train', color: '#6366f1' },
     ],
     gradient: ['#ede9fe', '#dbeafe'],
@@ -31,7 +31,7 @@ const favoriteRoutes = [
     duration: '18 min',
     modes: [
       { name: 'bus', color: '#3b82f6' },
-      { name: 'walking', color: '#64748b' },
+      { name: 'walk', color: '#64748b' },
     ],
     gradient: ['#dcfce7', '#d1fae5'],
     border: '#dcfce7',
@@ -61,7 +61,7 @@ const tripHistory = [
     eco: 95,
     duration: '15 min',
     modes: [
-      { name: 'bicycle', color: '#10b981' },
+      { name: 'bike', color: '#10b981' },
     ],
     cost: 'Free',
     ecoColor: '#22c55e',
@@ -76,7 +76,7 @@ const tripHistory = [
     duration: '22 min',
     modes: [
       { name: 'train', color: '#6366f1' },
-      { name: 'walking', color: '#64748b' },
+      { name: 'walk', color: '#64748b' },
     ],
     cost: '$3.25',
     ecoColor: '#3b82f6',
@@ -127,7 +127,9 @@ export default function TripsScreen({ navigation }) {
       <LinearGradient colors={["#6366f1", "#10b981"]} style={styles.headerGradient}>
         <View style={styles.headerRow}>
           <View style={styles.headerLeft}>
-            <Text style={styles.headerTitle}>Your Trips <Text style={{ fontSize: Math.max(18, width * 0.05) }}>🗺️</Text></Text>
+            <Text style={styles.headerTitle}>
+              Your Trips <Text style={{ fontSize: Math.max(18, width * 0.05) }}>🗺️</Text>
+            </Text>
             <Text style={styles.headerSubtitle}>Track your journey history</Text>
           </View>
           <View style={styles.headerRight}>
@@ -153,12 +155,12 @@ export default function TripsScreen({ navigation }) {
         </TouchableOpacity>
       </View>
       
-      <ScrollView showsVerticalScrollIndicator={false}>
+      <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContent}>
         {/* Favorites */}
         <View style={styles.section}>
           <View style={styles.sectionHeader}>
             <Text style={styles.sectionTitle}>Saved Routes</Text>
-            <Icon name="heart" solid size={18} color="#f87171" />
+            <Icon name="heart" size={18} color="#f87171" />
           </View>
           {favoriteRoutes.map(route => (
             <MotiView
@@ -168,24 +170,29 @@ export default function TripsScreen({ navigation }) {
               transition={{ type: 'timing', duration: 500 }}
               style={[styles.favoriteCard, {borderColor: route.border, backgroundColor: route.gradient[0]}]}>
               <View style={styles.favoriteTopRow}>
-                <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                <View style={styles.routeInfo}>
                   <Text style={styles.favoriteTrip}>{route.from} → {route.to}</Text>
-                  <Icon name="star" solid size={12} color="#facc15" style={{marginLeft: 4}} />
+                  <Icon name="star" size={12} color="#facc15" style={{marginLeft: 4}} />
                 </View>
-                <View style={styles.ecoBadge}><Text style={styles.ecoBadgeText}>{route.eco} Eco</Text></View>
+                <View style={styles.ecoBadge}>
+                  <Text style={styles.ecoBadgeText}>{route.eco} Eco</Text>
+                </View>
               </View>
               <View style={styles.favoriteBottomRow}>
-                <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                <View style={styles.modeInfo}>
                   {route.modes.map((m, i) => (
                     <Icon key={i} name={m.name} size={16} color={m.color} style={{marginRight: 6}} />
                   ))}
                   <Text style={styles.favoriteDuration}>{route.duration}</Text>
                 </View>
-                <TouchableOpacity><Text style={styles.useRouteBtn}>Use Route</Text></TouchableOpacity>
+                <TouchableOpacity>
+                  <Text style={styles.useRouteBtn}>Use Route</Text>
+                </TouchableOpacity>
               </View>
             </MotiView>
           ))}
         </View>
+        
         {/* Trip History */}
         <View style={styles.section}>
           <View style={styles.sectionHeader}>
@@ -203,18 +210,20 @@ export default function TripsScreen({ navigation }) {
                 transition={{ type: 'timing', duration: 500 }}
                 style={[styles.tripCard, {borderColor: '#E5E7EB', backgroundColor: '#fff'}]}>
                 <View style={styles.tripCardTop}>
-                  <View>
-                    <View style={{flexDirection: 'row', alignItems: 'center', marginBottom: 2}}>
+                  <View style={styles.tripInfo}>
+                    <View style={styles.routeDisplay}>
                       <Text style={styles.tripFrom}>{item.from}</Text>
                       <Icon name="arrow-right" size={12} color="#64748b" style={{marginHorizontal: 4}} />
                       <Text style={styles.tripTo}>{item.to}</Text>
                     </View>
                     <Text style={styles.tripDate}>{item.date}</Text>
                   </View>
-                  <View style={[styles.ecoBadge, {backgroundColor: item.ecoBg}]}> <Text style={[styles.ecoBadgeText, {color: item.ecoColor}]}>{item.eco} Eco</Text></View>
+                  <View style={[styles.ecoBadge, {backgroundColor: item.ecoBg}]}>
+                    <Text style={[styles.ecoBadgeText, {color: item.ecoColor}]}>{item.eco} Eco</Text>
+                  </View>
                 </View>
                 <View style={styles.tripCardBottom}>
-                  <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                  <View style={styles.tripDetails}>
                     {item.modes.map((m, i) => (
                       <Icon key={i} name={m.name} size={15} color={m.color} style={{marginRight: 4}} />
                     ))}
@@ -223,7 +232,7 @@ export default function TripsScreen({ navigation }) {
                     <Text style={styles.tripCost}>{item.cost}</Text>
                   </View>
                   <TouchableOpacity>
-                    <Icon name="ellipsis-h" size={16} color="#185a9d" />
+                    <Icon name="dots-vertical" size={16} color="#185a9d" />
                   </TouchableOpacity>
                 </View>
               </MotiView>
@@ -231,10 +240,11 @@ export default function TripsScreen({ navigation }) {
             scrollEnabled={false}
             ItemSeparatorComponent={() => <View style={{height: 12}} />}
           />
-          <TouchableOpacity style={styles.loadMoreBtn}><Text style={styles.loadMoreText}>Load More Trips</Text></TouchableOpacity>
+          <TouchableOpacity style={styles.loadMoreBtn}>
+            <Text style={styles.loadMoreText}>Load More Trips</Text>
+          </TouchableOpacity>
         </View>
       </ScrollView>
-      {/* Bottom Nav is handled by app navigation */}
     </SafeAreaView>
   );
 }
@@ -319,6 +329,9 @@ const styles = StyleSheet.create({
     fontWeight: '500',
     fontFamily: 'Urbanist_400Regular',
   },
+  scrollContent: {
+    paddingBottom: 32,
+  },
   section: {
     marginTop: 12,
     marginBottom: 8,
@@ -354,6 +367,10 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     marginBottom: 6,
   },
+  routeInfo: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
   favoriteTrip: {
     fontSize: 15,
     fontWeight: '500',
@@ -379,6 +396,10 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
   },
+  modeInfo: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
   favoriteDuration: {
     fontSize: 13,
     color: '#64748b',
@@ -403,6 +424,14 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     marginBottom: 8,
   },
+  tripInfo: {
+    flex: 1,
+  },
+  routeDisplay: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 2,
+  },
   tripFrom: {
     fontSize: 14,
     fontWeight: '500',
@@ -425,6 +454,10 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
+  },
+  tripDetails: {
+    flexDirection: 'row',
+    alignItems: 'center',
   },
   tripDuration: {
     fontSize: 12,
