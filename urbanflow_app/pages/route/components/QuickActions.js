@@ -28,7 +28,7 @@ const styles = StyleSheet.create({
   quickActions: {
     flexDirection: 'row',
     gap: 12,
-    marginBottom: 20, // Add bottom margin to prevent overlap
+    marginBottom: 20, // Add bottom margin to prevent overlap with system UI
   },
   primaryAction: {
     flex: 1,

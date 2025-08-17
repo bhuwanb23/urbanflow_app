@@ -62,17 +62,17 @@ export default function RouteDetailsScreen({ navigation, route }) {
 
   if (loading) {
     return (
-      <SafeAreaView style={{ flex: 1, backgroundColor: '#F9FAFB', justifyContent: 'center', alignItems: 'center' }} edges={['top', 'left', 'right']}>
-        <StatusBar barStyle="dark-content" backgroundColor="#F9FAFB" />
+      <View style={{ flex: 1, backgroundColor: '#F9FAFB', justifyContent: 'center', alignItems: 'center' }}>
+        <StatusBar barStyle="dark-content" backgroundColor="transparent" translucent />
         <ActivityIndicator size="large" color="#6366f1" />
         <Text style={{ marginTop: 16, color: '#6366f1', fontFamily: 'Urbanist_400Regular', fontSize: 16 }}>Loading route details...</Text>
-      </SafeAreaView>
+      </View>
     );
   }
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: '#F9FAFB' }} edges={['left', 'right']}>
-      <StatusBar barStyle="light-content" backgroundColor="#6366f1" />
+    <View style={{ flex: 1, backgroundColor: '#F9FAFB' }}>
+      <StatusBar barStyle="light-content" backgroundColor="#000000" translucent />
       
       {/* Header Component */}
       <RouteHeader onBack={handleBack} onMenu={handleMenu} />
@@ -111,6 +111,6 @@ export default function RouteDetailsScreen({ navigation, route }) {
           onShareRoute={handleShareRoute}
         />
       </ScrollView>
-    </SafeAreaView>
+    </View>
   );
 }

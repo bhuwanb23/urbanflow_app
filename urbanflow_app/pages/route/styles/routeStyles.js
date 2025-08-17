@@ -10,12 +10,16 @@ export const routeStyles = StyleSheet.create({
   componentSpacing: {
     marginBottom: 16,
   },
-  // Safe area utilities
+  // Safe area utilities - ensure content doesn't interfere with system UI
   safeAreaTop: {
     paddingTop: 8,
   },
   safeAreaBottom: {
     paddingBottom: 20,
+  },
+  // Header safe area - ensures header content is below status bar
+  headerSafeArea: {
+    paddingTop: 16,
   },
   // Add any additional styles that might be needed across components
 });
