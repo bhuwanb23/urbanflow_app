@@ -12,7 +12,8 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { useFonts as useUrbanist, Urbanist_400Regular, Urbanist_700Bold } from '@expo-google-fonts/urbanist';
 import { useFonts as usePoppins, Poppins_400Regular, Poppins_700Bold } from '@expo-google-fonts/poppins';
 import { useFonts as useMontserrat, Montserrat_400Regular, Montserrat_700Bold } from '@expo-google-fonts/montserrat';
-import { View, ActivityIndicator } from 'react-native';
+import { View, ActivityIndicator, Platform } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import LiveScreen from './pages/live/LiveScreen';
 import ProfileScreen from './pages/profile/ProfileScreen';
 import EcoStatsScreen from './pages/ecostats/EcoStatsScreen';
@@ -35,64 +36,130 @@ const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
 const ProfileStack = createStackNavigator();
 
+// Screen wrapper to add bottom padding for tab bar
+const ScreenWrapper = ({ children }) => {
+  const insets = useSafeAreaInsets();
+  return (
+    <View style={{ 
+      flex: 1, 
+      paddingBottom: 60 + insets.bottom,
+      backgroundColor: '#fff'
+    }}>
+      {children}
+    </View>
+  );
+};
+
 // Profile Stack Navigator
 function ProfileStackNavigator() {
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: '#fff' }}>
-      <ProfileStack.Navigator screenOptions={{ headerShown: false }}>
-        <ProfileStack.Screen name="ProfileMain" component={ProfileScreen} />
-        <ProfileStack.Screen name="LanguageRegionScreen" component={LanguageRegionScreen} />
-        <ProfileStack.Screen name="PreferredTransportScreen" component={PreferredTransportScreen} />
-        <ProfileStack.Screen name="ProfileNotificationsScreen" component={ProfileNotificationsScreen} />
-        <ProfileStack.Screen name="MobilityGoalsScreen" component={MobilityGoalsScreen} />
-        <ProfileStack.Screen name="PrivacyScreen" component={PrivacyScreen} />
-        <ProfileStack.Screen name="EditProfileScreen" component={EditProfileScreen} />
-      </ProfileStack.Navigator>
-    </SafeAreaView>
+    <ProfileStack.Navigator screenOptions={{ headerShown: false }}>
+      <ProfileStack.Screen name="ProfileMain" component={ProfileScreen} />
+      <ProfileStack.Screen name="LanguageRegionScreen" component={LanguageRegionScreen} />
+      <ProfileStack.Screen name="PreferredTransportScreen" component={PreferredTransportScreen} />
+      <ProfileStack.Screen name="ProfileNotificationsScreen" component={ProfileNotificationsScreen} />
+      <ProfileStack.Screen name="MobilityGoalsScreen" component={MobilityGoalsScreen} />
+      <ProfileStack.Screen name="PrivacyScreen" component={PrivacyScreen} />
+      <ProfileStack.Screen name="EditProfileScreen" component={EditProfileScreen} />
+    </ProfileStack.Navigator>
   );
 }
 
 function MainTabs() {
+  const insets = useSafeAreaInsets();
+  
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: '#fff' }}>
-      <Tab.Navigator
-        initialRouteName="Planner"
-        screenOptions={({ route }) => ({
-          headerShown: false,
-          tabBarShowLabel: true,
-          tabBarStyle: { 
-            borderTopLeftRadius: 24, 
-            borderTopRightRadius: 24, 
-            height: 64, 
-            backgroundColor: '#fff',
-            elevation: 8,
-            shadowColor: '#000',
-            shadowOffset: { width: 0, height: -2 },
-            shadowOpacity: 0.1,
-            shadowRadius: 8,
-            zIndex: 1000,
-          },
-          tabBarLabelStyle: { fontFamily: 'Urbanist_700Bold', fontSize: 12 },
-          tabBarIcon: ({ color, size, focused }) => {
-            let iconName;
-            if (route.name === 'Planner') iconName = 'compass';
-            else if (route.name === 'Live') iconName = 'traffic-light';
-            else if (route.name === 'EcoStats') iconName = 'leaf';
-            else if (route.name === 'Trips') iconName = 'map';
-            else if (route.name === 'Profile') iconName = 'account-circle';
-            return <Icon name={iconName} size={size} color={color} />;
-          },
-          tabBarActiveTintColor: '#6366f1',
-          tabBarInactiveTintColor: '#b0bec5',
-        })}
-      >
-        <Tab.Screen name="Planner" component={PlannerScreen} />
-        <Tab.Screen name="Live" component={LiveScreen} />
-        <Tab.Screen name="EcoStats" component={EcoStatsScreen} />
-        <Tab.Screen name="Trips" component={TripsScreen} />
-        <Tab.Screen name="Profile" component={ProfileStackNavigator} />
-      </Tab.Navigator>
-    </SafeAreaView>
+    <Tab.Navigator
+      initialRouteName="Planner"
+      screenOptions={({ route }) => ({
+        headerShown: false,
+        tabBarShowLabel: true,
+        tabBarStyle: { 
+          height: 60 + insets.bottom,
+          backgroundColor: '#ffffff',
+          borderTopWidth: 0,
+          elevation: 0,
+          shadowColor: '#000',
+          shadowOffset: { width: 0, height: -1 },
+          shadowOpacity: 0.08,
+          shadowRadius: 4,
+          position: 'absolute',
+          bottom: 0,
+          left: 0,
+          right: 0,
+          paddingBottom: insets.bottom,
+          paddingTop: 8,
+          paddingHorizontal: 16,
+        },
+        tabBarLabelStyle: { 
+          fontFamily: 'Urbanist_700Bold', 
+          fontSize: 11,
+          marginTop: 2,
+        },
+        tabBarIconStyle: {
+          marginTop: 4,
+        },
+        tabBarIcon: ({ color, size, focused }) => {
+          let iconName;
+          if (route.name === 'Planner') iconName = 'compass';
+          else if (route.name === 'Live') iconName = 'traffic-light';
+          else if (route.name === 'EcoStats') iconName = 'leaf';
+          else if (route.name === 'Trips') iconName = 'map';
+          else if (route.name === 'Profile') iconName = 'account-circle';
+          
+          return (
+            <Icon 
+              name={iconName} 
+              size={focused ? 24 : 22} 
+              color={focused ? '#6366f1' : '#9ca3af'} 
+            />
+          );
+        },
+        tabBarActiveTintColor: '#6366f1',
+        tabBarInactiveTintColor: '#9ca3af',
+      })}
+    >
+      <Tab.Screen 
+        name="Planner" 
+        component={(props) => (
+          <ScreenWrapper>
+            <PlannerScreen {...props} />
+          </ScreenWrapper>
+        )} 
+      />
+      <Tab.Screen 
+        name="Live" 
+        component={(props) => (
+          <ScreenWrapper>
+            <LiveScreen {...props} />
+          </ScreenWrapper>
+        )} 
+      />
+      <Tab.Screen 
+        name="EcoStats" 
+        component={(props) => (
+          <ScreenWrapper>
+            <EcoStatsScreen {...props} />
+          </ScreenWrapper>
+        )} 
+      />
+      <Tab.Screen 
+        name="Trips" 
+        component={(props) => (
+          <ScreenWrapper>
+            <TripsScreen {...props} />
+          </ScreenWrapper>
+        )} 
+      />
+      <Tab.Screen 
+        name="Profile" 
+        component={(props) => (
+          <ScreenWrapper>
+            <ProfileStackNavigator {...props} />
+          </ScreenWrapper>
+        )} 
+      />
+    </Tab.Navigator>
   );
 }
 
@@ -173,16 +240,18 @@ export default function App() {
     <SafeAreaProvider>
       <PaperProvider theme={theme}>
         <NavigationContainer>
-          <Stack.Navigator 
-            initialRouteName={isLoggedIn ? "MainTabs" : "Intro"} 
-            screenOptions={{ headerShown: false }}
-          >
-            <Stack.Screen name="Intro" component={IntroScreen} />
-            <Stack.Screen name="Login" component={LoginScreen} />
-            <Stack.Screen name="MainTabs" component={MainTabs} />
-            <Stack.Screen name="NotificationsScreen" component={NotificationsScreen} />
-            <Stack.Screen name="RouteDetailsScreen" component={RouteDetailsScreen} />
-          </Stack.Navigator>
+          <SafeAreaView style={{ flex: 1, backgroundColor: '#fff' }} edges={['top']}>
+            <Stack.Navigator 
+              initialRouteName={isLoggedIn ? "MainTabs" : "Intro"} 
+              screenOptions={{ headerShown: false }}
+            >
+              <Stack.Screen name="Intro" component={IntroScreen} />
+              <Stack.Screen name="Login" component={LoginScreen} />
+              <Stack.Screen name="MainTabs" component={MainTabs} />
+              <Stack.Screen name="NotificationsScreen" component={NotificationsScreen} />
+              <Stack.Screen name="RouteDetailsScreen" component={RouteDetailsScreen} />
+            </Stack.Navigator>
+          </SafeAreaView>
         </NavigationContainer>
       </PaperProvider>
     </SafeAreaProvider>
