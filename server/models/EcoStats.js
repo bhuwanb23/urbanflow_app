@@ -1,6 +1,5 @@
 const { DataTypes } = require('sequelize');
 const { sequelize } = require('../config/database');
-const User = require('./User');
 
 const EcoStats = sequelize.define('EcoStats', {
   id: {
@@ -48,9 +47,5 @@ const EcoStats = sequelize.define('EcoStats', {
   tableName: 'eco_stats',
   timestamps: true
 });
-
-// Define association
-EcoStats.belongsTo(User, { foreignKey: 'userId', as: 'user' });
-User.hasMany(EcoStats, { foreignKey: 'userId', as: 'ecoStats' });
 
 module.exports = EcoStats;

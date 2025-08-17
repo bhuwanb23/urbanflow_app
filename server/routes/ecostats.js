@@ -9,7 +9,7 @@ router.get('/', async (req, res) => {
       include: [
         {
           model: require('../models').User,
-          as: 'user',
+          as: 'ecoStatsUser',
           attributes: ['id', 'name', 'email']
         }
       ],
@@ -59,7 +59,7 @@ router.get('/weekly', async (req, res) => {
       include: [
         {
           model: require('../models').User,
-          as: 'user',
+          as: 'ecoStatsUser',
           attributes: ['id', 'name', 'email']
         }
       ],

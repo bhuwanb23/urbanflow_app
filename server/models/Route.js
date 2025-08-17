@@ -1,6 +1,5 @@
 const { DataTypes } = require('sequelize');
 const { sequelize } = require('../config/database');
-const User = require('./User');
 
 const Route = sequelize.define('Route', {
   id: {
@@ -87,9 +86,5 @@ const Route = sequelize.define('Route', {
   tableName: 'routes',
   timestamps: true
 });
-
-// Define association
-Route.belongsTo(User, { foreignKey: 'userId', as: 'user' });
-User.hasMany(Route, { foreignKey: 'userId', as: 'routes' });
 
 module.exports = Route;

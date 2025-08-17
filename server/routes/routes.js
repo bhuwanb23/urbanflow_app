@@ -9,7 +9,7 @@ router.get('/', async (req, res) => {
       include: [
         {
           model: require('../models').User,
-          as: 'user',
+          as: 'routeUser',
           attributes: ['id', 'name', 'email']
         }
       ],

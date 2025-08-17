@@ -107,11 +107,11 @@ const User = sequelize.define('User', {
     type: DataTypes.DECIMAL(5, 2),
     defaultValue: 0
   },
-  notifications: {
+  notificationSettings: {
     type: DataTypes.TEXT,
     allowNull: true,
     get() {
-      const value = this.getDataValue('notifications');
+      const value = this.getDataValue('notificationSettings');
       return value ? JSON.parse(value) : {
         pushEnabled: true,
         emailEnabled: true,
@@ -125,7 +125,7 @@ const User = sequelize.define('User', {
       };
     },
     set(value) {
-      this.setDataValue('notifications', JSON.stringify(value));
+      this.setDataValue('notificationSettings', JSON.stringify(value));
     }
   },
   privacy: {
