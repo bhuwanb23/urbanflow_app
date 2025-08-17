@@ -4,6 +4,7 @@ import { Card } from 'react-native-paper';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { LinearGradient } from 'expo-linear-gradient';
 import { MotiView } from 'moti';
+import profileTheme from '../theme/profileTheme';
 
 export default function SettingsCard({ title, settings, onSettingPress }) {
   return (
@@ -11,7 +12,7 @@ export default function SettingsCard({ title, settings, onSettingPress }) {
       <MotiView
         from={{ opacity: 0, translateY: 20 }}
         animate={{ opacity: 1, translateY: 0 }}
-        transition={{ type: 'timing', duration: 800, delay: 400 }}
+        transition={{ type: 'timing', duration: profileTheme.animation.duration.slower, delay: 400 }}
       >
         <Text style={styles.sectionTitle}>{title}</Text>
       </MotiView>
@@ -32,11 +33,11 @@ export default function SettingsCard({ title, settings, onSettingPress }) {
               >
                 <View style={styles.settingLeft}>
                   <LinearGradient colors={setting.color} style={styles.settingIconWrap}>
-                    <Icon name={setting.icon} size={22} color="#fff" />
+                    <Icon name={setting.icon} size={22} color={profileTheme.colors.textInverse} />
                   </LinearGradient>
                   <Text style={styles.settingLabel}>{setting.label}</Text>
                 </View>
-                <Icon name="chevron-right" size={22} color="#b0bec5" />
+                <Icon name="chevron-right" size={22} color={profileTheme.colors.textTertiary} />
               </TouchableOpacity>
             </MotiView>
           ))}
@@ -48,40 +49,36 @@ export default function SettingsCard({ title, settings, onSettingPress }) {
 
 const styles = StyleSheet.create({
   sectionWrap: {
-    marginTop: 18,
+    marginTop: profileTheme.spacing.lg,
   },
   sectionTitle: {
-    fontSize: 22,
-    fontWeight: 'bold',
-    color: '#185a9d',
-    fontFamily: 'Urbanist_700Bold',
-    marginBottom: 10,
+    fontSize: profileTheme.typography.fontSize['2xl'],
+    fontWeight: profileTheme.typography.fontWeight.bold,
+    color: profileTheme.colors.primary,
+    fontFamily: profileTheme.typography.fontFamily.primary,
+    marginBottom: profileTheme.spacing.md,
   },
   settingsCardWrap: {
-    borderRadius: 22,
-    marginBottom: 8,
-    shadowColor: '#185a9d',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.10,
-    shadowRadius: 10,
-    elevation: 2,
+    borderRadius: profileTheme.borderRadius['2xl'],
+    marginBottom: profileTheme.spacing.sm,
+    ...profileTheme.shadows.md,
   },
   settingsCard: {
-    borderRadius: 22,
-    backgroundColor: '#fff',
+    borderRadius: profileTheme.borderRadius['2xl'],
+    backgroundColor: profileTheme.colors.surface,
     overflow: 'hidden',
   },
   settingItem: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    paddingVertical: 18,
-    paddingHorizontal: 20,
+    paddingVertical: profileTheme.spacing.lg,
+    paddingHorizontal: profileTheme.spacing.xl,
     backgroundColor: 'transparent',
   },
   settingItemBorder: {
     borderBottomWidth: 1,
-    borderBottomColor: '#e0eafc',
+    borderBottomColor: profileTheme.colors.borderLight,
   },
   settingLeft: {
     flexDirection: 'row',
@@ -93,12 +90,12 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     justifyContent: 'center',
     alignItems: 'center',
-    marginRight: 14,
+    marginRight: profileTheme.spacing.md,
   },
   settingLabel: {
-    fontSize: 15,
-    color: '#22223b',
-    fontWeight: '600',
-    fontFamily: 'Urbanist_400Regular',
+    fontSize: profileTheme.typography.fontSize.lg,
+    color: profileTheme.colors.textPrimary,
+    fontFamily: profileTheme.typography.fontFamily.secondary,
+    fontWeight: profileTheme.typography.fontWeight.medium,
   },
 });

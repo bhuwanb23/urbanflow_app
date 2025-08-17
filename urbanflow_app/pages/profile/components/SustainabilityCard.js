@@ -4,6 +4,7 @@ import { Card } from 'react-native-paper';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { LinearGradient } from 'expo-linear-gradient';
 import { MotiView } from 'moti';
+import profileTheme from '../theme/profileTheme';
 
 export default function SustainabilityCard({ title, sustainabilityData }) {
   return (
@@ -11,7 +12,7 @@ export default function SustainabilityCard({ title, sustainabilityData }) {
       <MotiView
         from={{ opacity: 0, translateY: 20 }}
         animate={{ opacity: 1, translateY: 0 }}
-        transition={{ type: 'timing', duration: 800, delay: 600 }}
+        transition={{ type: 'timing', duration: profileTheme.animation.duration.slower, delay: 600 }}
       >
         <Text style={styles.sectionTitle}>{title}</Text>
       </MotiView>
@@ -23,11 +24,11 @@ export default function SustainabilityCard({ title, sustainabilityData }) {
               key={item.label}
               from={{ opacity: 0, translateY: 30, scale: 0.9 }}
               animate={{ opacity: 1, translateY: 0, scale: 1 }}
-              transition={{ type: 'spring', duration: 800, delay: 800 + index * 150 }}
+              transition={{ type: 'spring', duration: profileTheme.animation.duration.slower, delay: 800 + index * 150 }}
             >
               <View style={styles.sustainItem}>
                 <LinearGradient colors={item.color} style={styles.sustainIconWrap}>
-                  <Icon name={item.icon} size={24} color="#fff" />
+                  <Icon name={item.icon} size={24} color={profileTheme.colors.textInverse} />
                 </LinearGradient>
                 <View style={styles.sustainInfo}>
                   <Text style={styles.sustainLabel}>{item.label}</Text>
@@ -50,35 +51,31 @@ export default function SustainabilityCard({ title, sustainabilityData }) {
 
 const styles = StyleSheet.create({
   sectionWrap: {
-    marginTop: 18,
+    marginTop: profileTheme.spacing.lg,
   },
   sectionTitle: {
-    fontSize: 22,
-    fontWeight: 'bold',
-    color: '#185a9d',
-    fontFamily: 'Urbanist_700Bold',
-    marginBottom: 10,
+    fontSize: profileTheme.typography.fontSize['2xl'],
+    fontWeight: profileTheme.typography.fontWeight.bold,
+    color: profileTheme.colors.primary,
+    fontFamily: profileTheme.typography.fontFamily.primary,
+    marginBottom: profileTheme.spacing.md,
   },
   sustainCardWrap: {
-    borderRadius: 22,
-    marginBottom: 8,
-    shadowColor: '#185a9d',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.10,
-    shadowRadius: 10,
-    elevation: 2,
+    borderRadius: profileTheme.borderRadius['2xl'],
+    marginBottom: profileTheme.spacing.sm,
+    ...profileTheme.shadows.md,
   },
   sustainCard: {
-    borderRadius: 22,
-    backgroundColor: '#fff',
+    borderRadius: profileTheme.borderRadius['2xl'],
+    backgroundColor: profileTheme.colors.surface,
     overflow: 'hidden',
   },
   sustainItem: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    paddingVertical: 18,
-    paddingHorizontal: 20,
+    paddingVertical: profileTheme.spacing.lg,
+    paddingHorizontal: profileTheme.spacing.xl,
     backgroundColor: 'transparent',
   },
   sustainIconWrap: {
@@ -87,34 +84,36 @@ const styles = StyleSheet.create({
     borderRadius: 24,
     justifyContent: 'center',
     alignItems: 'center',
-    marginRight: 14,
+    marginRight: profileTheme.spacing.md,
   },
   sustainInfo: {
     flex: 1,
   },
   sustainLabel: {
-    fontSize: 15,
-    color: '#22223b',
-    fontWeight: '600',
-    fontFamily: 'Urbanist_400Regular',
+    fontSize: profileTheme.typography.fontSize.lg,
+    color: profileTheme.colors.textPrimary,
+    fontWeight: profileTheme.typography.fontWeight.semibold,
+    fontFamily: profileTheme.typography.fontFamily.secondary,
   },
   sustainValue: {
-    fontSize: 20,
-    color: '#185a9d',
-    fontWeight: '700',
-    fontFamily: 'Montserrat_700Bold',
+    fontSize: profileTheme.typography.fontSize['2xl'],
+    fontWeight: profileTheme.typography.fontWeight.bold,
+    color: profileTheme.colors.textPrimary,
+    fontFamily: profileTheme.typography.fontFamily.primary,
+    marginTop: profileTheme.spacing.xs,
   },
   sustainStats: {
     alignItems: 'flex-end',
   },
   sustainPercent: {
-    fontSize: 15,
-    fontWeight: '700',
-    fontFamily: 'Montserrat_700Bold',
+    fontSize: profileTheme.typography.fontSize['2xl'],
+    fontWeight: profileTheme.typography.fontWeight.bold,
+    fontFamily: profileTheme.typography.fontFamily.primary,
   },
   sustainMonth: {
-    fontSize: 12,
-    color: '#b0bec5',
-    fontFamily: 'Urbanist_400Regular',
+    fontSize: profileTheme.typography.fontSize.sm,
+    color: profileTheme.colors.textSecondary,
+    fontFamily: profileTheme.typography.fontFamily.secondary,
+    marginTop: profileTheme.spacing.xs,
   },
 });

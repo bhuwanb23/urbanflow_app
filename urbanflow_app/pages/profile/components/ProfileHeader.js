@@ -1,31 +1,30 @@
 import React from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, Dimensions } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { MotiView } from 'moti';
-
-const { width, height } = Dimensions.get('window');
+import profileTheme from '../theme/profileTheme';
 
 export default function ProfileHeader({ title, onBack, onMenu, showBack = false }) {
   return (
-    <LinearGradient colors={["#6366f1", "#8b5cf6"]} style={styles.headerGradient}>
+    <LinearGradient colors={profileTheme.gradients.primary} style={styles.headerGradient}>
       <MotiView
         from={{ opacity: 0, translateY: -20 }}
         animate={{ opacity: 1, translateY: 0 }}
-        transition={{ type: 'timing', duration: 800 }}
+        transition={{ type: 'timing', duration: profileTheme.animation.duration.slower }}
         style={styles.headerContent}
       >
         <View style={styles.headerLeft}>
           {showBack && (
             <TouchableOpacity onPress={onBack} style={styles.backBtn}>
-              <Icon name="arrow-left" size={20} color="#fff" />
+              <Icon name="arrow-left" size={20} color={profileTheme.colors.textInverse} />
             </TouchableOpacity>
           )}
           <Text style={styles.headerTitle}>{title}</Text>
         </View>
         <View style={styles.headerRight}>
           <TouchableOpacity onPress={onMenu} style={styles.settingsButton}>
-            <Icon name="dots-vertical" size={18} color="#fff" />
+            <Icon name="dots-vertical" size={18} color={profileTheme.colors.textInverse} />
           </TouchableOpacity>
         </View>
       </MotiView>
@@ -35,17 +34,13 @@ export default function ProfileHeader({ title, onBack, onMenu, showBack = false 
 
 const styles = StyleSheet.create({
   headerGradient: {
-    paddingTop: height * 0.04,
-    paddingBottom: height * 0.02,
-    paddingHorizontal: width * 0.06,
-    borderBottomLeftRadius: 24,
-    borderBottomRightRadius: 24,
-    elevation: 4,
-    shadowColor: '#6366f1',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.08,
-    shadowRadius: 12,
-    marginBottom: 8,
+    paddingTop: profileTheme.spacing['3xl'],
+    paddingBottom: profileTheme.spacing.xl,
+    paddingHorizontal: profileTheme.spacing.xl,
+    borderBottomLeftRadius: profileTheme.borderRadius['2xl'],
+    borderBottomRightRadius: profileTheme.borderRadius['2xl'],
+    marginBottom: profileTheme.spacing.sm,
+    ...profileTheme.shadows.lg,
   },
   headerContent: {
     flexDirection: 'row',
@@ -61,14 +56,14 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   backBtn: {
-    marginRight: 12,
-    padding: 4,
+    marginRight: profileTheme.spacing.md,
+    padding: profileTheme.spacing.sm,
   },
   headerTitle: {
-    color: '#fff',
-    fontSize: Math.max(20, width * 0.06),
-    fontWeight: 'bold',
-    fontFamily: 'Poppins_700Bold',
+    color: profileTheme.colors.textInverse,
+    fontSize: profileTheme.typography.fontSize['2xl'],
+    fontWeight: profileTheme.typography.fontWeight.bold,
+    fontFamily: profileTheme.typography.fontFamily.primary,
   },
   settingsButton: {
     width: 36,
