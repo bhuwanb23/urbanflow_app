@@ -64,6 +64,11 @@ app.get('/dashboard', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'dashboard.html'));
 });
 
+// Database Dashboard route
+app.get('/db-dashboard', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'db-dashboard.html'));
+});
+
 // API Stats endpoint
 app.get('/api/stats', (req, res) => {
   const uptime = Date.now() - serverStats.startTime.getTime();
