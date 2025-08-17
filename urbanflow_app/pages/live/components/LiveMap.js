@@ -3,7 +3,7 @@ import { View, Text, StyleSheet, Image, TouchableOpacity, Dimensions } from 'rea
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { MotiView } from 'moti';
 
-const { width } = Dimensions.get('window');
+const { width, height } = Dimensions.get('window');
 
 const mapImg = 'https://images.unsplash.com/photo-1477959858617-67f85cf4f1df';
 
@@ -45,16 +45,16 @@ export default function LiveMap() {
 const styles = StyleSheet.create({
   mapWrap: { 
     width: '100%', 
-    height: 200, 
-    borderRadius: 22, 
+    height: Math.max(180, height * 0.22), 
+    borderRadius: 20, 
     overflow: 'hidden', 
-    marginBottom: 18, 
+    marginBottom: 16, 
     position: 'relative', 
     backgroundColor: '#fff', 
-    shadowColor: '#0EA5E9', 
+    shadowColor: '#6366f1', 
     shadowOffset: { width: 0, height: 2 }, 
-    shadowOpacity: 0.10, 
-    shadowRadius: 10, 
+    shadowOpacity: 0.08, 
+    shadowRadius: 8, 
     elevation: 3 
   },
   mapImg: { 
@@ -67,58 +67,58 @@ const styles = StyleSheet.create({
   },
   mapBtn: { 
     position: 'absolute', 
-    bottom: 16, 
-    right: 16, 
+    bottom: Math.max(12, height * 0.015), 
+    right: Math.max(12, width * 0.03), 
     backgroundColor: '#fff', 
-    borderRadius: 24, 
-    padding: 10, 
-    shadowColor: '#0EA5E9', 
+    borderRadius: 20, 
+    padding: Math.max(8, width * 0.02), 
+    shadowColor: '#6366f1', 
     shadowOffset: { width: 0, height: 2 }, 
-    shadowOpacity: 0.12, 
-    shadowRadius: 8, 
+    shadowOpacity: 0.1, 
+    shadowRadius: 6, 
     elevation: 4 
   },
   mapUpdated: { 
     position: 'absolute', 
-    top: 16, 
-    right: 16, 
+    top: Math.max(12, height * 0.015), 
+    right: Math.max(12, width * 0.03), 
     backgroundColor: '#fff', 
-    borderRadius: 12, 
-    paddingHorizontal: 12, 
-    paddingVertical: 4, 
-    shadowColor: '#0EA5E9', 
+    borderRadius: 10, 
+    paddingHorizontal: Math.max(10, width * 0.025), 
+    paddingVertical: Math.max(3, height * 0.004), 
+    shadowColor: '#6366f1', 
     shadowOffset: { width: 0, height: 2 }, 
-    shadowOpacity: 0.10, 
-    shadowRadius: 6, 
+    shadowOpacity: 0.08, 
+    shadowRadius: 4, 
     elevation: 2 
   },
   mapUpdatedText: { 
     color: '#6366f1', 
-    fontSize: 13, 
+    fontSize: Math.max(11, width * 0.028), 
     fontWeight: '700', 
     fontFamily: 'Poppins_700Bold' 
   },
   liveIndicator: {
     position: 'absolute',
-    top: 16,
-    left: 16,
+    top: Math.max(12, height * 0.015),
+    left: Math.max(12, width * 0.03),
     backgroundColor: 'rgba(239, 68, 68, 0.9)',
-    borderRadius: 12,
-    paddingHorizontal: 10,
-    paddingVertical: 4,
+    borderRadius: 10,
+    paddingHorizontal: Math.max(8, width * 0.02),
+    paddingVertical: Math.max(3, height * 0.004),
     flexDirection: 'row',
     alignItems: 'center',
   },
   liveDot: {
-    width: 6,
-    height: 6,
-    borderRadius: 3,
+    width: Math.max(5, width * 0.012),
+    height: Math.max(5, width * 0.012),
+    borderRadius: Math.max(2.5, width * 0.006),
     backgroundColor: '#fff',
-    marginRight: 6,
+    marginRight: Math.max(4, width * 0.01),
   },
   liveText: {
     color: '#fff',
-    fontSize: 12,
+    fontSize: Math.max(10, width * 0.025),
     fontWeight: '700',
     fontFamily: 'Poppins_700Bold',
   },

@@ -4,7 +4,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { MotiView } from 'moti';
 
-const { width } = Dimensions.get('window');
+const { width, height } = Dimensions.get('window');
 
 const MODES = [
   { key: 'train', label: 'Train', icon: 'train' },
@@ -68,17 +68,18 @@ export default function PlannerScreen({ navigation }) {
       {/* Gradient Header */}
       <LinearGradient colors={["#6366f1", "#10b981"]} style={styles.headerGradient}>
         <View style={styles.headerRow}>
-          <View>
-            <Text style={styles.headerTitle}>Hello, Bhuwan <Text style={{ fontSize: 22 }}>👋</Text></Text>
+          <View style={styles.headerLeft}>
+            <Text style={styles.headerTitle}>Hello, Bhuwan <Text style={{ fontSize: Math.max(18, width * 0.05) }}>👋</Text></Text>
             <Text style={styles.headerSubtitle}>Where do you want to go today?</Text>
           </View>
-          <View style={styles.headerBellWrap}>
-            <TouchableOpacity onPress={() => navigation.navigate('NotificationsScreen')}>
-              <Icon name="bell-outline" size={22} color="#fff" />
+          <View style={styles.headerRight}>
+            <TouchableOpacity style={styles.settingsButton} onPress={() => navigation.navigate('NotificationsScreen')}>
+              <Icon name="bell-outline" size={18} color="#fff" />
             </TouchableOpacity>
           </View>
         </View>
       </LinearGradient>
+      
       <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
         {/* Search Bar */}
         <MotiView from={{ opacity: 0, translateY: -20 }} animate={{ opacity: 1, translateY: 0 }} transition={{ type: 'timing', duration: 700 }}>
@@ -92,67 +93,87 @@ export default function PlannerScreen({ navigation }) {
             <Icon name="microphone" size={20} color="#9ca3af" style={{ marginLeft: 8 }} />
           </View>
         </MotiView>
+        
         {/* Mode Filters */}
         <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.modeScroll} contentContainerStyle={{ paddingVertical: 8 }}>
           {MODES.map((mode, i) => (
             <TouchableOpacity
               key={mode.key}
               style={[styles.filterChip, selectedMode === mode.key ? styles.filterChipActive : null]}
-              activeOpacity={0.85}
               onPress={() => setSelectedMode(mode.key)}
             >
-              <Icon name={mode.icon} size={16} color={selectedMode === mode.key ? '#fff' : '#64748b'} style={{ marginRight: 6 }} />
-              <Text style={[styles.filterChipText, selectedMode === mode.key ? { color: '#fff' } : null]}>{mode.label}</Text>
+              <Icon name={mode.icon} size={16} color={selectedMode === mode.key ? '#fff' : '#6366f1'} />
+              <Text style={[styles.filterChipText, selectedMode === mode.key ? styles.filterChipTextActive : null]}>
+                {mode.label}
+              </Text>
             </TouchableOpacity>
           ))}
         </ScrollView>
-        {/* Route Suggestions */}
-        <Text style={styles.sectionTitle}>Smart Route Suggestions</Text>
-        <View style={{ marginBottom: 24 }}>
-          {ROUTES.map((route, i) => (
-            <MotiView key={i} from={{ opacity: 0, translateY: 30 }} animate={{ opacity: 1, translateY: 0 }} transition={{ type: 'timing', delay: 400 + i * 120 }}>
-              <View style={styles.routeCard}>
-                <View style={styles.routeCardTop}>
-                  <View style={{ flex: 1 }}>
-                    <View style={styles.routePointRow}>
-                      <View style={[styles.routeDot, { backgroundColor: '#10B981' }]} />
-                      <Text style={styles.routePointText}>{route.from}</Text>
-                    </View>
-                    <View style={{ flexDirection: 'row', alignItems: 'center', marginLeft: 18, marginVertical: 4 }}>
-                      <View style={styles.routeLine} />
-                    </View>
-                    <View style={styles.routePointRow}>
-                      <View style={[styles.routeDot, { backgroundColor: '#ef4444' }]} />
-                      <Text style={styles.routePointText}>{route.to}</Text>
-                    </View>
+
+        {/* Quick Actions */}
+        <View style={styles.quickActions}>
+          <Text style={styles.sectionTitle}>Quick Actions</Text>
+          <View style={styles.actionGrid}>
+            <TouchableOpacity style={styles.actionCard}>
+              <View style={styles.actionIcon}>
+                <Icon name="home" size={24} color="#6366f1" />
+              </View>
+              <Text style={styles.actionText}>Home</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.actionCard}>
+              <View style={styles.actionIcon}>
+                <Icon name="briefcase" size={24} color="#10b981" />
+              </View>
+              <Text style={styles.actionText}>Work</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.actionCard}>
+              <View style={styles.actionIcon}>
+                <Icon name="heart" size={24} color="#f59e0b" />
+              </View>
+              <Text style={styles.actionText}>Favorites</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.actionCard}>
+              <View style={styles.actionIcon}>
+                <Icon name="history" size={24} color="#8b5cf6" />
+              </View>
+              <Text style={styles.actionText}>Recent</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+
+        {/* Popular Routes */}
+        <View style={styles.popularRoutes}>
+          <Text style={styles.sectionTitle}>Popular Routes</Text>
+          {ROUTES.map((route, index) => (
+            <MotiView
+              key={index}
+              from={{ opacity: 0, translateY: 20 }}
+              animate={{ opacity: 1, translateY: 0 }}
+              transition={{ type: 'timing', duration: 600, delay: index * 100 }}
+            >
+              <TouchableOpacity style={styles.routeCard}>
+                <View style={styles.routeHeader}>
+                  <View style={styles.routeInfo}>
+                    <Text style={styles.routeFrom}>{route.from}</Text>
+                    <Icon name="arrow-down" size={16} color="#9ca3af" style={{ marginVertical: 4 }} />
+                    <Text style={styles.routeTo}>{route.to}</Text>
                   </View>
-                  <View style={{ flexDirection: 'row', alignItems: 'center', marginLeft: 12 }}>
-                    {route.modes.map((m, idx) => (
-                      <Icon key={idx} name={m} size={22} color={m === 'train' ? '#6366f1' : m === 'bus' ? '#10b981' : m === 'auto' ? '#f59e42' : '#10B981'} style={{ marginRight: 8 }} />
+                  <View style={styles.routeStats}>
+                    <Text style={styles.routeTime}>{route.time}</Text>
+                    <Text style={styles.routeCost}>{route.cost}</Text>
+                  </View>
+                </View>
+                <View style={styles.routeFooter}>
+                  <View style={styles.routeModes}>
+                    {route.modes.map((mode, i) => (
+                      <Icon key={i} name={mode} size={16} color="#6366f1" style={{ marginRight: 8 }} />
                     ))}
                   </View>
-                </View>
-                <View style={styles.routeCardStats}>
-                  <View style={styles.routeStatCol}>
-                    <Text style={styles.routeStatLabel}>Time</Text>
-                    <Text style={styles.routeStatValue}>{route.time}</Text>
-                  </View>
-                  <View style={styles.routeStatCol}>
-                    <Text style={styles.routeStatLabel}>Cost</Text>
-                    <Text style={styles.routeStatValue}>{route.cost}</Text>
-                  </View>
-                  <View style={styles.routeStatCol}>
-                    <Text style={styles.routeStatLabel}>Eco Score</Text>
-                    <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}>
-                      <Icon name="leaf" size={15} color={route.ecoColor} style={{ marginRight: 4 }} />
-                      <Text style={[styles.routeStatValue, { color: route.ecoColor }]}>{route.eco}</Text>
-                    </View>
+                  <View style={[styles.ecoBadge, { backgroundColor: route.ecoColor + '20' }]}>
+                    <Text style={[styles.ecoText, { color: route.ecoColor }]}>{route.eco} Eco</Text>
                   </View>
                 </View>
-                <TouchableOpacity style={styles.routeBtn} activeOpacity={0.85} onPress={() => navigation.navigate('RouteDetailsScreen')}>
-                  <Text style={styles.routeBtnText}>View Route</Text>
-                </TouchableOpacity>
-              </View>
+              </TouchableOpacity>
             </MotiView>
           ))}
         </View>
@@ -163,176 +184,204 @@ export default function PlannerScreen({ navigation }) {
 
 const styles = StyleSheet.create({
   headerGradient: {
-    paddingTop: 48,
-    paddingBottom: 24,
-    paddingHorizontal: 24,
-    borderBottomLeftRadius: 32,
-    borderBottomRightRadius: 32,
-    elevation: 6,
-    shadowColor: '#0EA5E9',
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.10,
-    shadowRadius: 16,
+    paddingTop: height * 0.04,
+    paddingBottom: height * 0.02,
+    paddingHorizontal: width * 0.06,
+    borderBottomLeftRadius: 24,
+    borderBottomRightRadius: 24,
+    elevation: 4,
+    shadowColor: '#6366f1',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.08,
+    shadowRadius: 12,
   },
   headerRow: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    marginBottom: 4,
+  },
+  headerLeft: {
+    flex: 1,
+  },
+  headerRight: {
+    alignItems: 'center',
   },
   headerTitle: {
-    fontSize: 24,
+    fontSize: Math.max(20, width * 0.06),
     fontWeight: 'bold',
     color: '#fff',
     fontFamily: 'Poppins_700Bold',
-    marginBottom: 2,
+    marginBottom: 6,
   },
   headerSubtitle: {
-    fontSize: 14,
-    color: '#dbeafe',
+    fontSize: Math.max(12, width * 0.035),
+    color: 'rgba(255,255,255,0.8)',
     fontFamily: 'Urbanist_400Regular',
   },
-  headerBellWrap: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    backgroundColor: 'rgba(255,255,255,0.18)',
+  settingsButton: {
+    width: 36,
+    height: 36,
+    borderRadius: 18,
+    backgroundColor: 'rgba(255,255,255,0.15)',
     alignItems: 'center',
     justifyContent: 'center',
   },
-  scrollContent: { padding: 20, paddingBottom: 80 },
+  scrollContent: {
+    padding: width * 0.05,
+    paddingBottom: 80,
+  },
   searchBar: {
     flexDirection: 'row',
     alignItems: 'center',
     backgroundColor: '#fff',
-    borderRadius: 18,
+    borderRadius: 16,
     paddingHorizontal: 16,
     paddingVertical: 12,
-    marginBottom: 18,
-    borderWidth: 1,
-    borderColor: '#E5E7EB',
-    shadowColor: '#0EA5E9',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.08,
-    shadowRadius: 8,
+    marginBottom: 16,
     elevation: 2,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
   },
   searchInput: {
     flex: 1,
     fontSize: 16,
-    color: '#6366f1',
+    color: '#374151',
     fontFamily: 'Urbanist_400Regular',
   },
-  modeScroll: { marginBottom: 18 },
+  modeScroll: {
+    marginBottom: 24,
+  },
   filterChip: {
     flexDirection: 'row',
     alignItems: 'center',
     backgroundColor: '#f3f4f6',
-    borderRadius: 999,
-    paddingHorizontal: 18,
+    paddingHorizontal: 16,
     paddingVertical: 8,
-    marginRight: 10,
-    borderWidth: 1,
-    borderColor: '#E5E7EB',
-    shadowColor: '#0EA5E9',
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.06,
-    shadowRadius: 4,
-    elevation: 1,
+    borderRadius: 20,
+    marginRight: 12,
   },
   filterChipActive: {
     backgroundColor: '#6366f1',
-    borderColor: '#6366f1',
-    shadowOpacity: 0.12,
   },
   filterChipText: {
-    fontSize: 15,
-    fontWeight: '600',
-    color: '#64748b',
-    fontFamily: 'Poppins_700Bold',
+    marginLeft: 6,
+    fontSize: 14,
+    color: '#6366f1',
+    fontWeight: '500',
+    fontFamily: 'Urbanist_400Regular',
+  },
+  filterChipTextActive: {
+    color: '#fff',
+  },
+  quickActions: {
+    marginBottom: 24,
   },
   sectionTitle: {
     fontSize: 18,
-    fontWeight: 'bold',
-    color: '#6366f1',
+    fontWeight: '600',
+    color: '#111827',
+    marginBottom: 16,
     fontFamily: 'Poppins_700Bold',
-    marginBottom: 12,
-    marginTop: 8,
+  },
+  actionGrid: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  actionCard: {
+    alignItems: 'center',
+    backgroundColor: '#fff',
+    borderRadius: 16,
+    padding: 16,
+    width: (width - 60) / 4,
+    elevation: 2,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+  },
+  actionIcon: {
+    width: 48,
+    height: 48,
+    borderRadius: 24,
+    backgroundColor: '#f3f4f6',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: 8,
+  },
+  actionText: {
+    fontSize: 12,
+    color: '#374151',
+    fontWeight: '500',
+    fontFamily: 'Urbanist_400Regular',
+  },
+  popularRoutes: {
+    marginBottom: 24,
   },
   routeCard: {
     backgroundColor: '#fff',
-    borderRadius: 22,
-    padding: 18,
-    marginBottom: 18,
-    borderWidth: 1,
-    borderColor: '#E5E7EB',
-    shadowColor: '#0EA5E9',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.10,
-    shadowRadius: 10,
-    elevation: 3,
+    borderRadius: 16,
+    padding: 16,
+    marginBottom: 12,
+    elevation: 2,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
   },
-  routeCardTop: {
+  routeHeader: {
     flexDirection: 'row',
+    justifyContent: 'space-between',
     alignItems: 'flex-start',
-    justifyContent: 'space-between',
-    marginBottom: 10,
+    marginBottom: 12,
   },
-  routePointRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginBottom: 2,
-  },
-  routeDot: {
-    width: 12,
-    height: 12,
-    borderRadius: 6,
-    marginRight: 8,
-  },
-  routePointText: {
-    fontSize: 15,
-    color: '#64748b',
-    fontFamily: 'Urbanist_700Bold',
-  },
-  routeLine: {
-    width: 2,
-    height: 24,
-    backgroundColor: '#d1d5db',
-    borderRadius: 1,
-  },
-  routeCardStats: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    marginBottom: 10,
-  },
-  routeStatCol: {
-    alignItems: 'center',
+  routeInfo: {
     flex: 1,
   },
-  routeStatLabel: {
-    fontSize: 13,
-    color: '#64748b',
-    fontFamily: 'Urbanist_400Regular',
-    marginBottom: 2,
-  },
-  routeStatValue: {
+  routeFrom: {
     fontSize: 16,
-    fontWeight: 'bold',
-    color: '#6366f1',
+    fontWeight: '600',
+    color: '#111827',
     fontFamily: 'Poppins_700Bold',
   },
-  routeBtn: {
-    backgroundColor: '#6366f1',
-    borderRadius: 14,
-    paddingVertical: 10,
-    alignItems: 'center',
-    marginTop: 2,
-  },
-  routeBtnText: {
-    color: '#fff',
-    fontSize: 15,
+  routeTo: {
+    fontSize: 16,
     fontWeight: '600',
-    fontFamily: 'Urbanist_700Bold',
+    color: '#111827',
+    fontFamily: 'Poppins_700Bold',
+  },
+  routeStats: {
+    alignItems: 'flex-end',
+  },
+  routeTime: {
+    fontSize: 14,
+    fontWeight: '600',
+    color: '#6366f1',
+    fontFamily: 'Montserrat_700Bold',
+  },
+  routeCost: {
+    fontSize: 12,
+    color: '#6b7280',
+    fontFamily: 'Urbanist_400Regular',
+  },
+  routeFooter: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  routeModes: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  ecoBadge: {
+    paddingHorizontal: 8,
+    paddingVertical: 4,
+    borderRadius: 12,
+  },
+  ecoText: {
+    fontSize: 12,
+    fontWeight: '600',
+    fontFamily: 'Montserrat_700Bold',
   },
 }); 

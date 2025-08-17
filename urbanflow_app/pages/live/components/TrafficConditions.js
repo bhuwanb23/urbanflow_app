@@ -3,7 +3,7 @@ import { View, Text, StyleSheet, TouchableOpacity, Dimensions } from 'react-nati
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { MotiView } from 'moti';
 
-const { width } = Dimensions.get('window');
+const { width, height } = Dimensions.get('window');
 
 const trafficConditions = [
   { 
@@ -57,10 +57,10 @@ export default function TrafficConditions() {
     <View style={styles.container}>
       <View style={styles.sectionRow}>
         <Text style={styles.sectionTitle}>Traffic Conditions</Text>
-        <TouchableOpacity style={styles.refreshBtn} onPress={handleRefresh}>
-          <Icon name="refresh" size={16} color="#6366f1" style={{ marginRight: 4 }} />
-          <Text style={styles.refreshText}>Refresh</Text>
-        </TouchableOpacity>
+                 <TouchableOpacity style={styles.refreshBtn} onPress={handleRefresh}>
+           <Icon name="refresh" size={Math.max(14, width * 0.035)} color="#6366f1" style={{ marginRight: Math.max(3, width * 0.008) }} />
+           <Text style={styles.refreshText}>Refresh</Text>
+         </TouchableOpacity>
       </View>
       
       <View style={styles.trafficGrid}>
@@ -72,10 +72,10 @@ export default function TrafficConditions() {
             transition={{ type: 'timing', delay: 200 + i * 80 }}
           >
             <View style={[styles.trafficCard, { backgroundColor: t.bg }]}>
-              <View style={styles.trafficHeader}>
-                <Icon name={t.icon} size={22} color={t.color} style={{ marginRight: 6 }} />
-                <Text style={[styles.trafficLevel, { color: t.color }]}>{t.level}</Text>
-              </View>
+                             <View style={styles.trafficHeader}>
+                 <Icon name={t.icon} size={Math.max(18, width * 0.045)} color={t.color} style={{ marginRight: Math.max(4, width * 0.01) }} />
+                 <Text style={[styles.trafficLevel, { color: t.color }]}>{t.level}</Text>
+               </View>
               <Text style={styles.trafficPlace}>{t.place}</Text>
               <View style={styles.trafficMeta}>
                 <Text style={styles.trafficChange}>{t.change}</Text>
@@ -91,16 +91,16 @@ export default function TrafficConditions() {
 
 const styles = StyleSheet.create({
   container: {
-    marginBottom: 20,
+    marginBottom: Math.max(16, height * 0.02),
   },
   sectionRow: { 
     flexDirection: 'row', 
     alignItems: 'center', 
     justifyContent: 'space-between', 
-    marginBottom: 16 
+    marginBottom: Math.max(12, height * 0.015) 
   },
   sectionTitle: { 
-    fontSize: 20, 
+    fontSize: Math.max(18, width * 0.045), 
     fontWeight: 'bold', 
     color: '#6366f1', 
     fontFamily: 'Poppins_700Bold', 
@@ -109,9 +109,9 @@ const styles = StyleSheet.create({
   refreshBtn: { 
     flexDirection: 'row', 
     alignItems: 'center', 
-    padding: 8,
+    padding: Math.max(6, width * 0.015),
     backgroundColor: '#f8fafc',
-    borderRadius: 12,
+    borderRadius: 10,
     borderWidth: 1,
     borderColor: '#e2e8f0'
   },
@@ -119,55 +119,67 @@ const styles = StyleSheet.create({
     color: '#6366f1', 
     fontWeight: '700', 
     fontFamily: 'Poppins_700Bold', 
-    fontSize: 14 
+    fontSize: Math.max(12, width * 0.03) 
   },
   trafficGrid: { 
     flexDirection: 'row', 
     flexWrap: 'wrap', 
-    justifyContent: 'space-between' 
+    justifyContent: 'space-between',
+    gap: Math.max(8, width * 0.02),
   },
   trafficCard: { 
-    width: (width - 48) / 2, 
-    borderRadius: 18, 
-    padding: 16, 
+    width: (width - Math.max(60, width * 0.15)) / 2, 
+    borderRadius: 16, 
+    padding: Math.max(12, width * 0.03), 
     elevation: 2, 
-    shadowColor: '#0EA5E9', 
+    shadowColor: '#6366f1', 
     shadowOffset: { width: 0, height: 2 }, 
-    shadowOpacity: 0.10, 
-    shadowRadius: 10, 
-    marginBottom: 12, 
+    shadowOpacity: 0.08, 
+    shadowRadius: 8, 
+    marginBottom: Math.max(10, height * 0.012), 
     borderWidth: 1, 
-    borderColor: '#E5E7EB' 
+    borderColor: '#E5E7EB',
+    minHeight: Math.max(120, height * 0.15),
   },
   trafficHeader: {
     flexDirection: 'row', 
     alignItems: 'center', 
-    marginBottom: 8 
+    marginBottom: Math.max(8, height * 0.01),
+    flexWrap: 'wrap',
   },
   trafficLevel: { 
-    fontSize: 16, 
+    fontSize: Math.max(13, width * 0.032), 
     fontWeight: 'bold', 
-    fontFamily: 'Poppins_700Bold' 
+    fontFamily: 'Poppins_700Bold',
+    flex: 1,
+    flexWrap: 'wrap',
   },
   trafficPlace: { 
-    fontSize: 14, 
+    fontSize: Math.max(11, width * 0.028), 
     color: '#64748b', 
     fontFamily: 'Urbanist_400Regular', 
-    marginBottom: 8 
+    marginBottom: Math.max(8, height * 0.01),
+    flexWrap: 'wrap',
   },
   trafficMeta: { 
     flexDirection: 'row', 
     justifyContent: 'space-between', 
-    alignItems: 'center' 
+    alignItems: 'flex-start',
+    flexWrap: 'wrap',
+    gap: Math.max(4, width * 0.01),
   },
   trafficChange: { 
-    fontSize: 13, 
+    fontSize: Math.max(10, width * 0.025), 
     color: '#9ca3af', 
-    fontFamily: 'Urbanist_400Regular' 
+    fontFamily: 'Urbanist_400Regular',
+    flex: 1,
+    flexWrap: 'wrap',
   },
   trafficDelay: { 
-    fontSize: 13, 
+    fontSize: Math.max(10, width * 0.025), 
     fontWeight: 'bold', 
-    fontFamily: 'Poppins_700Bold' 
+    fontFamily: 'Poppins_700Bold',
+    flexWrap: 'wrap',
+    textAlign: 'right',
   },
 });

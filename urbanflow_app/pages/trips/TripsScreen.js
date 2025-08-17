@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, FlatList, ScrollView, TouchableOpacity, ActivityIndicator, SafeAreaView } from 'react-native';
+import { View, Text, StyleSheet, FlatList, ScrollView, TouchableOpacity, ActivityIndicator, SafeAreaView, Dimensions } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { MotiView } from 'moti';
+
+const { width, height } = Dimensions.get('window');
 
 const FILTERS = ['All Trips', 'This Week', 'This Month', 'Eco-Friendly'];
 const SORTS = ['Date', 'Mode', 'Eco-Impact'];
@@ -124,17 +126,18 @@ export default function TripsScreen({ navigation }) {
       {/* Gradient Header */}
       <LinearGradient colors={["#6366f1", "#10b981"]} style={styles.headerGradient}>
         <View style={styles.headerRow}>
-          <View>
-            <Text style={styles.headerTitle}>Your Trips <Text style={{ fontSize: 22 }}>🗺️</Text></Text>
+          <View style={styles.headerLeft}>
+            <Text style={styles.headerTitle}>Your Trips <Text style={{ fontSize: Math.max(18, width * 0.05) }}>🗺️</Text></Text>
             <Text style={styles.headerSubtitle}>Track your journey history</Text>
           </View>
-          <View style={styles.headerBellWrap}>
-            <TouchableOpacity onPress={() => navigation.navigate('NotificationsScreen')}>
-              <Icon name="bell-outline" size={22} color="#fff" />
+          <View style={styles.headerRight}>
+            <TouchableOpacity style={styles.settingsButton} onPress={() => navigation.navigate('NotificationsScreen')}>
+              <Icon name="bell-outline" size={18} color="#fff" />
             </TouchableOpacity>
           </View>
         </View>
       </LinearGradient>
+      
       {/* Filter/Sort */}
       <View style={styles.filterRow}>
         <TouchableOpacity style={styles.filterActive} onPress={handleFilter}>
@@ -149,6 +152,7 @@ export default function TripsScreen({ navigation }) {
           <Text style={styles.filterBtnText}>Sort</Text>
         </TouchableOpacity>
       </View>
+      
       <ScrollView showsVerticalScrollIndicator={false}>
         {/* Favorites */}
         <View style={styles.section}>
@@ -237,47 +241,52 @@ export default function TripsScreen({ navigation }) {
 
 const styles = StyleSheet.create({
   headerGradient: {
-    paddingTop: 48,
-    paddingBottom: 24,
-    paddingHorizontal: 24,
-    borderBottomLeftRadius: 32,
-    borderBottomRightRadius: 32,
-    elevation: 6,
-    shadowColor: '#0EA5E9',
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.10,
-    shadowRadius: 16,
+    paddingTop: height * 0.04,
+    paddingBottom: height * 0.02,
+    paddingHorizontal: width * 0.06,
+    borderBottomLeftRadius: 24,
+    borderBottomRightRadius: 24,
+    elevation: 4,
+    shadowColor: '#6366f1',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.08,
+    shadowRadius: 12,
   },
   headerRow: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    marginBottom: 4,
+  },
+  headerLeft: {
+    flex: 1,
+  },
+  headerRight: {
+    alignItems: 'center',
   },
   headerTitle: {
-    fontSize: 24,
+    fontSize: Math.max(20, width * 0.06),
     fontWeight: 'bold',
     color: '#fff',
     fontFamily: 'Poppins_700Bold',
-    marginBottom: 2,
+    marginBottom: 6,
   },
   headerSubtitle: {
-    fontSize: 14,
-    color: '#dbeafe',
+    fontSize: Math.max(12, width * 0.035),
+    color: 'rgba(255,255,255,0.8)',
     fontFamily: 'Urbanist_400Regular',
   },
-  headerBellWrap: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    backgroundColor: 'rgba(255,255,255,0.18)',
+  settingsButton: {
+    width: 36,
+    height: 36,
+    borderRadius: 18,
+    backgroundColor: 'rgba(255,255,255,0.15)',
     alignItems: 'center',
     justifyContent: 'center',
   },
   filterRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingHorizontal: 20,
+    paddingHorizontal: width * 0.05,
     marginBottom: 8,
     marginTop: 8,
   },
@@ -313,7 +322,7 @@ const styles = StyleSheet.create({
   section: {
     marginTop: 12,
     marginBottom: 8,
-    paddingHorizontal: 20,
+    paddingHorizontal: width * 0.05,
   },
   sectionHeader: {
     flexDirection: 'row',

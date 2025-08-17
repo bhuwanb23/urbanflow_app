@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity, SafeAreaView, ActivityIndicator } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, SafeAreaView, ActivityIndicator, Dimensions } from 'react-native';
 import { Chip } from 'react-native-paper';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { LinearGradient } from 'expo-linear-gradient';
 import { MotiView } from 'moti';
+
+const { width, height } = Dimensions.get('window');
 
 // Import Components
 import LiveMap from './components/LiveMap';
@@ -31,20 +33,22 @@ export default function LiveScreen() {
     }
   return (
     <SafeAreaView style={styles.container}>
-      {/* Enhanced Gradient Header */}
-      <LinearGradient colors={["#6366f1", "#10b981"]} style={styles.headerGradient}>
+      {/* Compact Gradient Header */}
+      <LinearGradient colors={["#6366f1", "#8b5cf6"]} style={styles.headerGradient}>
         <View style={styles.headerRow}>
           <View style={styles.headerLeft}>
             <Text style={styles.headerTitle}>Live Traffic</Text>
-            <Text style={styles.headerSubtitle}>Real-time updates and conditions</Text>
+            <View style={styles.headerSubtitleRow}>
+              <View style={styles.liveIndicator}>
+                <View style={styles.liveDot} />
+                <Text style={styles.liveText}>LIVE</Text>
+              </View>
+              <Text style={styles.headerSubtitle}>Real-time updates</Text>
+            </View>
           </View>
           <View style={styles.headerRight}>
-            <View style={styles.liveIndicator}>
-              <View style={styles.liveDot} />
-              <Text style={styles.liveText}>LIVE</Text>
-            </View>
             <TouchableOpacity style={styles.settingsButton}>
-              <Icon name="cog" size={20} color="#fff" />
+              <Icon name="cog" size={18} color="#fff" />
             </TouchableOpacity>
           </View>
         </View>
@@ -76,74 +80,76 @@ const styles = StyleSheet.create({
     backgroundColor: '#F9FAFB' 
   },
   headerGradient: {
-    paddingTop: 48,
-    paddingBottom: 24,
-    paddingHorizontal: 24,
-    borderBottomLeftRadius: 32,
-    borderBottomRightRadius: 32,
-    elevation: 6,
-    shadowColor: '#0EA5E9',
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.10,
-    shadowRadius: 16,
+    paddingTop: height * 0.04,
+    paddingBottom: height * 0.02,
+    paddingHorizontal: width * 0.06,
+    borderBottomLeftRadius: 24,
+    borderBottomRightRadius: 24,
+    elevation: 4,
+    shadowColor: '#6366f1',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.08,
+    shadowRadius: 12,
   },
   headerRow: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    marginBottom: 4,
   },
   headerLeft: {
     flex: 1,
   },
   headerRight: {
-    flexDirection: 'row',
     alignItems: 'center',
-    gap: 12,
   },
   headerTitle: {
-    fontSize: 28,
+    fontSize: Math.max(20, width * 0.06),
     fontWeight: 'bold',
     color: '#fff',
     fontFamily: 'Poppins_700Bold',
-    marginBottom: 4,
+    marginBottom: 6,
+  },
+  headerSubtitleRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
   },
   headerSubtitle: {
-    fontSize: 14,
-    color: '#dbeafe',
+    fontSize: Math.max(12, width * 0.035),
+    color: 'rgba(255,255,255,0.8)',
     fontFamily: 'Urbanist_400Regular',
   },
   liveIndicator: {
     backgroundColor: 'rgba(239, 68, 68, 0.9)',
-    borderRadius: 12,
-    paddingHorizontal: 10,
-    paddingVertical: 4,
+    borderRadius: 8,
+    paddingHorizontal: 8,
+    paddingVertical: 3,
     flexDirection: 'row',
     alignItems: 'center',
   },
   liveDot: {
-    width: 6,
-    height: 6,
-    borderRadius: 3,
+    width: 5,
+    height: 5,
+    borderRadius: 2.5,
     backgroundColor: '#fff',
-    marginRight: 6,
+    marginRight: 4,
   },
   liveText: {
     color: '#fff',
-    fontSize: 12,
+    fontSize: Math.max(10, width * 0.025),
     fontWeight: '700',
     fontFamily: 'Poppins_700Bold',
   },
   settingsButton: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    backgroundColor: 'rgba(255,255,255,0.18)',
+    width: 36,
+    height: 36,
+    borderRadius: 18,
+    backgroundColor: 'rgba(255,255,255,0.15)',
     alignItems: 'center',
     justifyContent: 'center',
   },
   scrollContent: { 
-    padding: 20, 
+    padding: width * 0.05, 
     paddingBottom: 80 
   },
 }); 
