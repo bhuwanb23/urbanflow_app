@@ -42,7 +42,7 @@ export default function LoginScreen({ navigation }) {
               transition={{ type: 'spring', delay: 100 }}
               style={styles.heroIconCircle}
             >
-              <Icon name="lock" size={36} color="#0D47A1" />
+              <Icon name="lock" size={36} color="#3B82F6" />
             </MotiView>
             <MotiView
               from={{ opacity: 0, translateY: 10 }}
@@ -116,7 +116,7 @@ export default function LoginScreen({ navigation }) {
                 activeOpacity={0.9}
               >
                 <LinearGradient
-                  colors={['#0D47A1', '#003178']}
+                  colors={['#3B82F6', '#2563EB']}
                   start={{ x: 0, y: 0 }}
                   end={{ x: 1, y: 1 }}
                   style={styles.submitButton}
@@ -146,11 +146,11 @@ export default function LoginScreen({ navigation }) {
               style={styles.socialContainer}
             >
               <TouchableOpacity style={styles.socialButton}>
-                <Icon name="google" size={20} color="#F8FAFC" />
+                <Icon name="google" size={20} color="#0F172A" />
                 <Text style={styles.socialButtonText}>Google</Text>
               </TouchableOpacity>
               <TouchableOpacity style={styles.socialButton}>
-                <Icon name="apple" size={22} color="#F8FAFC" />
+                <Icon name="apple" size={22} color="#0F172A" />
                 <Text style={styles.socialButtonText}>Apple</Text>
               </TouchableOpacity>
             </MotiView>
@@ -188,7 +188,7 @@ export default function LoginScreen({ navigation }) {
 const styles = StyleSheet.create({
   mainContainer: {
     flex: 1,
-    backgroundColor: '#020617', // Slate 950
+    backgroundColor: '#FFFFFF', // White
   },
   keyboardView: {
     flex: 1,
@@ -220,7 +220,7 @@ const styles = StyleSheet.create({
     width: 64,
     height: 64,
     borderRadius: 32,
-    backgroundColor: '#F1F5F9', // Slate 100 (Light bg for icon as in HTML)
+    backgroundColor: '#F1F5F9', // Slate 100
     justifyContent: 'center',
     alignItems: 'center',
     marginBottom: 24,
@@ -228,7 +228,7 @@ const styles = StyleSheet.create({
   heroTitle: {
     fontSize: 30,
     fontFamily: 'Poppins_700Bold',
-    color: '#F8FAFC', // Slate 50
+    color: '#0F172A', // Slate 900
     textAlign: 'center',
     marginBottom: 8,
     letterSpacing: -0.5,
@@ -236,7 +236,7 @@ const styles = StyleSheet.create({
   heroSubtitle: {
     fontSize: 14,
     fontFamily: 'Urbanist_400Regular',
-    color: '#94A3B8', // Slate 400
+    color: '#64748B', // Slate 500
     textAlign: 'center',
   },
   formSection: {
@@ -248,7 +248,7 @@ const styles = StyleSheet.create({
   label: {
     fontSize: 10,
     fontFamily: 'Urbanist_700Bold',
-    color: '#94A3B8', // Slate 400
+    color: '#64748B', // Slate 500
     textTransform: 'uppercase',
     letterSpacing: 0.8,
     marginBottom: 8,
@@ -268,16 +268,17 @@ const styles = StyleSheet.create({
   inputContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#1E293B', // Slate 800
+    backgroundColor: '#F8FAFC', // Slate 50
     borderRadius: 12,
-    borderWidth: 0,
+    borderWidth: 1,
+    borderColor: '#E2E8F0', // Slate 200
   },
   input: {
     flex: 1,
     paddingVertical: 14,
     paddingHorizontal: 16,
     fontSize: 16,
-    color: '#F8FAFC',
+    color: '#0F172A', // Slate 900
     fontFamily: 'Urbanist_400Regular',
   },
   eyeIcon: {
@@ -287,7 +288,7 @@ const styles = StyleSheet.create({
     borderRadius: 9999, // Full rounded
     paddingVertical: 16,
     alignItems: 'center',
-    shadowColor: '#0D47A1',
+    shadowColor: '#3B82F6',
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.3,
     shadowRadius: 8,
@@ -308,12 +309,12 @@ const styles = StyleSheet.create({
   dividerLine: {
     flex: 1,
     height: 1,
-    backgroundColor: '#334155', // Slate 700
+    backgroundColor: '#E2E8F0', // Slate 200
   },
   dividerText: {
     fontSize: 10,
     fontFamily: 'Urbanist_700Bold',
-    color: '#64748B', // Slate 500
+    color: '#94A3B8', // Slate 400
     textTransform: 'uppercase',
     letterSpacing: 0.8,
   },
@@ -326,9 +327,9 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: '#0F172A', // Slate 900
+    backgroundColor: '#FFFFFF', // White
     borderWidth: 1,
-    borderColor: '#1E293B', // Slate 800
+    borderColor: '#E2E8F0', // Slate 200
     borderRadius: 12,
     paddingVertical: 14,
     gap: 10,
@@ -336,7 +337,7 @@ const styles = StyleSheet.create({
   socialButtonText: {
     fontSize: 14,
     fontFamily: 'Urbanist_600SemiBold',
-    color: '#F8FAFC',
+    color: '#0F172A', // Slate 900
   },
   footer: {
     flexDirection: 'row',
@@ -348,12 +349,12 @@ const styles = StyleSheet.create({
   footerText: {
     fontSize: 14,
     fontFamily: 'Urbanist_400Regular',
-    color: '#94A3B8',
+    color: '#64748B', // Slate 500
   },
   footerLink: {
     fontSize: 14,
     fontFamily: 'Urbanist_700Bold',
-    color: '#3B82F6',
+    color: '#3B82F6', // Blue 500
   },
   demoLink: {
     alignItems: 'center',
@@ -362,6 +363,6 @@ const styles = StyleSheet.create({
   demoLinkText: {
     fontSize: 12,
     fontFamily: 'Urbanist_600SemiBold',
-    color: '#334155',
+    color: '#94A3B8', // Slate 400
   },
-}); 
+});
