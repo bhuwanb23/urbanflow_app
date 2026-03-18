@@ -69,7 +69,7 @@ export default function PlannerScreen({ navigation }) {
   };
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: '#F9FAFB' }}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: '#FFFFFF' }}>
       {/* Header Component */}
       <PlannerHeader navigation={navigation} />
       
@@ -96,4 +96,4 @@ export default function PlannerScreen({ navigation }) {
       </ScrollView>
     </SafeAreaView>
   );
-} 
+}

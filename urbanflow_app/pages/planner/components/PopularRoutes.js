@@ -39,7 +39,7 @@ export default function PopularRoutes({ navigation }) {
             <View style={styles.routeHeader}>
               <View style={styles.routeInfo}>
                 <Text style={styles.routeFrom}>{route.from}</Text>
-                <Icon name="arrow-down" size={16} color="#9ca3af" style={{ marginVertical: 4 }} />
+                <Icon name="arrow-down" size={16} color="#94A3B8" style={{ marginVertical: 4 }} />
                 <Text style={styles.routeTo}>{route.to}</Text>
               </View>
               <View style={styles.routeStats}>
@@ -54,12 +54,12 @@ export default function PopularRoutes({ navigation }) {
                     key={i} 
                     name={getIconName(mode)} 
                     size={16} 
-                    color="#6366f1" 
+                    color="#64748B" 
                     style={{ marginRight: 8 }} 
                   />
                 ))}
               </View>
-              <View style={[styles.ecoBadge, { backgroundColor: route.ecoColor + '20' }]}>
+              <View style={[styles.ecoBadge, { backgroundColor: route.ecoColor + '15' }]}>
                 <Text style={[styles.ecoText, { color: route.ecoColor }]}>{route.eco} Eco</Text>
               </View>
             </View>
@@ -76,21 +76,24 @@ const styles = StyleSheet.create({
   },
   sectionTitle: {
     fontSize: 18,
-    fontWeight: '600',
-    color: '#111827',
+    fontWeight: 'bold',
+    color: '#0F172A', // Slate 900
     marginBottom: 16,
     fontFamily: 'Poppins_700Bold',
+    letterSpacing: -0.5,
   },
   routeCard: {
-    backgroundColor: '#fff',
+    backgroundColor: '#FFFFFF',
     borderRadius: 16,
     padding: 16,
     marginBottom: 12,
+    borderWidth: 1,
+    borderColor: '#F1F5F9', // Slate 100
+    shadowColor: '#64748B',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.05,
+    shadowRadius: 8,
     elevation: 2,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
   },
   routeHeader: {
     flexDirection: 'row',
@@ -104,14 +107,14 @@ const styles = StyleSheet.create({
   routeFrom: {
     fontSize: 16,
     fontWeight: '600',
-    color: '#111827',
-    fontFamily: 'Poppins_700Bold',
+    color: '#0F172A', // Slate 900
+    fontFamily: 'Urbanist_700Bold',
   },
   routeTo: {
     fontSize: 16,
     fontWeight: '600',
-    color: '#111827',
-    fontFamily: 'Poppins_700Bold',
+    color: '#0F172A', // Slate 900
+    fontFamily: 'Urbanist_700Bold',
   },
   routeStats: {
     alignItems: 'flex-end',
@@ -119,12 +122,12 @@ const styles = StyleSheet.create({
   routeTime: {
     fontSize: 14,
     fontWeight: '600',
-    color: '#6366f1',
-    fontFamily: 'Montserrat_700Bold',
+    color: '#10B981', // Emerald 500
+    fontFamily: 'Urbanist_700Bold',
   },
   routeCost: {
     fontSize: 12,
-    color: '#6b7280',
+    color: '#64748B', // Slate 500
     fontFamily: 'Urbanist_400Regular',
   },
   routeFooter: {
@@ -137,13 +140,13 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   ecoBadge: {
-    paddingHorizontal: 8,
-    paddingVertical: 4,
-    borderRadius: 12,
+    paddingHorizontal: 10,
+    paddingVertical: 6,
+    borderRadius: 8,
   },
   ecoText: {
     fontSize: 12,
     fontWeight: '600',
-    fontFamily: 'Montserrat_700Bold',
+    fontFamily: 'Urbanist_700Bold',
   },
 });

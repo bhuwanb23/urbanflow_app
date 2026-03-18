@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity, SafeAreaView, ActivityIndicator, Dimensions, Alert } from 'react-native';
-import { Chip } from 'react-native-paper';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, SafeAreaView, ActivityIndicator, Dimensions, Alert, Platform } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import { LinearGradient } from 'expo-linear-gradient';
 import { MotiView } from 'moti';
 
 // Import API hooks
@@ -70,17 +68,17 @@ export default function LiveScreen() {
 
     if (loading && demoLoading) {
         return (
-            <SafeAreaView style={{ flex: 1, backgroundColor: '#F9FAFB', justifyContent: 'center', alignItems: 'center' }}>
-                <ActivityIndicator size="large" color="#6366f1" />
-                <Text style={{ marginTop: 16, color: '#6366f1', fontFamily: 'Poppins_400Regular', fontSize: 16 }}>Loading live data...</Text>
+            <SafeAreaView style={{ flex: 1, backgroundColor: '#FFFFFF', justifyContent: 'center', alignItems: 'center' }}>
+                <ActivityIndicator size="large" color="#10B981" />
+                <Text style={{ marginTop: 16, color: '#10B981', fontFamily: 'Poppins_400Regular', fontSize: 16 }}>Loading live data...</Text>
             </SafeAreaView>
         );
     }
 
     return (
         <SafeAreaView style={styles.container}>
-            {/* Compact Gradient Header */}
-            <LinearGradient colors={["#6366f1", "#8b5cf6"]} style={styles.headerGradient}>
+            {/* Clean White Header */}
+            <View style={styles.headerContainer}>
                 <View style={styles.headerRow}>
                     <View style={styles.headerLeft}>
                         <Text style={styles.headerTitle}>Live Traffic</Text>
@@ -94,11 +92,11 @@ export default function LiveScreen() {
                     </View>
                     <View style={styles.headerRight}>
                         <TouchableOpacity style={styles.settingsButton}>
-                            <Icon name="cog" size={18} color="#fff" />
+                            <Icon name="cog-outline" size={20} color="#0F172A" />
                         </TouchableOpacity>
                     </View>
                 </View>
-            </LinearGradient>
+            </View>
             
             <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
                 {/* Live Map Component */}
@@ -134,19 +132,15 @@ export default function LiveScreen() {
 const styles = StyleSheet.create({
   container: { 
     flex: 1, 
-    backgroundColor: '#F9FAFB' 
+    backgroundColor: '#FFFFFF' 
   },
-  headerGradient: {
-    paddingTop: height * 0.04,
-    paddingBottom: height * 0.02,
-    paddingHorizontal: width * 0.06,
-    borderBottomLeftRadius: 24,
-    borderBottomRightRadius: 24,
-    elevation: 4,
-    shadowColor: '#6366f1',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.08,
-    shadowRadius: 12,
+  headerContainer: {
+    paddingTop: Platform.OS === 'android' ? 40 : 20,
+    paddingBottom: 20,
+    paddingHorizontal: 24,
+    backgroundColor: '#FFFFFF',
+    borderBottomWidth: 1,
+    borderBottomColor: '#F1F5F9',
   },
   headerRow: {
     flexDirection: 'row',
@@ -160,11 +154,11 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   headerTitle: {
-    fontSize: Math.max(20, width * 0.06),
-    fontWeight: 'bold',
-    color: '#fff',
+    fontSize: 24,
     fontFamily: 'Poppins_700Bold',
-    marginBottom: 6,
+    color: '#0F172A', // Slate 900
+    marginBottom: 4,
+    letterSpacing: -0.5,
   },
   headerSubtitleRow: {
     flexDirection: 'row',
@@ -172,41 +166,45 @@ const styles = StyleSheet.create({
     gap: 8,
   },
   headerSubtitle: {
-    fontSize: Math.max(12, width * 0.035),
-    color: 'rgba(255,255,255,0.8)',
+    fontSize: 14,
+    color: '#64748B', // Slate 500
     fontFamily: 'Urbanist_400Regular',
   },
   liveIndicator: {
-    backgroundColor: 'rgba(239, 68, 68, 0.9)',
-    borderRadius: 8,
-    paddingHorizontal: 8,
-    paddingVertical: 3,
+    backgroundColor: '#DEF7EC', // Green 100 (subtle background)
+    borderRadius: 6,
+    paddingHorizontal: 6,
+    paddingVertical: 2,
     flexDirection: 'row',
     alignItems: 'center',
+    borderWidth: 1,
+    borderColor: '#31C48D', // Green 500 border
   },
   liveDot: {
-    width: 5,
-    height: 5,
-    borderRadius: 2.5,
-    backgroundColor: '#fff',
+    width: 6,
+    height: 6,
+    borderRadius: 3,
+    backgroundColor: '#10B981', // Emerald 500
     marginRight: 4,
   },
   liveText: {
-    color: '#fff',
-    fontSize: Math.max(10, width * 0.025),
-    fontWeight: '700',
+    color: '#059669', // Emerald 600
+    fontSize: 10,
     fontFamily: 'Poppins_700Bold',
+    letterSpacing: 0.5,
   },
   settingsButton: {
-    width: 36,
-    height: 36,
-    borderRadius: 18,
-    backgroundColor: 'rgba(255,255,255,0.15)',
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    backgroundColor: '#F8FAFC', // Slate 50
     alignItems: 'center',
     justifyContent: 'center',
+    borderWidth: 1,
+    borderColor: '#E2E8F0', // Slate 200
   },
   scrollContent: { 
-    padding: width * 0.05, 
-    paddingBottom: 80 
+    padding: 24, 
+    paddingBottom: 100 
   },
-}); 
+});

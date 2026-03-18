@@ -6,35 +6,35 @@ import { MotiView } from 'moti';
 const recentUpdates = [
   { 
     icon: 'alert-circle', 
-    color: '#ef4444', 
-    bg: '#fee2e2', 
+    color: '#EF4444', 
+    bg: '#FEF2F2', 
     title: 'Accident Reported', 
     desc: 'Major intersection at Park Road and Main Street', 
     time: '2 minutes ago', 
     impact: 'Severe impact', 
-    impactColor: '#ef4444', 
+    impactColor: '#EF4444', 
     impactIcon: 'alert' 
   },
   { 
     icon: 'tools', 
-    color: '#facc15', 
-    bg: '#fef9c3', 
+    color: '#F59E0B', 
+    bg: '#FFFBEB', 
     title: 'New Construction Zone', 
     desc: 'Highway 101 southbound near exit 25', 
     time: '15 minutes ago', 
     impact: 'Moderate delay', 
-    impactColor: '#facc15', 
+    impactColor: '#F59E0B', 
     impactIcon: 'clock-outline' 
   },
   { 
     icon: 'check-circle', 
-    color: '#22c55e', 
-    bg: '#bbf7d0', 
+    color: '#10B981', 
+    bg: '#ECFDF5', 
     title: 'Road Cleared', 
     desc: 'Downtown expressway now open after earlier incident', 
     time: '28 minutes ago', 
     impact: 'Traffic normalizing', 
-    impactColor: '#22c55e', 
+    impactColor: '#10B981', 
     impactIcon: 'check-circle' 
   },
 ];
@@ -74,7 +74,7 @@ export default function RecentUpdates() {
                     </Text>
                     <Icon 
                       name={u.impactIcon} 
-                      size={16} 
+                      size={14} 
                       color={u.impactColor} 
                       style={{ marginLeft: 4 }} 
                     />
@@ -94,37 +94,37 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   sectionTitle: { 
-    fontSize: 20, 
+    fontSize: 18, 
     fontWeight: 'bold', 
     marginBottom: 16, 
-    color: '#6366f1', 
+    color: '#0F172A', // Slate 900
     fontFamily: 'Poppins_700Bold', 
-    letterSpacing: 0.2 
+    letterSpacing: -0.5 
   },
   updateCard: { 
-    borderRadius: 18, 
-    backgroundColor: '#fff', 
-    elevation: 2, 
-    shadowColor: '#0EA5E9', 
-    shadowOffset: { width: 0, height: 2 }, 
-    shadowOpacity: 0.10, 
-    shadowRadius: 10, 
+    borderRadius: 16, 
+    backgroundColor: '#FFFFFF', 
     padding: 16, 
-    marginBottom: 14, 
+    marginBottom: 12, 
     borderWidth: 1, 
-    borderColor: '#E5E7EB' 
+    borderColor: '#F1F5F9', // Slate 100
+    shadowColor: '#64748B',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.05,
+    shadowRadius: 8,
+    elevation: 2,
   },
   updateContent: {
     flexDirection: 'row', 
     alignItems: 'flex-start' 
   },
   updateIconWrap: { 
-    width: 48, 
-    height: 48, 
-    borderRadius: 24, 
+    width: 44, 
+    height: 44, 
+    borderRadius: 22, 
     justifyContent: 'center', 
     alignItems: 'center', 
-    marginRight: 16 
+    marginRight: 14 
   },
   updateInfo: {
     flex: 1 
@@ -132,13 +132,13 @@ const styles = StyleSheet.create({
   updateTitle: { 
     fontSize: 16, 
     fontWeight: 'bold', 
-    color: '#6366f1', 
-    fontFamily: 'Poppins_700Bold',
+    color: '#0F172A', // Slate 900
+    fontFamily: 'Urbanist_700Bold',
     marginBottom: 4 
   },
   updateDesc: { 
     fontSize: 14, 
-    color: '#64748b', 
+    color: '#64748B', // Slate 500
     fontFamily: 'Urbanist_400Regular', 
     marginBottom: 8,
     lineHeight: 20 
@@ -149,8 +149,8 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between' 
   },
   updateTime: { 
-    fontSize: 13, 
-    color: '#9ca3af', 
+    fontSize: 12, 
+    color: '#94A3B8', // Slate 400
     fontFamily: 'Urbanist_400Regular' 
   },
   impactContainer: {
@@ -158,8 +158,8 @@ const styles = StyleSheet.create({
     alignItems: 'center' 
   },
   updateImpact: { 
-    fontSize: 13, 
+    fontSize: 12, 
     fontWeight: 'bold', 
-    fontFamily: 'Poppins_700Bold' 
+    fontFamily: 'Urbanist_700Bold' 
   },
 });

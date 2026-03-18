@@ -11,7 +11,7 @@ export default function ModeFilters({ selectedMode, setSelectedMode }) {
       horizontal 
       showsHorizontalScrollIndicator={false} 
       style={styles.modeScroll} 
-      contentContainerStyle={{ paddingVertical: 8 }}
+      contentContainerStyle={{ paddingVertical: 4 }}
     >
       {MODES.map((mode) => (
         <TouchableOpacity
@@ -19,7 +19,7 @@ export default function ModeFilters({ selectedMode, setSelectedMode }) {
           style={[styles.filterChip, selectedMode === mode.key ? styles.filterChipActive : null]}
           onPress={() => setSelectedMode(mode.key)}
         >
-          <Icon name={mode.icon} size={16} color={selectedMode === mode.key ? '#fff' : '#6366f1'} />
+          <Icon name={mode.icon} size={18} color={selectedMode === mode.key ? '#FFFFFF' : '#64748B'} />
           <Text style={[styles.filterChipText, selectedMode === mode.key ? styles.filterChipTextActive : null]}>
             {mode.label}
           </Text>
@@ -36,23 +36,25 @@ const styles = StyleSheet.create({
   filterChip: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#f3f4f6',
+    backgroundColor: '#F8FAFC', // Slate 50
     paddingHorizontal: 16,
-    paddingVertical: 8,
-    borderRadius: 20,
+    paddingVertical: 10,
+    borderRadius: 9999,
     marginRight: 12,
+    borderWidth: 1,
+    borderColor: '#E2E8F0', // Slate 200
   },
   filterChipActive: {
-    backgroundColor: '#6366f1',
+    backgroundColor: '#10B981', // Emerald 500
+    borderColor: '#10B981',
   },
   filterChipText: {
-    marginLeft: 6,
+    marginLeft: 8,
     fontSize: 14,
-    color: '#6366f1',
-    fontWeight: '500',
-    fontFamily: 'Urbanist_400Regular',
+    color: '#64748B', // Slate 500
+    fontFamily: 'Urbanist_600SemiBold',
   },
   filterChipTextActive: {
-    color: '#fff',
+    color: '#FFFFFF',
   },
 });

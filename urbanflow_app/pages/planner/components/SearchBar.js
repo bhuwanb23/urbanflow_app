@@ -13,13 +13,13 @@ export default function SearchBar() {
       transition={{ type: 'timing', duration: 700 }}
     >
       <View style={styles.searchBar}>
-        <Icon name="map-marker" size={20} color="#6366f1" style={{ marginRight: 8 }} />
+        <Icon name="map-marker" size={20} color="#10B981" style={{ marginRight: 12 }} />
         <TextInput
           placeholder="Search destinations..."
           style={styles.searchInput}
-          placeholderTextColor="#9ca3af"
+          placeholderTextColor="#94A3B8"
         />
-        <Icon name="microphone" size={20} color="#9ca3af" style={{ marginLeft: 8 }} />
+        <Icon name="microphone" size={20} color="#64748B" style={{ marginLeft: 12 }} />
       </View>
     </MotiView>
   );
@@ -29,21 +29,18 @@ const styles = StyleSheet.create({
   searchBar: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#fff',
+    backgroundColor: '#F8FAFC', // Slate 50
     borderRadius: 16,
     paddingHorizontal: 16,
-    paddingVertical: 12,
-    marginBottom: 16,
-    elevation: 2,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
+    paddingVertical: 14,
+    marginBottom: 24,
+    borderWidth: 1,
+    borderColor: '#E2E8F0', // Slate 200
   },
   searchInput: {
     flex: 1,
     fontSize: 16,
-    color: '#374151',
+    color: '#0F172A', // Slate 900
     fontFamily: 'Urbanist_400Regular',
   },
 });
