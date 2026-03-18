@@ -30,7 +30,7 @@ export default function LoginScreen({ navigation }) {
             transition={{ type: 'timing', duration: 800 }}
             style={styles.topHeader}
           >
-            <Icon name="shield-check" size={24} color="#3B82F6" />
+            <Icon name="shield-check" size={24} color="#10B981" />
             <Text style={styles.headerTitle}>UrbanFlow</Text>
           </MotiView>
 
@@ -42,7 +42,7 @@ export default function LoginScreen({ navigation }) {
               transition={{ type: 'spring', delay: 100 }}
               style={styles.heroIconCircle}
             >
-              <Icon name="lock" size={36} color="#3B82F6" />
+              <Icon name="lock" size={36} color="#10B981" />
             </MotiView>
             <MotiView
               from={{ opacity: 0, translateY: 10 }}
@@ -116,7 +116,7 @@ export default function LoginScreen({ navigation }) {
                 activeOpacity={0.9}
               >
                 <LinearGradient
-                  colors={['#3B82F6', '#2563EB']}
+                  colors={['#10B981', '#059669']}
                   start={{ x: 0, y: 0 }}
                   end={{ x: 1, y: 1 }}
                   style={styles.submitButton}
@@ -209,7 +209,7 @@ const styles = StyleSheet.create({
   headerTitle: {
     fontSize: 18,
     fontFamily: 'Poppins_700Bold',
-    color: '#3B82F6', // Blue 500
+    color: '#10B981', // Emerald 500
     letterSpacing: -0.5,
   },
   heroSection: {
@@ -220,7 +220,7 @@ const styles = StyleSheet.create({
     width: 64,
     height: 64,
     borderRadius: 32,
-    backgroundColor: '#F1F5F9', // Slate 100
+    backgroundColor: '#ECFDF5', // Emerald 50
     justifyContent: 'center',
     alignItems: 'center',
     marginBottom: 24,
@@ -263,7 +263,7 @@ const styles = StyleSheet.create({
   forgotPassword: {
     fontSize: 12,
     fontFamily: 'Urbanist_600SemiBold',
-    color: '#3B82F6', // Blue 500
+    color: '#10B981', // Emerald 500
   },
   inputContainer: {
     flexDirection: 'row',
@@ -288,7 +288,7 @@ const styles = StyleSheet.create({
     borderRadius: 9999, // Full rounded
     paddingVertical: 16,
     alignItems: 'center',
-    shadowColor: '#3B82F6',
+    shadowColor: '#10B981',
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.3,
     shadowRadius: 8,
@@ -354,7 +354,7 @@ const styles = StyleSheet.create({
   footerLink: {
     fontSize: 14,
     fontFamily: 'Urbanist_700Bold',
-    color: '#3B82F6', // Blue 500
+    color: '#10B981', // Emerald 500
   },
   demoLink: {
     alignItems: 'center',
