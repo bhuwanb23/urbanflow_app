@@ -1,39 +1,18 @@
-import React, { useState, useEffect } from 'react';
-import { View, StyleSheet, Text, Platform, TouchableOpacity, TextInput, Alert, ActivityIndicator, KeyboardAvoidingView, ScrollView } from 'react-native';
+import React, { useState } from 'react';
+import { View, StyleSheet, Text, Platform, TouchableOpacity, TextInput, KeyboardAvoidingView, ScrollView } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { MotiView } from 'moti';
 import { LinearGradient } from 'expo-linear-gradient';
-import { useAuth } from '../../utils/hooks/useAPI';
 
 export default function LoginScreen({ navigation }) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [isLogin, setIsLogin] = useState(true);
-  
-  const { login, register, loading, error } = useAuth();
 
-  useEffect(() => {
-    if (error) Alert.alert('Error', error, [{ text: 'OK' }]);
-  }, [error]);
-
-  const handleAuth = async () => {
-    if (!email || !password) {
-      Alert.alert('Error', 'Please fill in all fields');
-      return;
-    }
-    try {
-      if (isLogin) {
-        await login({ email, password });
-      } else {
-        const name = email.split('@')[0];
-        await register({ name, email, password });
-      }
-      navigation.replace('MainTabs');
-    } catch (error) {
-      console.log('Auth error:', error);
-      Alert.alert('Error', error.message || 'Authentication failed');
-    }
+  const handleAuth = () => {
+    // Navigate directly to MainTabs for UI development
+    navigation.replace('MainTabs');
   };
 
   return (
@@ -134,7 +113,6 @@ export default function LoginScreen({ navigation }) {
             >
               <TouchableOpacity
                 onPress={handleAuth}
-                disabled={loading}
                 activeOpacity={0.9}
               >
                 <LinearGradient
@@ -143,11 +121,7 @@ export default function LoginScreen({ navigation }) {
                   end={{ x: 1, y: 1 }}
                   style={styles.submitButton}
                 >
-                  {loading ? (
-                    <ActivityIndicator color="#fff" size="small" />
-                  ) : (
-                    <Text style={styles.submitButtonText}>{isLogin ? 'Sign In' : 'Sign Up'}</Text>
-                  )}
+                  <Text style={styles.submitButtonText}>{isLogin ? 'Sign In' : 'Sign Up'}</Text>
                 </LinearGradient>
               </TouchableOpacity>
             </MotiView>
@@ -200,14 +174,7 @@ export default function LoginScreen({ navigation }) {
           {/* Demo Button (Hidden in plain sight style) */}
           <TouchableOpacity
             style={styles.demoLink}
-            onPress={async () => {
-              try {
-                await login({ email: 'demo@urbanflow.com', password: 'password' });
-                navigation.replace('MainTabs');
-              } catch (error) {
-                Alert.alert('Error', 'Demo login failed.');
-              }
-            }}
+            onPress={() => navigation.replace('MainTabs')}
           >
             <Text style={styles.demoLinkText}>Demo Mode</Text>
           </TouchableOpacity>
