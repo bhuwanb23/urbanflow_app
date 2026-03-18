@@ -43,7 +43,7 @@ export default function LogoutButton({ onLogout }) {
         onPressOut={() => setIsPressed(false)}
         activeOpacity={0.8}
       >
-        <Icon name="logout" size={20} color={profileTheme.colors.textInverse} style={{ marginRight: 8 }} />
+        <Icon name="logout" size={20} color={profileTheme.colors.error} style={{ marginRight: 8 }} />
         <Text style={styles.logoutText}>Logout</Text>
       </TouchableOpacity>
     </MotiView>
@@ -53,23 +53,24 @@ export default function LogoutButton({ onLogout }) {
 const styles = StyleSheet.create({
   container: {
     marginTop: profileTheme.spacing.xl,
-    marginBottom: profileTheme.spacing.lg,
+    marginBottom: profileTheme.spacing.xl,
   },
   logoutBtn: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: profileTheme.colors.error,
+    backgroundColor: '#FEF2F2', // Red 50
     borderRadius: profileTheme.borderRadius['2xl'],
     paddingVertical: profileTheme.spacing.md,
-    ...profileTheme.shadows.md,
+    borderWidth: 1,
+    borderColor: '#FECACA', // Red 200
   },
   logoutBtnPressed: {
-    backgroundColor: '#dc2626',
+    backgroundColor: '#FEE2E2', // Red 100
     transform: [{ scale: 0.98 }],
   },
   logoutText: {
-    color: profileTheme.colors.textInverse,
+    color: profileTheme.colors.error,
     fontWeight: profileTheme.typography.fontWeight.bold,
     fontFamily: profileTheme.typography.fontFamily.primary,
     fontSize: profileTheme.typography.fontSize.lg,

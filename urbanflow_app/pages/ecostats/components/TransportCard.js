@@ -1,10 +1,9 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
-import { Card } from 'react-native-paper';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { MotiView } from 'moti';
 
-export default function TransportCard() {
+export default function TransportCard({ publicTransportTrips, averageEcoScore }) {
     return (
         <MotiView 
             from={{ opacity: 0, translateY: 30 }} 
@@ -12,15 +11,15 @@ export default function TransportCard() {
             transition={{ type: 'timing', duration: 700, delay: 300 }}
             style={{ marginTop: 16, width: '100%' }}
         >
-            <Card style={[styles.transportCard, styles.statCardShadow]}>
+            <View style={styles.transportCard}>
                 <View style={styles.transportRow}>
                     <View style={styles.transportLeft}>
-                        <View style={[styles.iconBg, { backgroundColor: '#E0E7FF', padding: 10, marginRight: 12 }]}>
-                            <Icon name="bus" size={24} color="#6366f1" />
+                        <View style={[styles.iconBg, { backgroundColor: '#ECFDF5' }]}>
+                            <Icon name="bus" size={24} color="#10B981" />
                         </View>
                         <View>
                             <Text style={styles.transportLabel}>Public Transport Trips</Text>
-                            <Text style={styles.transportValue}>17</Text>
+                            <Text style={styles.transportValue}>{publicTransportTrips || 17}</Text>
                         </View>
                     </View>
                     <View style={styles.transportRight}>
@@ -28,30 +27,23 @@ export default function TransportCard() {
                         <Text style={styles.transportPeriod}>this week</Text>
                     </View>
                 </View>
-            </Card>
+            </View>
         </MotiView>
     );
 }
 
 const styles = StyleSheet.create({
     transportCard: {
-        borderRadius: 18,
-        padding: 14,
-        backgroundColor: '#fff',
-        elevation: 3,
-        shadowColor: '#000',
-        shadowOpacity: 0.06,
-        shadowRadius: 8,
-        shadowOffset: { width: 0, height: 2 },
-    },
-    statCardShadow: {
+        borderRadius: 16,
+        padding: 16,
+        backgroundColor: '#FFFFFF',
         borderWidth: 1,
-        borderColor: '#E5E7EB',
-        shadowColor: '#6366f1',
-        shadowOpacity: 0.10,
-        shadowRadius: 12,
-        shadowOffset: { width: 0, height: 4 },
-        elevation: 5,
+        borderColor: '#F1F5F9', // Slate 100
+        shadowColor: '#64748B',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.05,
+        shadowRadius: 8,
+        elevation: 2,
     },
     transportRow: {
         flexDirection: 'row',
@@ -63,18 +55,22 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     iconBg: {
-        borderRadius: 14,
+        width: 48,
+        height: 48,
+        borderRadius: 24,
         alignItems: 'center',
         justifyContent: 'center',
+        marginRight: 16,
     },
     transportLabel: {
-        color: '#6B7280',
+        color: '#64748B', // Slate 500
         fontSize: 13,
-        fontFamily: 'Urbanist_400Regular',
+        fontFamily: 'Urbanist_600SemiBold',
+        marginBottom: 2,
     },
     transportValue: {
-        color: '#111827',
-        fontSize: 26,
+        color: '#0F172A', // Slate 900
+        fontSize: 24,
         fontWeight: 'bold',
         fontFamily: 'Montserrat_700Bold',
     },
@@ -82,14 +78,15 @@ const styles = StyleSheet.create({
         alignItems: 'flex-end',
     },
     transportChange: {
-        color: '#10b981',
-        fontWeight: '600',
-        fontSize: 13,
-        fontFamily: 'Montserrat_600SemiBold',
+        color: '#10B981', // Emerald 500
+        fontWeight: 'bold',
+        fontSize: 14,
+        fontFamily: 'Montserrat_700Bold',
+        marginBottom: 2,
     },
     transportPeriod: {
-        color: '#6B7280',
-        fontSize: 11,
-        fontFamily: 'Urbanist_400Regular',
+        color: '#94A3B8', // Slate 400
+        fontSize: 12,
+        fontFamily: 'Urbanist_600SemiBold',
     },
 });

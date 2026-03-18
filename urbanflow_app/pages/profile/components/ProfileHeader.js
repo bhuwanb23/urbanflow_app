@@ -1,13 +1,12 @@
 import React from 'react';
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
-import { LinearGradient } from 'expo-linear-gradient';
+import { View, Text, TouchableOpacity, StyleSheet, Platform } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { MotiView } from 'moti';
 import profileTheme from '../theme/profileTheme';
 
 export default function ProfileHeader({ title, onBack, onMenu, showBack = false }) {
   return (
-    <LinearGradient colors={profileTheme.gradients.primary} style={styles.headerGradient}>
+    <View style={styles.headerContainer}>
       <MotiView
         from={{ opacity: 0, translateY: -20 }}
         animate={{ opacity: 1, translateY: 0 }}
@@ -17,30 +16,29 @@ export default function ProfileHeader({ title, onBack, onMenu, showBack = false 
         <View style={styles.headerLeft}>
           {showBack && (
             <TouchableOpacity onPress={onBack} style={styles.backBtn}>
-              <Icon name="arrow-left" size={20} color={profileTheme.colors.textInverse} />
+              <Icon name="arrow-left" size={24} color={profileTheme.colors.textPrimary} />
             </TouchableOpacity>
           )}
           <Text style={styles.headerTitle}>{title}</Text>
         </View>
         <View style={styles.headerRight}>
           <TouchableOpacity onPress={onMenu} style={styles.settingsButton}>
-            <Icon name="dots-vertical" size={18} color={profileTheme.colors.textInverse} />
+            <Icon name="dots-vertical" size={20} color={profileTheme.colors.textPrimary} />
           </TouchableOpacity>
         </View>
       </MotiView>
-    </LinearGradient>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
-  headerGradient: {
-    paddingTop: profileTheme.spacing['3xl'],
-    paddingBottom: profileTheme.spacing.xl,
-    paddingHorizontal: profileTheme.spacing.xl,
-    borderBottomLeftRadius: profileTheme.borderRadius['2xl'],
-    borderBottomRightRadius: profileTheme.borderRadius['2xl'],
-    marginBottom: profileTheme.spacing.sm,
-    ...profileTheme.shadows.lg,
+  headerContainer: {
+    paddingTop: Platform.OS === 'android' ? 40 : 20,
+    paddingBottom: 20,
+    paddingHorizontal: 24,
+    backgroundColor: profileTheme.colors.surface,
+    borderBottomWidth: 1,
+    borderBottomColor: profileTheme.colors.borderLight,
   },
   headerContent: {
     flexDirection: 'row',
@@ -57,20 +55,22 @@ const styles = StyleSheet.create({
   },
   backBtn: {
     marginRight: profileTheme.spacing.md,
-    padding: profileTheme.spacing.sm,
+    padding: profileTheme.spacing.xs,
   },
   headerTitle: {
-    color: profileTheme.colors.textInverse,
-    fontSize: profileTheme.typography.fontSize['2xl'],
-    fontWeight: profileTheme.typography.fontWeight.bold,
+    color: profileTheme.colors.textPrimary,
+    fontSize: 24,
     fontFamily: profileTheme.typography.fontFamily.primary,
+    letterSpacing: -0.5,
   },
   settingsButton: {
-    width: 36,
-    height: 36,
-    borderRadius: 18,
-    backgroundColor: 'rgba(255,255,255,0.15)',
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    backgroundColor: profileTheme.colors.surfaceVariant,
     alignItems: 'center',
     justifyContent: 'center',
+    borderWidth: 1,
+    borderColor: profileTheme.colors.border,
   },
 });

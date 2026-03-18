@@ -1,157 +1,139 @@
 import React, { useState, useEffect } from 'react';
-import { SafeAreaView, View, Text, StyleSheet, ScrollView, ActivityIndicator, Alert } from 'react-native';
+import { View, StyleSheet, ScrollView, SafeAreaView, ActivityIndicator, Alert } from 'react-native';
+
+// Import Theme
+import profileTheme from './theme/profileTheme';
+
+// Import Components
 import ProfileHeader from './components/ProfileHeader';
 import ProfileCard from './components/ProfileCard';
 import SettingsCard from './components/SettingsCard';
 import SustainabilityCard from './components/SustainabilityCard';
 import LogoutButton from './components/LogoutButton';
 
-const settings = [
-    { label: 'Language & Region', icon: 'web', color: ['#3b82f6', '#1e40af'], bg: '#e0eaff', screen: 'LanguageRegion' },
-    { label: 'Preferred Transport', icon: 'bus', color: ['#22c55e', '#4ade80'], bg: '#d1fae5', screen: 'PreferredTransport' },
-    { label: 'Notifications', icon: 'bell', color: ['#facc15', '#fbbf24'], bg: '#fef9c3', screen: 'Notifications' },
-    { label: 'Mobility Goals', icon: 'target', color: ['#a78bfa', '#f472b6'], bg: '#ede9fe', screen: 'MobilityGoals' },
-    { label: 'Privacy', icon: 'shield-lock', color: ['#ef4444', '#f87171'], bg: '#fee2e2', screen: 'Privacy' },
+// Mock Data (Assuming hooks might not be fully wired up yet based on your existing pattern)
+const MOCK_PROFILE = {
+  name: 'Bhuwan Chandra',
+  email: 'bhuwan@urbanflow.eco',
+  joinDate: 'Jan 2024',
+};
+
+const ACCOUNT_SETTINGS = [
+  { icon: 'account-edit', label: 'Edit Profile', route: 'EditProfileScreen', bg: '#F8FAFC', color: ['#0F172A'] },
+  { icon: 'bell-outline', label: 'Notifications', route: 'NotificationsScreen', bg: '#F8FAFC', color: ['#0F172A'] },
+  { icon: 'shield-account', label: 'Privacy & Security', route: 'PrivacyScreen', bg: '#F8FAFC', color: ['#0F172A'] },
+];
+
+const PREFERENCES_SETTINGS = [
+  { icon: 'bus', label: 'Preferred Transport', route: 'PreferredTransportScreen', bg: '#F8FAFC', color: ['#0F172A'] },
+  { icon: 'target', label: 'Mobility Goals', route: 'MobilityGoalsScreen', bg: '#F8FAFC', color: ['#0F172A'] },
+  { icon: 'earth', label: 'Language & Region', route: 'LanguageRegionScreen', bg: '#F8FAFC', color: ['#0F172A'] },
+];
+
+const SUSTAINABILITY_DATA = [
+  { icon: 'leaf', label: 'CO2 Saved', value: '45.2 kg', percent: '+12%', percentColor: '#10B981', bg: '#ECFDF5', color: ['#10B981'] },
+  { icon: 'tree', label: 'Trees Equivalent', value: '2.5', percent: '+1', percentColor: '#10B981', bg: '#ECFDF5', color: ['#10B981'] },
+  { icon: 'star-circle', label: 'Eco Score', value: '850', percent: 'Top 5%', percentColor: '#F59E0B', bg: '#FFFBEB', color: ['#F59E0B'] },
 ];
 
 export default function ProfileScreen({ navigation }) {
-    // Mock Data
-    const user = {
-        name: 'Demo User',
-        email: 'demo@urbanflow.com',
-        avatar: null
-    };
+  const [profile, setProfile] = useState(MOCK_PROFILE);
+  const [loading, setLoading] = useState(false);
 
-    const ecoStats = {
-        totalCO2Saved: '125 kg',
-        totalDistanceWalked: '45 km',
-        totalPublicTransportTrips: 28
-    };
+  // In a real app, fetch data here
+  useEffect(() => {
+    // Simulate data loading
+    setLoading(true);
+    setTimeout(() => {
+      setLoading(false);
+    }, 500);
+  }, []);
 
-    const handleSettingPress = (setting) => {
-        // Navigate to the appropriate screen based on setting
-        switch (setting.screen) {
-            case 'LanguageRegion':
-                navigation.navigate('LanguageRegionScreen');
-                break;
-            case 'PreferredTransport':
-                navigation.navigate('PreferredTransportScreen');
-                break;
-            case 'Notifications':
-                navigation.navigate('NotificationsScreen');
-                break;
-            case 'MobilityGoals':
-                navigation.navigate('MobilityGoalsScreen');
-                break;
-            case 'Privacy':
-                navigation.navigate('PrivacyScreen');
-                break;
-            default:
-                console.log('Setting pressed:', setting.label);
-        }
-    };
+  const handleSettingPress = (setting) => {
+    if (setting.route) {
+      // navigation.navigate(setting.route);
+      console.log(`Navigate to ${setting.route}`);
+    }
+  };
 
-    const handleEditProfile = () => {
-        // Navigate to edit profile screen
-        navigation.navigate('EditProfileScreen');
-    };
+  const handleLogout = () => {
+    console.log('Logging out...');
+    navigation.replace('Login');
+  };
 
-    const handleEditAvatar = () => {
-        // Handle avatar editing
-        console.log('Edit avatar pressed');
-    };
+  const handleEditProfile = () => {
+    console.log('Edit profile clicked');
+    // navigation.navigate('EditProfileScreen');
+  };
 
-    const handleLogout = () => {
-        navigation.replace('Login');
-    };
+  const handleEditAvatar = () => {
+    console.log('Edit avatar clicked');
+    // Trigger image picker
+  };
 
-    const handleMenuPress = () => {
-        // Handle menu press
-        console.log('Menu pressed');
-    };
-
-    // Prepare sustainability data
-    const sustainability = [
-        { 
-            label: 'CO₂ Saved', 
-            value: ecoStats.totalCO2Saved, 
-            icon: 'leaf', 
-            color: ['#4ade80', '#16a34a'], 
-            percent: '+12%', 
-            percentColor: '#16a34a', 
-            bg: '#f0fdf4' 
-        },
-        { 
-            label: 'Distance Walked', 
-            value: ecoStats.totalDistanceWalked, 
-            icon: 'walk', 
-            color: ['#3b82f6', '#1e40af'], 
-            percent: '+8%', 
-            percentColor: '#2563eb', 
-            bg: '#eff6ff' 
-        },
-        { 
-            label: 'Public Transport', 
-            value: `${ecoStats.totalPublicTransportTrips} trips`, 
-            icon: 'subway-variant', 
-            color: ['#a78bfa', '#f472b6'], 
-            percent: '+15%', 
-            percentColor: '#a21caf', 
-            bg: '#f5f3ff' 
-        },
-    ];
-
+  if (loading) {
     return (
-        <SafeAreaView style={styles.container}>
-            <ProfileHeader 
-                title="Profile" 
-                onMenu={handleMenuPress}
-                showBack={false}
-            />
-            
-            <ScrollView 
-                style={styles.scrollView}
-                contentContainerStyle={styles.scrollContent} 
-                showsVerticalScrollIndicator={false}
-            >
-                {/* Profile Info Card */}
-                <ProfileCard 
-                    profile={user}
-                    onEditProfile={handleEditProfile}
-                    onEditAvatar={handleEditAvatar}
-                />
-
-                {/* Settings */}
-                <SettingsCard 
-                    title="Settings"
-                    settings={settings}
-                    onSettingPress={handleSettingPress}
-                />
-
-                {/* Sustainability Impact */}
-                <SustainabilityCard 
-                    title="Sustainability Impact"
-                    sustainabilityData={sustainability}
-                />
-
-                {/* Logout Button */}
-                <LogoutButton onLogout={handleLogout} />
-            </ScrollView>
-        </SafeAreaView>
+      <SafeAreaView style={styles.loadingContainer}>
+        <ActivityIndicator size="large" color={profileTheme.colors.primary} />
+      </SafeAreaView>
     );
+  }
+
+  return (
+    <SafeAreaView style={styles.container}>
+      <ProfileHeader 
+        title="My Profile" 
+        onMenu={() => console.log('Menu clicked')} 
+      />
+      
+      <ScrollView 
+        contentContainerStyle={styles.scrollContent}
+        showsVerticalScrollIndicator={false}
+      >
+        <ProfileCard 
+          profile={profile} 
+          onEditProfile={handleEditProfile}
+          onEditAvatar={handleEditAvatar}
+        />
+
+        <SustainabilityCard 
+          title="Sustainability Impact" 
+          sustainabilityData={SUSTAINABILITY_DATA} 
+        />
+
+        <SettingsCard 
+          title="Account" 
+          settings={ACCOUNT_SETTINGS} 
+          onSettingPress={handleSettingPress} 
+        />
+
+        <SettingsCard 
+          title="Preferences" 
+          settings={PREFERENCES_SETTINGS} 
+          onSettingPress={handleSettingPress} 
+        />
+
+        <LogoutButton onLogout={handleLogout} />
+        
+      </ScrollView>
+    </SafeAreaView>
+  );
 }
 
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        backgroundColor: '#F9FAFB',
-    },
-    scrollView: {
-        flex: 1,
-    },
-    scrollContent: { 
-        padding: 20,
-        paddingTop: 16,
-        paddingBottom: 80,
-    },
-}); 
+  container: {
+    flex: 1,
+    backgroundColor: profileTheme.colors.background,
+  },
+  loadingContainer: {
+    flex: 1,
+    backgroundColor: profileTheme.colors.background,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  scrollContent: {
+    paddingHorizontal: profileTheme.spacing.xl,
+    paddingTop: profileTheme.spacing.lg,
+    paddingBottom: profileTheme.spacing['4xl'],
+  },
+});

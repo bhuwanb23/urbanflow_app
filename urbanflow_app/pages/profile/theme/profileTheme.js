@@ -4,54 +4,51 @@ const { width, height } = Dimensions.get('window');
 
 export const profileTheme = {
   colors: {
-    // Primary colors
-    primary: '#6366f1',
-    primaryLight: '#8b5cf6',
-    primaryDark: '#4f46e5',
+    // Primary colors (Emerald Green Theme)
+    primary: '#10B981',
+    primaryLight: '#34D399',
+    primaryDark: '#059669',
     
-    // Secondary colors
-    secondary: '#10b981',
-    secondaryLight: '#34d399',
-    secondaryDark: '#059669',
+    // Secondary colors (Slate for modern contrast)
+    secondary: '#0F172A',
+    secondaryLight: '#334155',
+    secondaryDark: '#020617',
     
     // Accent colors
-    accent: '#f59e0b',
-    accentLight: '#fbbf24',
-    accentDark: '#d97706',
+    accent: '#F59E0B',
+    accentLight: '#FBBF24',
+    accentDark: '#D97706',
     
     // Text colors
-    textPrimary: '#1f2937',
-    textSecondary: '#6b7280',
-    textTertiary: '#9ca3af',
-    textInverse: '#ffffff',
+    textPrimary: '#0F172A',
+    textSecondary: '#64748B',
+    textTertiary: '#94A3B8',
+    textInverse: '#FFFFFF',
     
     // Background colors
-    background: '#f8fafc',
-    surface: '#ffffff',
-    surfaceVariant: '#f1f5f9',
+    background: '#FFFFFF',
+    surface: '#FFFFFF',
+    surfaceVariant: '#F8FAFC',
     
     // Status colors
-    success: '#22c55e',
-    warning: '#f59e0b',
-    error: '#ef4444',
-    info: '#3b82f6',
+    success: '#10B981',
+    warning: '#F59E0B',
+    error: '#EF4444',
+    info: '#3B82F6',
     
     // Border colors
-    border: '#e2e8f0',
-    borderLight: '#f1f5f9',
+    border: '#E2E8F0',
+    borderLight: '#F1F5F9',
     
     // Shadow colors
-    shadow: '#000000',
-    shadowPrimary: '#6366f1',
+    shadow: '#64748B',
+    shadowPrimary: '#10B981',
   },
   
   typography: {
     fontFamily: {
-      // Primary font for headings and important text
-      primary: 'System',
-      // Secondary font for body text and descriptions
-      secondary: 'System',
-      // Monospace font for technical information
+      primary: 'Poppins_700Bold',
+      secondary: 'Urbanist_400Regular',
       mono: 'System',
     },
     
@@ -75,81 +72,67 @@ export const profileTheme = {
       bold: '700',
       extrabold: '800',
     },
-    
-    lineHeight: {
-      tight: 1.2,
-      normal: 1.4,
-      relaxed: 1.6,
-      loose: 1.8,
-    },
   },
   
   spacing: {
-    xs: Math.max(4, height * 0.005),
-    sm: Math.max(8, height * 0.01),
-    base: Math.max(12, height * 0.015),
-    md: Math.max(16, height * 0.02),
-    lg: Math.max(20, height * 0.025),
-    xl: Math.max(24, height * 0.03),
-    '2xl': Math.max(32, height * 0.04),
-    '3xl': Math.max(40, height * 0.05),
-    '4xl': Math.max(48, height * 0.06),
+    xs: 4,
+    sm: 8,
+    base: 12,
+    md: 16,
+    lg: 20,
+    xl: 24,
+    '2xl': 32,
+    '3xl': 40,
+    '4xl': 48,
   },
   
   borderRadius: {
-    sm: Math.max(4, width * 0.01),
-    base: Math.max(8, width * 0.02),
-    md: Math.max(12, width * 0.03),
-    lg: Math.max(16, width * 0.04),
-    xl: Math.max(20, width * 0.05),
-    '2xl': Math.max(24, width * 0.06),
-    '3xl': Math.max(32, width * 0.08),
+    sm: 4,
+    base: 8,
+    md: 12,
+    lg: 16,
+    xl: 20,
+    '2xl': 24,
+    '3xl': 32,
     full: 9999,
   },
   
   shadows: {
     sm: {
-      shadowColor: '#000000',
+      shadowColor: '#64748B',
       shadowOffset: { width: 0, height: 1 },
       shadowOpacity: 0.05,
       shadowRadius: 2,
       elevation: 1,
     },
     md: {
-      shadowColor: '#000000',
+      shadowColor: '#64748B',
       shadowOffset: { width: 0, height: 2 },
-      shadowOpacity: 0.1,
-      shadowRadius: 4,
+      shadowOpacity: 0.05,
+      shadowRadius: 8,
       elevation: 2,
     },
     lg: {
-      shadowColor: '#000000',
+      shadowColor: '#64748B',
       shadowOffset: { width: 0, height: 4 },
-      shadowOpacity: 0.15,
-      shadowRadius: 8,
+      shadowOpacity: 0.08,
+      shadowRadius: 12,
       elevation: 4,
     },
-    xl: {
-      shadowColor: '#000000',
-      shadowOffset: { width: 0, height: 8 },
-      shadowOpacity: 0.2,
-      shadowRadius: 16,
-      elevation: 8,
-    },
     primary: {
-      shadowColor: '#6366f1',
+      shadowColor: '#10B981',
       shadowOffset: { width: 0, height: 4 },
-      shadowOpacity: 0.25,
+      shadowOpacity: 0.2,
       shadowRadius: 8,
       elevation: 4,
     },
   },
   
   gradients: {
-    primary: ['#6366f1', '#8b5cf6'],
-    secondary: ['#10b981', '#34d399'],
-    accent: ['#f59e0b', '#fbbf24'],
-    surface: ['#ffffff', '#f8fafc'],
+    primary: ['#10B981', '#059669'],
+    secondary: ['#0F172A', '#1E293B'],
+    accent: ['#F59E0B', '#FBBF24'],
+    surface: ['#FFFFFF', '#F8FAFC'],
   },
   
   animation: {
@@ -159,20 +142,6 @@ export const profileTheme = {
       slow: 500,
       slower: 800,
     },
-    easing: {
-      ease: 'ease',
-      easeIn: 'ease-in',
-      easeOut: 'ease-out',
-      easeInOut: 'ease-in-out',
-    },
-  },
-  
-  responsive: {
-    width,
-    height,
-    isSmallDevice: width < 375,
-    isMediumDevice: width >= 375 && width < 414,
-    isLargeDevice: width >= 414,
   },
 };
 

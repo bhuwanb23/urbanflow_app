@@ -22,7 +22,7 @@ export default function StatCard({
             transition={{ type: 'timing', duration: 700, delay }}
             style={style}
         >
-            <Card style={[styles.statCard, styles.statCardShadow]}>
+            <View style={styles.statCard}>
                 <View style={styles.cardIconRow}>
                     <View style={[styles.iconBg, { backgroundColor: iconBgColor }]}>
                         <Icon name={icon} size={20} color={iconColor} />
@@ -36,7 +36,7 @@ export default function StatCard({
                         <Text style={[styles.cardChangeText, { color: changeColor }]}>{change}</Text>
                     </View>
                 )}
-            </Card>
+            </View>
         </MotiView>
     );
 }
@@ -44,55 +44,48 @@ export default function StatCard({
 const styles = StyleSheet.create({
     statCard: {
         flex: 1,
-        borderRadius: 18,
-        padding: 14,
-        marginRight: 0,
-        backgroundColor: '#fff',
-        elevation: 3,
-        shadowColor: '#000',
-        shadowOpacity: 0.06,
-        shadowRadius: 8,
-        shadowOffset: { width: 0, height: 2 },
-    },
-    statCardShadow: {
+        borderRadius: 16,
+        padding: 16,
+        backgroundColor: '#FFFFFF',
         borderWidth: 1,
-        borderColor: '#E5E7EB',
-        shadowColor: '#6366f1',
-        shadowOpacity: 0.10,
-        shadowRadius: 12,
-        shadowOffset: { width: 0, height: 4 },
-        elevation: 5,
+        borderColor: '#F1F5F9', // Slate 100
+        shadowColor: '#64748B',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.05,
+        shadowRadius: 8,
+        elevation: 2,
     },
     cardIconRow: {
         flexDirection: 'row',
         alignItems: 'center',
-        marginBottom: 6,
+        marginBottom: 12,
     },
     iconBg: {
-        padding: 6,
-        borderRadius: 14,
+        width: 40,
+        height: 40,
+        borderRadius: 20,
         alignItems: 'center',
         justifyContent: 'center',
     },
     cardLabel: {
-        color: '#6B7280',
-        fontSize: 11,
-        marginBottom: 2,
-        fontFamily: 'Urbanist_400Regular',
+        color: '#64748B', // Slate 500
+        fontSize: 13,
+        marginBottom: 4,
+        fontFamily: 'Urbanist_600SemiBold',
     },
     cardValue: {
-        color: '#111827',
-        fontSize: 20,
+        color: '#0F172A', // Slate 900
+        fontSize: 22,
         fontWeight: 'bold',
         fontFamily: 'Montserrat_700Bold',
     },
     cardChangeRow: {
         flexDirection: 'row',
         alignItems: 'center',
-        marginTop: 3,
+        marginTop: 6,
     },
     cardChangeText: {
-        fontSize: 11,
-        fontFamily: 'Urbanist_400Regular',
+        fontSize: 12,
+        fontFamily: 'Urbanist_600SemiBold',
     },
 });

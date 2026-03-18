@@ -1,6 +1,5 @@
 import React from 'react';
 import { View, Text, Image, TouchableOpacity, StyleSheet } from 'react-native';
-import { Card } from 'react-native-paper';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { MotiView } from 'moti';
 import profileTheme from '../theme/profileTheme';
@@ -13,7 +12,7 @@ export default function ProfileCard({ profile, onEditProfile, onEditAvatar }) {
       transition={{ type: 'spring', duration: profileTheme.animation.duration.slower, delay: 200 }}
       style={styles.profileCardWrap}
     >
-      <Card style={styles.profileCard}>
+      <View style={styles.profileCard}>
         <View style={styles.profileInfo}>
           <MotiView
             from={{ scale: 0, rotate: '-180deg' }}
@@ -21,9 +20,11 @@ export default function ProfileCard({ profile, onEditProfile, onEditAvatar }) {
             transition={{ type: 'spring', delay: 400, duration: profileTheme.animation.duration.slower }}
             style={styles.avatarWrap}
           >
-            <Image source={{ uri: profile.avatar }} style={styles.avatarImg} />
+            <View style={styles.avatarPlaceholder}>
+              <Icon name="account" size={48} color={profileTheme.colors.primary} />
+            </View>
             <TouchableOpacity onPress={onEditAvatar} style={styles.avatarEditBtn}>
-              <Icon name="camera" size={16} color={profileTheme.colors.textInverse} />
+              <Icon name="camera" size={14} color={profileTheme.colors.textInverse} />
             </TouchableOpacity>
           </MotiView>
           
@@ -42,12 +43,12 @@ export default function ProfileCard({ profile, onEditProfile, onEditAvatar }) {
             transition={{ type: 'spring', delay: 800 }}
           >
             <TouchableOpacity onPress={onEditProfile} style={styles.editProfileBtn}>
-              <Icon name="pencil" size={16} color={profileTheme.colors.textInverse} style={{ marginRight: 6 }} />
+              <Icon name="pencil" size={16} color={profileTheme.colors.primary} style={{ marginRight: 6 }} />
               <Text style={styles.editProfileText}>Edit Profile</Text>
             </TouchableOpacity>
           </MotiView>
         </View>
-      </Card>
+      </View>
     </MotiView>
   );
 }
@@ -55,31 +56,33 @@ export default function ProfileCard({ profile, onEditProfile, onEditAvatar }) {
 const styles = StyleSheet.create({
   profileCardWrap: {
     marginBottom: profileTheme.spacing.lg,
-    borderRadius: profileTheme.borderRadius['3xl'],
-    ...profileTheme.shadows.lg,
   },
   profileCard: {
     borderRadius: profileTheme.borderRadius['3xl'],
     backgroundColor: profileTheme.colors.surface,
     padding: profileTheme.spacing.xl,
     alignItems: 'center',
+    borderWidth: 1,
+    borderColor: profileTheme.colors.borderLight,
+    ...profileTheme.shadows.md,
   },
   profileInfo: {
     alignItems: 'center',
-    marginTop: profileTheme.spacing.xs,
   },
   avatarWrap: {
     position: 'relative',
     marginBottom: profileTheme.spacing.md,
   },
-  avatarImg: {
+  avatarPlaceholder: {
     width: 96,
     height: 96,
     borderRadius: 48,
     borderWidth: 4,
     borderColor: profileTheme.colors.surface,
-    backgroundColor: profileTheme.colors.surfaceVariant,
-    ...profileTheme.shadows.lg,
+    backgroundColor: '#ECFDF5', // Emerald 50
+    alignItems: 'center',
+    justifyContent: 'center',
+    ...profileTheme.shadows.md,
   },
   avatarEditBtn: {
     position: 'absolute',
@@ -88,16 +91,15 @@ const styles = StyleSheet.create({
     width: 32,
     height: 32,
     borderRadius: 16,
-    backgroundColor: profileTheme.colors.success,
+    backgroundColor: profileTheme.colors.primary,
     borderWidth: 3,
     borderColor: profileTheme.colors.surface,
     alignItems: 'center',
     justifyContent: 'center',
-    ...profileTheme.shadows.md,
+    ...profileTheme.shadows.sm,
   },
   profileName: {
-    fontSize: profileTheme.typography.fontSize['3xl'],
-    fontWeight: profileTheme.typography.fontWeight.bold,
+    fontSize: profileTheme.typography.fontSize['2xl'],
     color: profileTheme.colors.textPrimary,
     marginBottom: profileTheme.spacing.xs,
     fontFamily: profileTheme.typography.fontFamily.primary,
@@ -106,23 +108,23 @@ const styles = StyleSheet.create({
   profileEmail: {
     fontSize: profileTheme.typography.fontSize.base,
     color: profileTheme.colors.textSecondary,
-    marginBottom: profileTheme.spacing.md,
+    marginBottom: profileTheme.spacing.lg,
     fontFamily: profileTheme.typography.fontFamily.secondary,
     textAlign: 'center',
   },
   editProfileBtn: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: profileTheme.colors.primary,
-    paddingHorizontal: profileTheme.spacing.md,
-    paddingVertical: profileTheme.spacing.sm,
-    borderRadius: profileTheme.borderRadius.xl,
-    ...profileTheme.shadows.primary,
+    backgroundColor: '#ECFDF5', // Emerald 50
+    paddingHorizontal: profileTheme.spacing.lg,
+    paddingVertical: profileTheme.spacing.base,
+    borderRadius: profileTheme.borderRadius.full,
+    borderWidth: 1,
+    borderColor: '#A7F3D0', // Emerald 200
   },
   editProfileText: {
-    color: profileTheme.colors.textInverse,
+    color: profileTheme.colors.primary,
     fontSize: profileTheme.typography.fontSize.base,
-    fontWeight: profileTheme.typography.fontWeight.semibold,
-    fontFamily: profileTheme.typography.fontFamily.secondary,
+    fontFamily: 'Urbanist_700Bold',
   },
 });

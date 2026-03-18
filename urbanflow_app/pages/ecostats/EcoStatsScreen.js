@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, ScrollView, SafeAreaView, ActivityIndicator, Alert } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, SafeAreaView, ActivityIndicator, Alert, Platform } from 'react-native';
 
 // Import API hooks
 import { useEcoStats } from '../../utils/hooks/useAPI';
@@ -104,8 +104,8 @@ export default function EcoStatsScreen() {
                     <View style={styles.statCardsRow}>
                         <StatCard
                             icon="leaf"
-                            iconBgColor="#E0E7FF"
-                            iconColor="#10b981"
+                            iconBgColor="#ECFDF5" // Emerald 50
+                            iconColor="#10B981" // Emerald 500
                             label="CO₂ Saved"
                             value={co2Saved}
                             change="+2.1kg"
@@ -113,8 +113,8 @@ export default function EcoStatsScreen() {
                         />
                         <StatCard
                             icon="walk"
-                            iconBgColor="#F1F5F9"
-                            iconColor="#6366f1"
+                            iconBgColor="#F8FAFC" // Slate 50
+                            iconColor="#0F172A" // Slate 900
                             label="Distance Walked"
                             value={distanceWalked}
                             change="+3.2km"
@@ -165,7 +165,7 @@ export default function EcoStatsScreen() {
                                 title="Step Master"
                                 subtitle="10,000+ steps daily"
                                 icon="trophy"
-                                gradientColors={["#3B82F6", "#2563EB"]}
+                                gradientColors={["#0F172A", "#1E293B"]} // Slate 900 -> 800
                                 delay={600}
                             />
                             
@@ -209,11 +209,11 @@ export default function EcoStatsScreen() {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#F9FAFB',
+        backgroundColor: '#FFFFFF',
     },
     loadingContainer: {
         flex: 1,
-        backgroundColor: '#F9FAFB',
+        backgroundColor: '#FFFFFF',
         justifyContent: 'center',
         alignItems: 'center',
     },
@@ -227,26 +227,27 @@ const styles = StyleSheet.create({
         flex: 1,
     },
     scrollContent: {
-        paddingBottom: 32,
+        paddingBottom: 40,
     },
     cardsContainer: {
-        paddingHorizontal: 20,
+        paddingHorizontal: 24,
         marginTop: 16,
-        marginBottom: 20,
+        marginBottom: 24,
     },
     statCardsRow: {
         flexDirection: 'row',
-        gap: 12,
+        gap: 16,
     },
     sectionContainer: {
-        paddingHorizontal: 20,
-        marginBottom: 20,
+        paddingHorizontal: 24,
+        marginBottom: 24,
     },
     sectionTitle: {
-        fontSize: 16,
-        fontWeight: '600',
-        color: '#111827',
-        marginBottom: 12,
-        fontFamily: 'Montserrat_700Bold',
+        fontSize: 18,
+        fontWeight: 'bold',
+        color: '#0F172A', // Slate 900
+        marginBottom: 16,
+        fontFamily: 'Poppins_700Bold',
+        letterSpacing: -0.5,
     },
-}); 
+});

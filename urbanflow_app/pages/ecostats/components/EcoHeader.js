@@ -1,46 +1,39 @@
 import React from 'react';
-import { View, Text, StyleSheet, Dimensions, TouchableOpacity } from 'react-native';
-import { LinearGradient } from 'expo-linear-gradient';
+import { View, Text, StyleSheet, Dimensions, TouchableOpacity, Platform } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 const { width, height } = Dimensions.get('window');
 
 export default function EcoHeader() {
     return (
-        <LinearGradient
-            colors={["#6366f1", "#8b5cf6"]}
-            style={styles.headerGradient}
-        >
+        <View style={styles.headerContainer}>
             <View style={styles.headerRow}>
                 <View style={styles.headerLeft}>
-                    <Text style={styles.headerTitle}>Your Sustainability Stats</Text>
+                    <Text style={styles.headerTitle}>Your Eco Stats</Text>
                     <View style={styles.headerSubtitleRow}>
-                        <Text style={{ fontSize: 18, marginRight: 6 }}>🌱</Text>
+                        <Text style={{ fontSize: 16, marginRight: 6 }}>🌱</Text>
                         <Text style={styles.headerSubtitle}>Keep up the great work!</Text>
                     </View>
                 </View>
                 <View style={styles.headerRight}>
                     <TouchableOpacity style={styles.settingsButton}>
-                        <Icon name="bell" size={18} color="#fff" />
+                        <Icon name="bell-outline" size={20} color="#0F172A" />
+                        <View style={styles.notificationDot} />
                     </TouchableOpacity>
                 </View>
             </View>
-        </LinearGradient>
+        </View>
     );
 }
 
 const styles = StyleSheet.create({
-    headerGradient: {
-        paddingTop: height * 0.04,
-        paddingBottom: height * 0.02,
-        paddingHorizontal: width * 0.06,
-        borderBottomLeftRadius: 24,
-        borderBottomRightRadius: 24,
-        elevation: 4,
-        shadowColor: '#6366f1',
-        shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.08,
-        shadowRadius: 12,
+    headerContainer: {
+        paddingTop: Platform.OS === 'android' ? 40 : 20,
+        paddingBottom: 20,
+        paddingHorizontal: 24,
+        backgroundColor: '#FFFFFF',
+        borderBottomWidth: 1,
+        borderBottomColor: '#F1F5F9',
     },
     headerRow: {
         flexDirection: 'row',
@@ -54,28 +47,41 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     headerTitle: {
-        fontSize: Math.max(20, width * 0.06),
-        fontWeight: 'bold',
-        color: '#fff',
+        fontSize: 24,
         fontFamily: 'Poppins_700Bold',
-        marginBottom: 6,
+        color: '#0F172A', // Slate 900
+        marginBottom: 4,
+        letterSpacing: -0.5,
     },
     headerSubtitleRow: {
         flexDirection: 'row',
         alignItems: 'center',
-        gap: 8,
+        gap: 4,
     },
     headerSubtitle: {
-        fontSize: Math.max(12, width * 0.035),
-        color: 'rgba(255,255,255,0.8)',
+        fontSize: 14,
+        color: '#64748B', // Slate 500
         fontFamily: 'Urbanist_400Regular',
     },
     settingsButton: {
-        width: 36,
-        height: 36,
-        borderRadius: 18,
-        backgroundColor: 'rgba(255,255,255,0.15)',
+        width: 40,
+        height: 40,
+        borderRadius: 20,
+        backgroundColor: '#F8FAFC', // Slate 50
         alignItems: 'center',
         justifyContent: 'center',
+        borderWidth: 1,
+        borderColor: '#E2E8F0', // Slate 200
+    },
+    notificationDot: {
+        position: 'absolute',
+        top: 10,
+        right: 10,
+        width: 8,
+        height: 8,
+        borderRadius: 4,
+        backgroundColor: '#EF4444', // Red 500
+        borderWidth: 1,
+        borderColor: '#FFFFFF',
     },
 });
