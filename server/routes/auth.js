@@ -71,10 +71,10 @@ const handleValidationErrors = (req, res, next) => {
 // @access  Public
 router.post('/register', validateRegistration, handleValidationErrors, async (req, res) => {
   try {
-    const { name, email, password, location, preferredTransport, sustainabilityGoals } = req.body;
+    const { name, email, password, location, preferredTransport } = req.body;
 
-    // Check if user already exists
-    const existingUser = await User.findOne({ email });
+    // Check if user already exists (Sequelize)
+    const existingUser = await User.findOne({ where: { email } });
     if (existingUser) {
       return res.status(400).json({
         success: false,
@@ -82,54 +82,34 @@ router.post('/register', validateRegistration, handleValidationErrors, async (re
       });
     }
 
-    // Create new user
-    const user = new User({
+    const city = location?.city || 'Mumbai';
+    const country = location?.country || 'India';
+
+    const newUser = await User.create({
       name,
       email,
       password,
-      location: location || { city: 'Mumbai', country: 'India' },
+      city,
+      country,
       preferredTransport: preferredTransport || [
         { mode: 'train', priority: 1 },
         { mode: 'bus', priority: 2 },
         { mode: 'walk', priority: 3 }
       ],
-      sustainabilityGoals: sustainabilityGoals || {
-        dailyCO2Target: 5.0,
-        weeklyWalkingTarget: 50,
-        monthlyPublicTransportTarget: 100,
-        ecoScoreTarget: 80
-      }
     });
 
-    await user.save();
+    const token = generateToken(newUser.id);
 
-    // Generate JWT token
-    const token = generateToken(user._id);
+    const user = newUser.getPublicProfile();
 
-    // Return user data (without password) and token
-    const userResponse = {
-      _id: user._id,
-      name: user.name,
-      email: user.email,
-      avatar: user.avatar,
-      location: user.location,
-      preferredTransport: user.preferredTransport,
-      sustainabilityGoals: user.sustainabilityGoals,
-      currentStats: user.currentStats,
-      notifications: user.notifications,
-      privacy: user.privacy,
-      createdAt: user.createdAt
-    };
-
-    res.status(201).json({
+    // Return flat structure expected by mobile client
+    return res.status(201).json({
       success: true,
       message: 'User registered successfully',
-      data: {
-        user: userResponse,
-        token,
-        tokenType: 'Bearer',
-        expiresIn: process.env.JWT_EXPIRES_IN || '7d'
-      }
+      token,
+      tokenType: 'Bearer',
+      expiresIn: process.env.JWT_EXPIRES_IN || '7d',
+      user,
     });
 
   } catch (error) {
@@ -149,25 +129,24 @@ router.post('/login', validateLogin, handleValidationErrors, async (req, res) =>
   try {
     const { email, password } = req.body;
 
-    // Check if user exists
-    const user = await User.findOne({ email }).select('+password');
-    if (!user) {
+    // Find user via Sequelize
+    const userRecord = await User.findOne({ where: { email } });
+    if (!userRecord) {
       return res.status(401).json({
         success: false,
         message: 'Invalid credentials'
       });
     }
 
-    // Check if user is active
-    if (!user.isActive) {
+    if (!userRecord.isActive) {
       return res.status(401).json({
         success: false,
         message: 'Account is deactivated. Please contact support.'
       });
     }
 
-    // Verify password
-    const isPasswordValid = await user.comparePassword(password);
+    // Verify password (instance method on Sequelize model)
+    const isPasswordValid = await userRecord.comparePassword(password);
     if (!isPasswordValid) {
       return res.status(401).json({
         success: false,
@@ -176,37 +155,24 @@ router.post('/login', validateLogin, handleValidationErrors, async (req, res) =>
     }
 
     // Update last login
-    user.lastLogin = new Date();
-    await user.save();
+    userRecord.lastLogin = new Date();
+    await userRecord.save();
 
-    // Generate JWT token
-    const token = generateToken(user._id);
+    const token = generateToken(userRecord.id);
 
-    // Return user data and token
-    const userResponse = {
-      _id: user._id,
-      name: user.name,
-      email: user.email,
-      avatar: user.avatar,
-      location: user.location,
-      preferredTransport: user.preferredTransport,
-      sustainabilityGoals: user.sustainabilityGoals,
-      currentStats: user.currentStats,
-      notifications: user.notifications,
-      privacy: user.privacy,
-      lastLogin: user.lastLogin,
-      createdAt: user.createdAt
+    const user = {
+      ...userRecord.getPublicProfile(),
+      lastLogin: userRecord.lastLogin,
     };
 
-    res.json({
+    // Return flat structure expected by mobile client
+    return res.json({
       success: true,
       message: 'Login successful',
-      data: {
-        user: userResponse,
-        token,
-        tokenType: 'Bearer',
-        expiresIn: process.env.JWT_EXPIRES_IN || '7d'
-      }
+      token,
+      tokenType: 'Bearer',
+      expiresIn: process.env.JWT_EXPIRES_IN || '7d',
+      user,
     });
 
   } catch (error) {
@@ -235,10 +201,10 @@ router.post('/refresh', async (req, res) => {
 
     // Verify token
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    
-    // Check if user still exists
-    const user = await User.findById(decoded.userId);
-    if (!user || !user.isActive) {
+
+    // Check if user still exists (Sequelize)
+    const userRecord = await User.findByPk(decoded.userId);
+    if (!userRecord || !userRecord.isActive) {
       return res.status(401).json({
         success: false,
         message: 'Invalid token or user not found'
@@ -246,16 +212,14 @@ router.post('/refresh', async (req, res) => {
     }
 
     // Generate new token
-    const newToken = generateToken(user._id);
+    const newToken = generateToken(userRecord.id);
 
     res.json({
       success: true,
       message: 'Token refreshed successfully',
-      data: {
-        token: newToken,
-        tokenType: 'Bearer',
-        expiresIn: process.env.JWT_EXPIRES_IN || '7d'
-      }
+      token: newToken,
+      tokenType: 'Bearer',
+      expiresIn: process.env.JWT_EXPIRES_IN || '7d'
     });
 
   } catch (error) {

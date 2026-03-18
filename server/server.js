@@ -58,8 +58,8 @@ app.get('/api/stats', (req, res) => {
   });
 });
 
-// Mount API routes
-app.use('/api', apiRoutes);
+// Mount API routes at root so versioned paths like /api/v1 work as defined in routes
+app.use('/', apiRoutes);
 
 // Error handling middleware
 app.use((err, req, res, next) => {

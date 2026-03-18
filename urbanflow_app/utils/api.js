@@ -2,7 +2,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 // API Configuration
 const API_CONFIG = {
-  BASE_URL: 'http://192.168.31.67:3000',
+  BASE_URL: 'http://localhost:3001',
   VERSION: 'v1',
   TIMEOUT: 10000,
 };
@@ -54,9 +54,16 @@ const apiCall = async (endpoint, options = {}) => {
 
     // Handle authentication errors
     if (response.status === 401 || response.status === 403) {
-      await AsyncStorage.removeItem(STORAGE_KEYS.USER_TOKEN);
-      await AsyncStorage.removeItem(STORAGE_KEYS.USER_DATA);
-      throw new Error('Session expired. Please login again.');
+      const isAuthEndpoint = endpoint.startsWith('/auth/');
+      if (isAuthEndpoint) {
+        // For login/register, surface server message without clearing session
+        throw new Error(data.message || 'Authentication failed');
+      } else {
+        // For other endpoints, treat as expired session
+        await AsyncStorage.removeItem(STORAGE_KEYS.USER_TOKEN);
+        await AsyncStorage.removeItem(STORAGE_KEYS.USER_DATA);
+        throw new Error(data.message || 'Session expired. Please login again.');
+      }
     }
 
     if (!response.ok) {
