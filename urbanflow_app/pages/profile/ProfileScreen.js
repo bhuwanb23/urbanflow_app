@@ -6,9 +6,6 @@ import SettingsCard from './components/SettingsCard';
 import SustainabilityCard from './components/SustainabilityCard';
 import LogoutButton from './components/LogoutButton';
 
-// Import API hooks
-import { useAuth, useEcoStats } from '../../utils/hooks/useAPI';
-
 const settings = [
     { label: 'Language & Region', icon: 'web', color: ['#3b82f6', '#1e40af'], bg: '#e0eaff', screen: 'LanguageRegion' },
     { label: 'Preferred Transport', icon: 'bus', color: ['#22c55e', '#4ade80'], bg: '#d1fae5', screen: 'PreferredTransport' },
@@ -18,38 +15,17 @@ const settings = [
 ];
 
 export default function ProfileScreen({ navigation }) {
-    // API hooks
-    const { user, updateProfile, logout, loading: authLoading, error: authError } = useAuth();
-    const { ecoStats, fetchEcoStats, loading: statsLoading, error: statsError } = useEcoStats();
+    // Mock Data
+    const user = {
+        name: 'Demo User',
+        email: 'demo@urbanflow.com',
+        avatar: null
+    };
 
-    useEffect(() => {
-        loadProfileData();
-    }, []);
-
-    // Show error alerts if there are API errors
-    useEffect(() => {
-        if (authError) {
-            Alert.alert('Error', authError, [
-                { text: 'OK' }
-            ]);
-        }
-    }, [authError]);
-
-    useEffect(() => {
-        if (statsError) {
-            Alert.alert('Error', statsError, [
-                { text: 'Retry', onPress: loadProfileData },
-                { text: 'OK' }
-            ]);
-        }
-    }, [statsError]);
-
-    const loadProfileData = async () => {
-        try {
-            await fetchEcoStats({ period: 'all' });
-        } catch (error) {
-            console.log('Error loading profile data:', error);
-        }
+    const ecoStats = {
+        totalCO2Saved: '125 kg',
+        totalDistanceWalked: '45 km',
+        totalPublicTransportTrips: 28
     };
 
     const handleSettingPress = (setting) => {
@@ -85,14 +61,8 @@ export default function ProfileScreen({ navigation }) {
         console.log('Edit avatar pressed');
     };
 
-    const handleLogout = async () => {
-        try {
-            await logout();
-            // Navigation will be handled by App.js auth state
-        } catch (error) {
-            console.log('Error during logout:', error);
-            Alert.alert('Error', 'Failed to logout. Please try again.');
-        }
+    const handleLogout = () => {
+        navigation.replace('Login');
     };
 
     const handleMenuPress = () => {
@@ -100,11 +70,11 @@ export default function ProfileScreen({ navigation }) {
         console.log('Menu pressed');
     };
 
-    // Prepare sustainability data from API
-    const sustainability = ecoStats ? [
+    // Prepare sustainability data
+    const sustainability = [
         { 
             label: 'CO₂ Saved', 
-            value: ecoStats.totalCO2Saved || '0 kg', 
+            value: ecoStats.totalCO2Saved, 
             icon: 'leaf', 
             color: ['#4ade80', '#16a34a'], 
             percent: '+12%', 
@@ -113,7 +83,7 @@ export default function ProfileScreen({ navigation }) {
         },
         { 
             label: 'Distance Walked', 
-            value: ecoStats.totalDistanceWalked || '0 km', 
+            value: ecoStats.totalDistanceWalked, 
             icon: 'walk', 
             color: ['#3b82f6', '#1e40af'], 
             percent: '+8%', 
@@ -122,23 +92,14 @@ export default function ProfileScreen({ navigation }) {
         },
         { 
             label: 'Public Transport', 
-            value: `${ecoStats.totalPublicTransportTrips || 0} trips`, 
+            value: `${ecoStats.totalPublicTransportTrips} trips`, 
             icon: 'subway-variant', 
             color: ['#a78bfa', '#f472b6'], 
             percent: '+15%', 
             percentColor: '#a21caf', 
             bg: '#f5f3ff' 
         },
-    ] : [];
-
-    if (authLoading || statsLoading) {
-        return (
-            <View style={{ flex: 1, backgroundColor: '#F9FAFB', justifyContent: 'center', alignItems: 'center' }}>
-                <ActivityIndicator size="large" color="#3B82F6" />
-                <Text style={{ marginTop: 16, color: '#3B82F6', fontFamily: 'Urbanist_400Regular', fontSize: 16 }}>Loading profile...</Text>
-            </View>
-        );
-    }
+    ];
 
     return (
         <SafeAreaView style={styles.container}>

@@ -13,66 +13,60 @@ import {
 // Import styles
 import { plannerStyles } from './styles/plannerStyles';
 
-// Import API hooks
-import { useRoutes } from '../../utils/hooks/useAPI';
+// Mock Data
+const MOCK_ROUTES = [
+  {
+    id: '1',
+    from: 'Central Station',
+    to: 'Tech Park',
+    time: '45 min',
+    cost: '$2.50',
+    modes: ['train', 'bus'],
+    eco: 'High',
+  },
+  {
+    id: '2',
+    from: 'Downtown',
+    to: 'Airport',
+    time: '30 min',
+    cost: '$5.00',
+    modes: ['auto'],
+    eco: 'Low',
+  },
+  {
+    id: '3',
+    from: 'University',
+    to: 'Library',
+    time: '15 min',
+    cost: 'Free',
+    modes: ['walk'],
+    eco: 'Best',
+  },
+];
 
 const { width } = Dimensions.get('window');
 
 export default function PlannerScreen({ navigation }) {
   const [selectedMode, setSelectedMode] = useState('train');
   const [searchQuery, setSearchQuery] = useState('');
+  const [routes, setRoutes] = useState(MOCK_ROUTES);
 
-  // API hooks
-  const { routes, fetchRoutes, searchRoutes, getPopularRoutes, loading, error } = useRoutes();
-
-  useEffect(() => {
-    loadPlannerData();
-  }, []);
-
-  // Show error alert if there's an API error
-  useEffect(() => {
-    if (error) {
-      Alert.alert('Error', error, [
-        { text: 'Retry', onPress: loadPlannerData },
-        { text: 'OK' }
-      ]);
-    }
-  }, [error]);
-
-  const loadPlannerData = async () => {
-    try {
-      await Promise.all([
-        fetchRoutes({ isActive: true }),
-        getPopularRoutes()
-      ]);
-    } catch (error) {
-      console.log('Error loading planner data:', error);
-    }
-  };
-
-  const handleSearch = async (query) => {
+  const handleSearch = (query) => {
     setSearchQuery(query);
     if (query.trim()) {
-      try {
-        await searchRoutes({ query, limit: 10 });
-      } catch (error) {
-        console.log('Error searching routes:', error);
-      }
+      const filtered = MOCK_ROUTES.filter(route => 
+        route.from.toLowerCase().includes(query.toLowerCase()) || 
+        route.to.toLowerCase().includes(query.toLowerCase())
+      );
+      setRoutes(filtered);
+    } else {
+      setRoutes(MOCK_ROUTES);
     }
   };
 
   const handleRoutePress = (route) => {
     navigation.navigate('RouteDetailsScreen', { route });
   };
-
-  if (loading) {
-    return (
-      <SafeAreaView style={{ flex: 1, backgroundColor: '#F9FAFB', justifyContent: 'center', alignItems: 'center' }}>
-        <ActivityIndicator size="large" color="#10B981" />
-        <Text style={{ marginTop: 16, color: '#10B981', fontFamily: 'Poppins_400Regular', fontSize: 16 }}>Loading planner...</Text>
-      </SafeAreaView>
-    );
-  }
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: '#F9FAFB' }}>
