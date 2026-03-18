@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>Vaulted Sanctuary - Login</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;700;800&amp;family=Inter:wght@400;500;600;700&amp;display=swap"
+        rel="stylesheet" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+        rel="stylesheet" />
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "on-tertiary-fixed": "#001e30",
+                        "secondary-container": "#cfe6f2",
+                        "surface-container-high": "#e6e8ea",
+                        "on-primary-container": "#a1bbff",
+                        "primary-container": "#0d47a1",
+                        "on-secondary": "#ffffff",
+                        "secondary-fixed-dim": "#b4cad6",
+                        "on-primary-fixed-variant": "#00429c",
+                        "on-tertiary": "#ffffff",
+                        "on-error-container": "#93000a",
+                        "surface-container-low": "#f2f4f6",
+                        "on-secondary-fixed": "#071e27",
+                        "primary-fixed": "#d9e2ff",
+                        "on-tertiary-fixed-variant": "#004b70",
+                        "surface": "#f7f9fb",
+                        "background": "#f7f9fb",
+                        "on-secondary-container": "#526772",
+                        "tertiary-fixed-dim": "#8dcdff",
+                        "secondary": "#4c616c",
+                        "inverse-surface": "#2d3133",
+                        "surface-container-highest": "#e0e3e5",
+                        "outline": "#737783",
+                        "outline-variant": "#c3c6d4",
+                        "surface-container-lowest": "#ffffff",
+                        "surface-tint": "#2b5bb5",
+                        "surface-container": "#eceef0",
+                        "on-background": "#191c1e",
+                        "surface-variant": "#e0e3e5",
+                        "tertiary-fixed": "#cae6ff",
+                        "error": "#ba1a1a",
+                        "on-surface": "#191c1e",
+                        "on-tertiary-container": "#74c5ff",
+                        "on-secondary-fixed-variant": "#354a53",
+                        "secondary-fixed": "#cfe6f2",
+                        "primary": "#003178",
+                        "inverse-on-surface": "#eff1f3",
+                        "on-surface-variant": "#434652",
+                        "tertiary": "#003956",
+                        "on-primary": "#ffffff",
+                        "on-error": "#ffffff",
+                        "error-container": "#ffdad6",
+                        "on-primary-fixed": "#001945",
+                        "surface-dim": "#d8dadc",
+                        "inverse-primary": "#b0c6ff",
+                        "surface-bright": "#f7f9fb",
+                        "primary-fixed-dim": "#b0c6ff",
+                        "tertiary-container": "#005178"
+                    },
+                    fontFamily: {
+                        "headline": ["Manrope"],
+                        "body": ["Inter"],
+                        "label": ["Inter"]
+                    },
+                    borderRadius: { "DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem" },
+                    keyframes: {
+                        'fade-in-up': {
+                            '0%': { opacity: '0', transform: 'translateY(20px)' },
+                            '100%': { opacity: '1', transform: 'translateY(0)' },
+                        },
+                        'fade-in-down': {
+                            '0%': { opacity: '0', transform: 'translateY(-10px)' },
+                            '100%': { opacity: '1', transform: 'translateY(0)' },
+                        }
+                    },
+                    animation: {
+                        'fade-in-up': 'fade-in-up 0.8s cubic-bezier(0.22, 1, 0.36, 1) forwards',
+                        'fade-in-down': 'fade-in-down 0.8s cubic-bezier(0.22, 1, 0.36, 1) forwards',
+                    }
+                },
+            },
+        }
+    </script>
+    <style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+
+        .signature-gradient {
+            background: linear-gradient(135deg, #0d47a1 0%, #003178 100%);
+        }
+
+        .animate-delay-100 {
+            animation-delay: 100ms;
+        }
+
+        .animate-delay-200 {
+            animation-delay: 200ms;
+        }
+
+        .animate-delay-300 {
+            animation-delay: 300ms;
+        }
+
+        .animate-delay-400 {
+            animation-delay: 400ms;
+        }
+
+        .animate-delay-500 {
+            animation-delay: 500ms;
+        }
+
+        .animate-delay-600 {
+            animation-delay: 600ms;
+        }
+
+        .animate-delay-700 {
+            animation-delay: 700ms;
+        }
+
+        /* Ensure elements are invisible before animation starts */
+        .reveal-on-load {
+            opacity: 0;
+        }
+    </style>
+    <style>
+        body {
+            min-height: max(884px, 100dvh);
+        }
+    </style>
+</head>
+
+<body class="bg-surface font-body text-on-background min-h-screen flex flex-col">
+    <!-- TopAppBar -->
+    <header
+        class="w-full top-0 px-6 py-4 bg-[#f7f9fb] dark:bg-slate-950 flex items-center justify-between w-full max-w-md mx-auto animate-fade-in-down reveal-on-load">
+        <div class="flex items-center gap-2">
+            <span class="material-symbols-outlined text-[#0D47A1] dark:text-blue-400"
+                data-icon="security">security</span>
+            <h1 class="font-['Manrope'] font-bold text-lg tracking-tight text-[#0D47A1] dark:text-blue-500">Vaulted
+                Sanctuary</h1>
+        </div>
+    </header>
+    <main class="flex-grow flex flex-col px-8 pt-10 pb-12 max-w-md mx-auto w-full">
+        <!-- Hero Branding Section -->
+        <div class="mb-10 text-center">
+            <div
+                class="inline-flex items-center justify-center p-4 rounded-full bg-surface-container-low mb-6 animate-fade-in-up animate-delay-100 reveal-on-load">
+                <span class="material-symbols-outlined text-primary text-4xl" data-icon="lock"
+                    style="font-variation-settings: 'FILL' 1;">lock</span>
+            </div>
+            <h2
+                class="font-headline text-3xl font-extrabold text-on-surface tracking-tight mb-2 animate-fade-in-up animate-delay-200 reveal-on-load">
+                Welcome Back</h2>
+            <p class="text-on-surface-variant font-body text-sm animate-fade-in-up animate-delay-200 reveal-on-load">
+                Access your secure workspace</p>
+        </div>
+        <!-- Login Form -->
+        <form class="space-y-6">
+            <div class="space-y-2 animate-fade-in-up animate-delay-300 reveal-on-load">
+                <label
+                    class="block font-label text-[10px] font-bold uppercase tracking-[0.05rem] text-on-secondary-container ml-1"
+                    for="email">Email Address</label>
+                <div class="relative">
+                    <input
+                        class="w-full px-4 py-3.5 bg-surface-container-high border-none rounded-xl focus:ring-2 focus:ring-primary/40 focus:bg-surface-container-lowest transition-all duration-200 text-on-surface placeholder:text-outline/60 outline-none"
+                        id="email" placeholder="name@company.com" type="email" />
+                </div>
+            </div>
+            <div class="space-y-2 animate-fade-in-up animate-delay-400 reveal-on-load">
+                <div class="flex justify-between items-end">
+                    <label
+                        class="block font-label text-[10px] font-bold uppercase tracking-[0.05rem] text-on-secondary-container ml-1"
+                        for="password">Password</label>
+                    <a class="text-primary font-body text-xs font-semibold hover:opacity-80 transition-opacity"
+                        href="#">Forgot Password?</a>
+                </div>
+                <div class="relative">
+                    <input
+                        class="w-full px-4 py-3.5 bg-surface-container-high border-none rounded-xl focus:ring-2 focus:ring-primary/40 focus:bg-surface-container-lowest transition-all duration-200 text-on-surface placeholder:text-outline/60 outline-none"
+                        id="password" placeholder="••••••••" type="password" />
+                </div>
+            </div>
+            <button
+                class="w-full py-4 rounded-full signature-gradient text-white font-headline font-bold text-sm tracking-wide shadow-lg shadow-primary/20 active:scale-95 transition-transform duration-200 animate-fade-in-up animate-delay-500 reveal-on-load"
+                type="submit">
+                Sign In
+            </button>
+        </form>
+        <!-- Divider -->
+        <div class="flex items-center my-10 space-x-4 animate-fade-in-up animate-delay-600 reveal-on-load">
+            <div class="flex-grow h-[1px] bg-outline-variant/30"></div>
+            <span class="font-label text-[10px] font-bold uppercase tracking-[0.05rem] text-outline">Or continue
+                with</span>
+            <div class="flex-grow h-[1px] bg-outline-variant/30"></div>
+        </div>
+        <!-- Social Logins -->
+        <div class="grid grid-cols-2 gap-4 animate-fade-in-up animate-delay-700 reveal-on-load">
+            <button
+                class="flex items-center justify-center gap-3 py-3.5 px-4 bg-surface-container-lowest rounded-xl border border-outline-variant/15 hover:bg-surface-container-low transition-colors duration-200">
+                <img alt="" class="w-5 h-5" data-alt="Google colorful logo icon"
+                    src="https://lh3.googleusercontent.com/aida-public/AB6AXuARI1dRbZanszIbFFMGCGaoGpZoGh5wZ2efezqDPAabZSBx2Xli4BKvcFEAXJ1oRZzQUemqtIpes9PZgmH8f5AP9M7ynxE9FpCEP-5BW_adKlMDzRzfci8pWyg7Cn9lrxvs_FnwA4scYj9B4p9LDJJBrPMLiRx1CX46UObXV2ZmDTj-OpAzxPGLkXOT0QON_QlSBs0xz8QRFs018F9ev7uuzpDbKMGlEjjwUCpYKWQqdv8Nm5ZctMZ6ZsoXEH48ZuOS1PJwuTgNquoC" />
+                <span class="font-body text-sm font-semibold text-on-surface">Google</span>
+            </button>
+            <button
+                class="flex items-center justify-center gap-3 py-3.5 px-4 bg-surface-container-lowest rounded-xl border border-outline-variant/15 hover:bg-surface-container-low transition-colors duration-200">
+                <span class="material-symbols-outlined text-on-surface text-xl" data-icon="apple"
+                    style="font-variation-settings: 'FILL' 1;">ios</span>
+                <span class="font-body text-sm font-semibold text-on-surface">Apple</span>
+            </button>
+        </div>
+        <!-- Footer CTA -->
+        <div class="mt-auto pt-12 pb-8 text-center animate-fade-in-up animate-delay-700 reveal-on-load">
+            <p class="font-body text-sm text-on-surface-variant">
+                Don't have an account?
+                <a class="text-primary font-bold ml-1 hover:underline" href="#">Sign Up</a>
+            </p>
+        </div>
+    </main>
+    <!-- BottomNavBar - Suppressed for Transactional Screen -->
+    <nav
+        class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-4 pb-6 pt-3 bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl shadow-[0_-4px_32px_rgba(25,28,30,0.06)] rounded-t-3xl border-t border-slate-200/15 dark:border-slate-800/15 animate-fade-in-up animate-delay-700 reveal-on-load">
+        <a class="flex flex-col items-center justify-center bg-[#eceef0] dark:bg-slate-800 text-[#003178] dark:text-blue-200 rounded-xl px-6 py-2 scale-95 active:scale-90 transition-transform duration-200"
+            href="#">
+            <span class="material-symbols-outlined" data-icon="login">login</span>
+            <span class="font-['Inter'] text-[10px] font-bold uppercase tracking-[0.05rem]">Login</span>
+        </a>
+        <a class="flex flex-col items-center justify-center text-slate-400 dark:text-slate-500 px-6 py-2 hover:bg-slate-100 dark:hover:bg-slate-800 scale-95 active:scale-90 transition-transform duration-200"
+            href="#">
+            <span class="material-symbols-outlined" data-icon="person_add">person_add</span>
+            <span class="font-['Inter'] text-[10px] font-bold uppercase tracking-[0.05rem]">Sign Up</span>
+        </a>
+    </nav>
+</body>
+
+</html>
