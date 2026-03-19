@@ -1,15 +1,32 @@
 import React from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, Platform } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, Platform, Modal } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 const NotificationHeader = ({ 
   navigation, 
   onFilterPress, 
   stats,
-  showStats = true 
+  showStats = true,
+  activeFilter,
+  onFilterSelect
 }) => {
+  const [showFilterModal, setShowFilterModal] = React.useState(false);
+
   const handleBack = () => {
     navigation.goBack();
+  };
+
+  const handleFilterPress = () => {
+    setShowFilterModal(true);
+  };
+
+  const handleCloseModal = () => {
+    setShowFilterModal(false);
+  };
+
+  const handleSelectFilter = (filter) => {
+    onFilterSelect?.(filter);
+    setShowFilterModal(false);
   };
 
   return (
@@ -21,17 +38,75 @@ const NotificationHeader = ({
           </TouchableOpacity>
           <View style={styles.titleContainer}>
             <Text style={styles.headerTitle}>Notifications</Text>
-            <Text style={styles.headerSubtitle}>Stay updated with your journey</Text>
+            {/* <Text style={styles.headerSubtitle}>Stay updated with your journey</Text> */}
           </View>
         </View>
         <View style={styles.headerRight}>
-          <TouchableOpacity onPress={onFilterPress} style={styles.filterButton}>
+          <TouchableOpacity onPress={handleFilterPress} style={styles.filterButton}>
             <Icon name="filter-variant" size={20} color="#0F172A" />
           </TouchableOpacity>
         </View>
       </View>
 
-      {showStats && stats && (
+      {/* Filter Modal */}
+      <Modal
+        visible={showFilterModal}
+        transparent={true}
+        animationType="fade"
+        onRequestClose={handleCloseModal}
+      >
+        <TouchableOpacity 
+          style={styles.modalOverlay} 
+          activeOpacity={1} 
+          onPress={handleCloseModal}
+        >
+          <View style={styles.modalContent}>
+            <View style={styles.modalHeader}>
+              <Text style={styles.modalTitle}>Filter Notifications</Text>
+              <TouchableOpacity onPress={handleCloseModal} style={styles.closeButton}>
+                <Icon name="close" size={24} color="#0F172A" />
+              </TouchableOpacity>
+            </View>
+            
+            <View style={styles.filterOptions}>
+              {['all', 'unread', 'important', 'today'].map((filter) => (
+                <TouchableOpacity
+                  key={filter}
+                  style={[
+                    styles.filterOption,
+                    activeFilter === filter && styles.filterOptionActive
+                  ]}
+                  onPress={() => handleSelectFilter(filter)}
+                  activeOpacity={0.7}
+                >
+                  <View style={styles.filterOptionLeft}>
+                    <Icon 
+                      name={
+                        filter === 'all' ? 'view-grid' :
+                        filter === 'unread' ? 'email-outline' :
+                        filter === 'important' ? 'star' : 'calendar-today'
+                      }
+                      size={20}
+                      color={activeFilter === filter ? '#10B981' : '#64748B'}
+                    />
+                    <Text style={[
+                      styles.filterOptionText,
+                      activeFilter === filter && styles.filterOptionTextActive
+                    ]}>
+                      {filter.charAt(0).toUpperCase() + filter.slice(1)}
+                    </Text>
+                  </View>
+                  {activeFilter === filter && (
+                    <Icon name="check-circle" size={20} color="#10B981" />
+                  )}
+                </TouchableOpacity>
+              ))}
+            </View>
+          </View>
+        </TouchableOpacity>
+      </Modal>
+
+      {/* {showStats && stats && (
         <View style={styles.statsContainer}>
           <View style={styles.statItem}>
             <Text style={styles.statNumber}>{stats.total || 0}</Text>
@@ -53,14 +128,14 @@ const NotificationHeader = ({
             <Text style={styles.statLabel}>Today</Text>
           </View>
         </View>
-      )}
+      )} */}
     </View>
   );
 };
 
 const styles = StyleSheet.create({
   headerContainer: {
-    paddingTop: Platform.OS === 'android' ? 40 : 20,
+    paddingTop: Platform.OS === 'android' ? 20 : 20,
     paddingBottom: 20,
     paddingHorizontal: 24,
     backgroundColor: '#FFFFFF',
@@ -115,6 +190,79 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     borderWidth: 1,
     borderColor: '#E2E8F0',
+  },
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  modalContent: {
+    width: '85%',
+    maxWidth: 400,
+    backgroundColor: '#FFFFFF',
+    borderRadius: 20,
+    padding: 24,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 10 },
+    shadowOpacity: 0.25,
+    shadowRadius: 20,
+    elevation: 10,
+  },
+  modalHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 20,
+    paddingBottom: 16,
+    borderBottomWidth: 1,
+    borderBottomColor: '#F1F5F9',
+  },
+  modalTitle: {
+    fontSize: 20,
+    fontFamily: 'Poppins_700Bold',
+    color: '#0F172A',
+  },
+  closeButton: {
+    width: 32,
+    height: 32,
+    borderRadius: 16,
+    backgroundColor: '#F8FAFC',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  filterOptions: {
+    gap: 8,
+  },
+  filterOption: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingVertical: 14,
+    paddingHorizontal: 16,
+    borderRadius: 12,
+    backgroundColor: '#F8FAFC',
+    borderWidth: 1,
+    borderColor: '#E2E8F0',
+  },
+  filterOptionActive: {
+    backgroundColor: '#ECFDF5',
+    borderColor: '#10B981',
+    borderWidth: 1.5,
+  },
+  filterOptionLeft: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 12,
+  },
+  filterOptionText: {
+    fontSize: 16,
+    fontFamily: 'Urbanist_400Regular',
+    color: '#64748B',
+  },
+  filterOptionTextActive: {
+    fontFamily: 'Urbanist_700Bold',
+    color: '#10B981',
   },
   statsContainer: {
     flexDirection: 'row',

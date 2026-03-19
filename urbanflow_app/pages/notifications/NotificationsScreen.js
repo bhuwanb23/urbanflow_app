@@ -13,7 +13,6 @@ import { mockNotifications, getNotificationsByFilter } from './data/mockNotifica
 
 // Components
 import NotificationHeader from './components/NotificationHeader';
-import FilterTabs from './components/FilterTabs';
 import NotificationSection from './components/NotificationSection';
 import EmptyState from './components/EmptyState';
 
@@ -21,8 +20,6 @@ const NotificationsScreen = ({ navigation }) => {
   const [refreshing, setRefreshing] = useState(false);
   const [activeFilter, setActiveFilter] = useState('all');
   const [notifications, setNotifications] = useState(mockNotifications);
-  
-  // Calculate stats from mock data
   const stats = {
     total: notifications.length,
     unread: notifications.filter(n => !n.isRead).length,
@@ -64,9 +61,9 @@ const NotificationsScreen = ({ navigation }) => {
     );
   };
 
-  const handleFilterPress = () => {
-    // Show filter modal or navigate to filter screen
-    console.log('Filter pressed');
+  const handleFilterSelect = (filter) => {
+    setActiveFilter(filter);
+    console.log('Filter selected:', filter);
   };
 
   const handleDeleteNotification = (notificationId) => {
@@ -203,17 +200,13 @@ const NotificationsScreen = ({ navigation }) => {
     <SafeAreaView style={styles.container} edges={['top']}>
       <NotificationHeader
         navigation={navigation}
-        onFilterPress={handleFilterPress}
+        onFilterPress={() => {}}
+        activeFilter={activeFilter}
+        onFilterSelect={handleFilterSelect}
         stats={stats}
         showStats={true}
       />
       
-      <FilterTabs
-        activeFilter={activeFilter}
-        onFilterChange={setActiveFilter}
-        filters={['All', 'Unread', 'Important', 'Today']}
-      />
-
       <ScrollView
         style={styles.scrollView}
         contentContainerStyle={styles.scrollContent}
