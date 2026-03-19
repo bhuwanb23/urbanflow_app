@@ -4,38 +4,41 @@ const { width, height } = Dimensions.get('window');
 
 export const notificationTheme = {
   colors: {
-    primary: '#6366f1',
-    secondary: '#8b5cf6',
-    accent: '#10b981',
+    // Green theme - matching UrbanFlow brand
+    primary: '#10B981', // Emerald 500
+    primaryDark: '#047857', // Emerald 700
+    primaryLight: '#34D399', // Emerald 400
+    secondary: '#059669', // Emerald 600
+    accent: '#6EE7B7', // Emerald 300
     success: '#22c55e',
     warning: '#f59e0b',
     error: '#ef4444',
     info: '#3b82f6',
     
     // Background colors
-    background: '#F9FAFB',
+    background: '#F0FDF4', // Emerald 50
     surface: '#ffffff',
-    surfaceVariant: '#f8fafc',
+    surfaceVariant: '#ECFDF5', // Emerald 50
     
     // Text colors
-    textPrimary: '#111827',
-    textSecondary: '#64748b',
-    textTertiary: '#9ca3af',
+    textPrimary: '#064e3b', // Emerald 900
+    textSecondary: '#047857', // Emerald 700
+    textTertiary: '#6B7280',
     textInverse: '#ffffff',
     
-    // Status colors
+    // Status colors (green-themed)
     traffic: '#ef4444',
-    route: '#3b82f6',
-    transit: '#10b981',
+    route: '#10B981',
+    transit: '#059669',
     bike: '#f59e0b',
-    parking: '#8b5cf6',
+    parking: '#047857',
     
     // Border colors
-    border: '#e2e8f0',
-    borderLight: '#f1f5f9',
+    border: '#A7F3D0', // Emerald 300
+    borderLight: '#D1FAE5', // Emerald 100
     
     // Shadow colors
-    shadowPrimary: '#6366f1',
+    shadowPrimary: '#10B981',
     shadowSecondary: '#000000',
   },
   
@@ -134,9 +137,9 @@ export const notificationTheme = {
   },
   
   gradients: {
-    primary: ['#6366f1', '#8b5cf6', '#10b981'],
-    secondary: ['#3b82f6', '#6366f1'],
-    accent: ['#10b981', '#22c55e'],
+    primary: ['#10B981', '#059669', '#047857'], // Green gradient
+    secondary: ['#34D399', '#10B981'], // Light green to emerald
+    accent: ['#6EE7B7', '#34D399'], // Mint to green
   },
   
   animation: {

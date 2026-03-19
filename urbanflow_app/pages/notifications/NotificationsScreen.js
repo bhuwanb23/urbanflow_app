@@ -4,13 +4,12 @@ import {
   ScrollView, 
   SafeAreaView, 
   StyleSheet, 
-  Alert,
   RefreshControl 
 } from 'react-native';
 import notificationTheme from './theme/notificationTheme';
 
-// Import API hooks
-import { useNotifications } from '../../utils/hooks/useAPI';
+// Import mock data
+import { mockNotifications, getNotificationsByFilter } from './data/mockNotifications';
 
 // Components
 import NotificationHeader from './components/NotificationHeader';
@@ -21,60 +20,39 @@ import EmptyState from './components/EmptyState';
 const NotificationsScreen = ({ navigation }) => {
   const [refreshing, setRefreshing] = useState(false);
   const [activeFilter, setActiveFilter] = useState('all');
-
-  // API hooks
-  const { 
-    notifications, 
-    fetchNotifications, 
-    markAsRead, 
-    markAllAsRead,
-    deleteNotification, 
-    loading, 
-    error 
-  } = useNotifications();
-
-  useEffect(() => {
-    loadNotifications();
-  }, []);
-
-  // Show error alert if there's an API error
-  useEffect(() => {
-    if (error) {
-      Alert.alert('Error', error, [
-        { text: 'Retry', onPress: loadNotifications },
-        { text: 'OK' }
-      ]);
-    }
-  }, [error]);
-
-  const loadNotifications = async () => {
-    try {
-      await fetchNotifications({ limit: 50 });
-    } catch (error) {
-      console.log('Error loading notifications:', error);
-    }
+  const [notifications, setNotifications] = useState(mockNotifications);
+  
+  // Calculate stats from mock data
+  const stats = {
+    total: notifications.length,
+    unread: notifications.filter(n => !n.isRead).length,
+    important: notifications.filter(n => n.isImportant).length,
+    today: notifications.filter(n => {
+      const today = new Date();
+      const notifDate = new Date(n.timestamp);
+      return notifDate.toDateString() === today.toDateString();
+    }).length,
   };
 
   const handleRefresh = async () => {
     setRefreshing(true);
-    await loadNotifications();
-    setRefreshing(false);
+    // Simulate refresh delay
+    setTimeout(() => {
+      setRefreshing(false);
+    }, 1000);
   };
 
   const handleNotificationPress = async (notification) => {
     console.log('Notification pressed:', notification.title);
     
-    // Mark as read when pressed
+    // Mark as read locally when pressed
     if (!notification.isRead) {
-      try {
-        await markAsRead(notification.id);
-      } catch (error) {
-        console.log('Error marking notification as read:', error);
-      }
+      setNotifications(prev => 
+        prev.map(n => 
+          n.id === notification.id ? { ...n, isRead: true } : n
+        )
+      );
     }
-    
-    // Here you can navigate to specific screens based on notification type
-    // For example: navigation.navigate('RouteDetails', { routeId: notification.routeId });
   };
 
   const handleFilterPress = () => {
@@ -83,37 +61,20 @@ const NotificationsScreen = ({ navigation }) => {
   };
 
   const handleDeleteNotification = (notificationId) => {
-    Alert.alert(
-      'Delete Notification',
-      'Are you sure you want to delete this notification?',
-      [
-        { text: 'Cancel', style: 'cancel' },
-        { 
-          text: 'Delete', 
-          style: 'destructive',
-          onPress: async () => {
-            try {
-              await deleteNotification(notificationId);
-            } catch (error) {
-              console.log('Error deleting notification:', error);
-            }
-          }
-        },
-      ]
-    );
+    // Remove notification locally
+    setNotifications(prev => prev.filter(n => n.id !== notificationId));
   };
 
-  const handleMarkAllAsRead = async () => {
-    try {
-      await markAllAsRead();
-    } catch (error) {
-      console.log('Error marking all notifications as read:', error);
-    }
+  const handleMarkAllAsRead = () => {
+    // Mark all as read locally
+    setNotifications(prev => prev.map(n => ({ ...n, isRead: true })));
   };
 
-  // Group notifications by date
-  const groupedNotifications = notifications.reduce((groups, notification) => {
-    const date = new Date(notification.createdAt);
+  // Group notifications by date and apply filter
+  const filteredNotifications = getNotificationsByFilter(activeFilter, notifications);
+  
+  const groupedNotifications = filteredNotifications.reduce((groups, notification) => {
+    const date = new Date(notification.createdAt || notification.timestamp);
     const today = new Date();
     const yesterday = new Date(today);
     yesterday.setDate(yesterday.getDate() - 1);
@@ -208,42 +169,21 @@ const NotificationsScreen = ({ navigation }) => {
     return sections;
   };
 
-  if (loading) {
+  if (notifications.length === 0) {
     return (
       <SafeAreaView style={styles.container}>
         <NotificationHeader
           navigation={navigation}
           onFilterPress={handleFilterPress}
-          stats={null} // No stats in this new structure
-          showStats={false}
+          stats={stats}
+          showStats={true}
         />
-        <View style={styles.loadingContainer}>
+        <View style={styles.emptyContainer}>
           <EmptyState
-            title="Loading notifications..."
-            message="Please wait while we fetch your latest updates."
-            icon="loading"
-            showRefreshButton={false}
-          />
-        </View>
-      </SafeAreaView>
-    );
-  }
-
-  if (error) {
-    return (
-      <SafeAreaView style={styles.container}>
-        <NotificationHeader
-          navigation={navigation}
-          onFilterPress={handleFilterPress}
-          stats={null} // No stats in this new structure
-          showStats={false}
-        />
-        <View style={styles.errorContainer}>
-          <EmptyState
-            title="Something went wrong"
-            message={error}
-            icon="alert-circle"
-            onRefresh={loadNotifications}
+            title="No notifications yet"
+            message="Stay tuned for updates about your routes, traffic conditions, and transit information."
+            icon="bell-off"
+            onRefresh={handleRefresh}
           />
         </View>
       </SafeAreaView>
@@ -255,7 +195,8 @@ const NotificationsScreen = ({ navigation }) => {
       <NotificationHeader
         navigation={navigation}
         onFilterPress={handleFilterPress}
-        stats={null} // No stats in this new structure
+        stats={stats}
+        showStats={true}
       />
       
       <FilterTabs
@@ -301,14 +242,9 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   scrollContent: {
-    paddingBottom: 80, // Adjusted padding to provide proper spacing without BottomActions
+    paddingBottom: 80,
   },
-  loadingContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  errorContainer: {
+  emptyContainer: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
