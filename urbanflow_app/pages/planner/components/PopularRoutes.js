@@ -9,8 +9,20 @@ const { width } = Dimensions.get('window');
 export default function PopularRoutes({ navigation }) {
   const handleRoutePress = (route) => {
     console.log('Route pressed:', route);
-    console.log('Navigating to RouteDetailsScreen with route data');
-    navigation.navigate('RouteDetailsScreen', { route });
+    
+    // Generate detailed route data with segments based on modes
+    const detailedRoute = {
+      ...route,
+      id: `detailed-${route.id}`,
+      arrivalTime: '09:15 AM',
+      ecoScore: parseFloat(route.eco),
+      hasMapPreview: true,
+      mapPreviewIndex: 1,
+      segments: generateSegments(route),
+    };
+    
+    console.log('Navigating to RouteDetailsScreen with route data', detailedRoute);
+    navigation.navigate('RouteDetailsScreen', { route: detailedRoute });
   };
 
   const getIconName = (mode) => {
@@ -19,6 +31,53 @@ export default function PopularRoutes({ navigation }) {
     else if (mode === 'auto') return 'car';
     else if (mode === 'walk') return 'walk';
     else return 'car';
+  };
+
+  // Generate segments based on route modes
+  const generateSegments = (route) => {
+    const segments = [];
+    let segmentId = 1;
+    
+    // Add walk segment at start
+    segments.push({
+      id: `seg-${segmentId++}`,
+      type: 'walk',
+      title: 'Walk to Station',
+      duration: '5 mins',
+      distance: '0.3 miles',
+      status: 'on-time',
+      features: ['On Time'],
+    });
+    
+    // Add transport mode segments
+    route.modes.forEach((mode, index) => {
+      const transportType = mode === 'auto' ? 'bus' : mode;
+      segments.push({
+        id: `seg-${segmentId++}`,
+        type: transportType,
+        title: `${transportType.charAt(0).toUpperCase() + transportType.slice(1)} ${100 + index}`,
+        duration: `${10 + index * 5} mins`,
+        stops: 4 + index * 2,
+        status: index === 0 ? 'on-time' : 'delayed',
+        delayInfo: index === 0 ? null : '2m delay',
+        liveTracking: index === 0,
+        features: [index === 0 ? 'On Time' : '2m delay'],
+      });
+    });
+    
+    // Add bike/walk segment at end
+    segments.push({
+      id: `seg-${segmentId++}`,
+      type: 'bike',
+      title: 'FlowBike Rental',
+      duration: '7 mins',
+      distance: '0.8 miles',
+      status: 'available',
+      nearbyStation: true,
+      features: ['Available'],
+    });
+    
+    return segments;
   };
 
   return (

@@ -45,7 +45,6 @@ function RouteDetailsContent({ navigation, route }) {
   const handleStartJourney = useCallback(() => {
     triggerHapticFeedback('success');
     startTracking();
-    // Navigate to navigation mode or start journey
     console.log('Starting journey...');
   }, [startTracking]);
 

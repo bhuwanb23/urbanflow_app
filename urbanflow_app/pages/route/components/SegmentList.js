@@ -9,7 +9,9 @@ import { routeTheme } from '../theme/routeTheme';
  * Renders all journey segments with optional map preview
  */
 export default function SegmentList({ segments, showConnectors = true }) {
-  if (!segments || segments.length === 0) return null;
+  if (!segments || segments.length === 0) {
+    return null;
+  }
 
   const renderSegments = () => {
     return segments.map((segment, index) => {

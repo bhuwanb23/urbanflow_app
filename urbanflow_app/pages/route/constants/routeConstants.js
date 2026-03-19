@@ -64,13 +64,13 @@ export const MOCK_ROUTE_DATA = {
 // Transport mode configurations
 export const TRANSPORT_MODES = {
   walk: {
-    icon: 'directions_walk',
+    icon: 'walk',
     iconBg: 'primary-fixed',
     iconColor: 'on-primary-fixed',
     label: 'Walking',
   },
   bus: {
-    icon: 'directions_bus',
+    icon: 'bus',
     iconBg: 'secondary-fixed',
     iconColor: 'on-secondary-fixed',
     label: 'Bus',
@@ -82,7 +82,7 @@ export const TRANSPORT_MODES = {
     label: 'Metro',
   },
   bike: {
-    icon: 'directions_bike',
+    icon: 'bike',
     iconBg: 'secondary-fixed-dim',
     iconColor: 'on-secondary-fixed',
     label: 'Bike',
@@ -94,13 +94,13 @@ export const TRANSPORT_MODES = {
     label: 'Train',
   },
   car: {
-    icon: 'directions_car',
+    icon: 'car',
     iconBg: 'tertiary-container',
     iconColor: 'on-tertiary',
     label: 'Car',
   },
   scooter: {
-    icon: 'two_wheeler',
+    icon: 'scooter',
     iconBg: 'secondary-container',
     iconColor: 'on-secondary-container',
     label: 'Scooter',
