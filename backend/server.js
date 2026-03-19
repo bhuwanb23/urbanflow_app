@@ -14,6 +14,7 @@ const routesRouter = require('./routes/routes');
 const scheduleRouter = require('./routes/schedule');
 const shapesRouter = require('./routes/shapes');
 const searchRouter = require('./routes/search');
+const planRouter = require('./routes/plan');
 
 // Initialize Express app
 const app = express();
@@ -87,6 +88,7 @@ app.use('/api/v1/routes', routesRouter);
 app.use('/api/v1/schedule', scheduleRouter);
 app.use('/api/v1/shapes', shapesRouter);
 app.use('/api/v1/search', searchRouter);
+app.use('/api/v1/plan', planRouter);
 
 // API information endpoint
 app.get('/api/v1', (req, res) => {
@@ -100,7 +102,8 @@ app.get('/api/v1', (req, res) => {
       routes: '/api/v1/routes',
       schedule: '/api/v1/schedule/:routeId',
       shapes: '/api/v1/shapes/:shapeId',
-      search: '/api/v1/search?q=query'
+      search: '/api/v1/search?q=query',
+      plan: '/api/v1/plan (POST)'
     }
   });
 });

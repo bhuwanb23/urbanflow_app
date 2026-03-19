@@ -1,0 +1,31 @@
+{
+  "routingDefaults": {
+    "drivingDirection": "left",
+    "walkSpeed": 1.34,
+    "bikeSpeed": 4.5,
+    "maxWalkDistance": 2000,
+    "maxBikeDistance": 8000,
+    "accessibilityScore": true,
+    "timeZone": "Asia/Kolkata",
+    "locale": "en_IN"
+  },
+  "timetableUpdates": {
+    "maxTransferDuration": 7200,
+    "transferSlack": 60,
+    "contactDurations": {
+      "riderRequest": 60,
+      "driverRequest": 60
+    }
+  },
+  "updaters": [
+    {
+      "type": "real-time-alerts",
+      "frequencySec": 60,
+      "url": "http://localhost:3000/api/v1/traffic/alerts",
+      "feedId": "BMTC"
+    }
+  ],
+  "travelTimeFactor": 0.5,
+  "otherThanPreferredRoutesPenalty": 1200,
+  "serviceTimeRangeDays": 7
+}

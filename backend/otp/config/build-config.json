@@ -1,0 +1,19 @@
+{
+  "dataDir": "./data",
+  "osmFile": "data/karnataka.osm.pbf",
+  "gtfsFile": "../data/output/bmtc-gtfs.zip",
+  "extraGtfs": [
+    "../data/output/bmrcl-gtfs.zip"
+  ],
+  "areaVisibility": true,
+  "visibilityThreshold": 100,
+  "transit": true,
+  "streetNetwork": true,
+  "numThreads": 4,
+  "graphBuildTimeout": 600,
+  "localTimezone": "Asia/Kolkata",
+  "matchBusRoutesToStreets": true,
+  "subwayAccessTime": 90,
+  "transferSlack": 60,
+  "maxTransferDuration": 7200
+}

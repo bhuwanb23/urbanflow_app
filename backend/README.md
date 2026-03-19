@@ -349,6 +349,182 @@ curl "http://localhost:3000/api/v1/search?q=500&limit=5"
 
 ---
 
+## 🗺️ Plan API (Journey Planning)
+
+### POST `/api/v1/plan`
+Returns multimodal journey plans with carbon scores and fare calculations.
+
+**Request Body:**
+```json
+{
+  "fromPlace": "12.9716,77.5946",
+  "toPlace": "12.9352,77.6245",
+  "modes": "BUS,WALK",
+  "time": "0800",
+  "date": "20-03-2026",
+  "numItineraries": 3,
+  "wheelchair": false,
+  "optimize": "QUICK"
+}
+```
+
+**Request Parameters:**
+- `fromPlace` (required): Starting location as `latitude,longitude`
+- `toPlace` (required): Destination as `latitude,longitude`
+- `modes` (optional): Comma-separated transport modes (default: `BUS,WALK`)
+  - Available modes: `BUS`, `SUBWAY`, `RAIL`, `WALK`, `BICYCLE`
+- `time` (optional): Departure time in HHMM format (default: `0800`)
+- `date` (optional): Travel date in DD-MM-YYYY format (default: today)
+- `numItineraries` (optional): Number of route options (default: 3)
+- `wheelchair` (optional): Accessible routes only (default: false)
+- `optimize` (optional): Optimization preference
+  - `QUICK`: Fastest route
+  - `TRIANGLE`: Balanced route
+  - `GREENWAYS`: Greenest route
+
+**Example:**
+```bash
+curl -X POST "http://localhost:3000/api/v1/plan" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "fromPlace": "12.9716,77.5946",
+    "toPlace": "12.9352,77.6245",
+    "modes": "BUS,WALK",
+    "time": "0800",
+    "date": "20-03-2026"
+  }'
+```
+
+**Response:**
+```json
+{
+  "success": true,
+  "count": 3,
+  "data": {
+    "itineraries": [
+      {
+        "duration": 2700,
+        "startTime": "2026-03-20T08:00:00+05:30",
+        "endTime": "2026-03-20T08:45:00+05:30",
+        "totalDistanceKm": 12.5,
+        "carbonSaved": 1.85,
+        "formattedCarbonSaved": "1.85 kg CO₂",
+        "ecoScore": "A",
+        "ecoScorePercentage": 85,
+        "fare": 45,
+        "formattedFare": "₹45",
+        "legs": [
+          {
+            "mode": "WALK",
+            "modeKey": "walk",
+            "icon": "walk",
+            "color": "#6b7280",
+            "bgColor": "#F3F4F6",
+            "from": {
+              "name": "MG Road",
+              "lat": 12.9716,
+              "lon": 77.5946
+            },
+            "to": {
+              "name": "Trinity Metro Station",
+              "lat": 12.9720,
+              "lon": 77.5950
+            },
+            "distance": 350,
+            "duration": 260,
+            "startTime": "08:00:00",
+            "endTime": "08:04:20",
+            "instructions": "Walk towards Trinity Metro Station"
+          },
+          {
+            "mode": "BUS",
+            "modeKey": "bus",
+            "icon": "bus",
+            "color": "#16a34a",
+            "bgColor": "#DCFCE7",
+            "route": "500-A",
+            "routeShortName": "500-A",
+            "agencyName": "BMTC",
+            "from": {
+              "name": "Trinity Metro Station",
+              "lat": 12.9720,
+              "lon": 77.5950
+            },
+            "to": {
+              "name": "Silk Board",
+              "lat": 12.9352,
+              "lon": 77.6245
+            },
+            "distance": 12000,
+            "duration": 2340,
+            "startTime": "08:05:00",
+            "endTime": "08:44:00",
+            "headsign": "Silk Board",
+            "realTime": false,
+            "fare": 45,
+            "carbonSaved": 1.92
+          }
+        ]
+      }
+    ]
+  }
+}
+```
+
+**Response Fields:**
+- `duration`: Total journey duration in seconds
+- `startTime`/`endTime`: Journey timing with timezone
+- `totalDistanceKm`: Total distance in kilometers
+- `carbonSaved`: CO₂ saved vs private car (kg)
+- `ecoScore`: Environmental grade (A+ to E)
+- `ecoScorePercentage`: Eco-score as percentage (0-100)
+- `fare`: Total fare in INR
+- `legs`: Array of journey segments
+
+**Leg Object:**
+- `mode`: Transport mode (OTP standard)
+- `modeKey`: Normalized mode key for UI
+- `icon`: Material Community Icon name
+- `color`: Primary color for UI styling
+- `bgColor`: Background color for UI elements
+- `from`/`to`: Location details with coordinates
+- `distance`: Leg distance in meters
+- `duration`: Leg duration in seconds
+- `startTime`/`endTime`: Leg timing
+- `route`: Route number (for transit)
+- `agencyName`: Operator name (BMTC/BMRCL)
+- `fare`: Leg fare in INR
+- `carbonSaved`: CO₂ saved for this leg (kg)
+- `realTime`: Real-time data availability
+
+**Carbon Scoring:**
+- Based on emission factors for Indian transport modes
+- Compares against private car baseline (0.192 kg CO₂/km)
+- Grades: A+ (90-100%), A (75-89%), B (60-74%), C (45-59%), D (30-44%), E (<30%)
+
+**Fare Calculation:**
+- BMTC bus fares: ₹10-75 based on distance
+- BMRCL metro fares: ₹10-60 distance-based
+- 10% transfer discount for multi-leg journeys
+- All fares in Indian Rupees (INR)
+
+**Error Responses:**
+```json
+{
+  "success": false,
+  "error": "No route found between the specified locations"
+}
+```
+
+```json
+{
+  "success": false,
+  "error": "Invalid coordinates: latitude must be between -90 and 90"
+}
+```
+
+---
+
 ## 🌐 API Information
 
 ### GET `/api/v1`
@@ -366,7 +542,8 @@ Returns API metadata and available endpoints.
     "routes": "/api/v1/routes",
     "schedule": "/api/v1/schedule/:routeId",
     "shapes": "/api/v1/shapes/:shapeId",
-    "search": "/api/v1/search?q=query"
+    "search": "/api/v1/search?q=query",
+    "plan": "/api/v1/plan (POST)"
   }
 }
 ```
@@ -454,6 +631,8 @@ curl http://localhost:3000/health
 - **GTFS Specification:** https://gtfs.org/
 - **BMTC GTFS Data:** https://github.com/Vonter/bmtc-gtfs
 - **OpenTripPlanner:** https://www.opentripplanner.org/
+- **Journey Planning API:** See [Plan API](#️-plan-api-journey-planning) section above
+- **Journey Planning API:** See [Plan API](#️-plan-api-journey-planning) section above
 
 ---
 
