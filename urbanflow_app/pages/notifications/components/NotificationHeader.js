@@ -38,25 +38,25 @@ const NotificationHeader = ({
         </View>
       </View>
 
-      {showStats && (
+      {showStats && stats && (
         <View style={styles.statsContainer}>
           <View style={styles.statItem}>
-            <Text style={styles.statNumber}>{stats.total}</Text>
+            <Text style={styles.statNumber}>{stats.total || 0}</Text>
             <Text style={styles.statLabel}>Total</Text>
           </View>
           <View style={styles.statDivider} />
           <View style={styles.statItem}>
-            <Text style={styles.statNumber}>{stats.unread}</Text>
+            <Text style={styles.statNumber}>{stats.unread || 0}</Text>
             <Text style={styles.statLabel}>Unread</Text>
           </View>
           <View style={styles.statDivider} />
           <View style={styles.statItem}>
-            <Text style={styles.statNumber}>{stats.important}</Text>
+            <Text style={styles.statNumber}>{stats.important || 0}</Text>
             <Text style={styles.statLabel}>Important</Text>
           </View>
           <View style={styles.statDivider} />
           <View style={styles.statItem}>
-            <Text style={styles.statNumber}>{stats.today}</Text>
+            <Text style={styles.statNumber}>{stats.today || 0}</Text>
             <Text style={styles.statLabel}>Today</Text>
           </View>
         </View>
