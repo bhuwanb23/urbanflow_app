@@ -115,11 +115,11 @@ function MainTabs() {
           height: 60 + insets.bottom,
           backgroundColor: '#ffffff',
           borderTopWidth: 0,
-          elevation: 0,
+          elevation: 8,
           shadowColor: '#000',
-          shadowOffset: { width: 0, height: -1 },
-          shadowOpacity: 0.08,
-          shadowRadius: 4,
+          shadowOffset: { width: 0, height: -2 },
+          shadowOpacity: 0.15,
+          shadowRadius: 8,
           position: 'absolute',
           bottom: 0,
           left: 0,
@@ -273,31 +273,29 @@ export default function App() {
     <SafeAreaProvider>
       <PaperProvider theme={theme}>
         <NavigationContainer>
-          <SafeAreaView style={{ flex: 1, backgroundColor: '#fff' }} edges={['top']}>
-            <Stack.Navigator 
-              initialRouteName={isLoggedIn ? "MainTabs" : "Intro"} 
-              screenOptions={{ headerShown: false }}
-            >
-              <Stack.Screen name="Intro" component={IntroScreen} />
-              <Stack.Screen name="Login" component={LoginScreen} />
-              <Stack.Screen name="MainTabs" component={MainTabs} />
-              <Stack.Screen 
-                name="NotificationsScreen" 
-                component={NotificationsScreen}
-                options={{
-                  headerShown: false,
-                  presentation: 'modal',
-                }}
-              />
-              <Stack.Screen 
-                name="RouteDetailsScreen" 
-                component={RouteDetailsScreen}
-                options={{
-                  headerShown: false,
-                }}
-              />
-            </Stack.Navigator>
-          </SafeAreaView>
+          <Stack.Navigator 
+            initialRouteName={isLoggedIn ? "MainTabs" : "Intro"} 
+            screenOptions={{ headerShown: false }}
+          >
+            <Stack.Screen name="Intro" component={IntroScreen} />
+            <Stack.Screen name="Login" component={LoginScreen} />
+            <Stack.Screen name="MainTabs" component={MainTabs} />
+            <Stack.Screen 
+              name="NotificationsScreen" 
+              component={NotificationsScreen}
+              options={{
+                headerShown: false,
+                presentation: 'modal',
+              }}
+            />
+            <Stack.Screen 
+              name="RouteDetailsScreen" 
+              component={RouteDetailsScreen}
+              options={{
+                headerShown: false,
+              }}
+            />
+          </Stack.Navigator>
         </NavigationContainer>
       </PaperProvider>
     </SafeAreaProvider>
