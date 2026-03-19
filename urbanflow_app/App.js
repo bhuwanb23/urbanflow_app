@@ -156,13 +156,20 @@ function MainTabs() {
           return (
             <Icon 
               name={iconName} 
-              size={focused ? 24 : 22} 
-              color={focused ? '#6366f1' : '#9ca3af'} 
+              size={focused ? 26 : 22} 
+              color={focused ? '#34D399' : '#6B7280'} 
+              style={{
+                shadowColor: focused ? '#34D399' : 'transparent',
+                shadowOffset: { width: 0, height: 0 },
+                shadowOpacity: focused ? 0.6 : 0,
+                shadowRadius: 8,
+                elevation: focused ? 3 : 0,
+              }}
             />
           );
         },
-        tabBarActiveTintColor: '#6366f1',
-        tabBarInactiveTintColor: '#9ca3af',
+        tabBarActiveTintColor: '#34D399', // Emerald 400 - Bright green
+        tabBarInactiveTintColor: '#6B7280', // Gray 500
       })}
     >
       <Tab.Screen 
