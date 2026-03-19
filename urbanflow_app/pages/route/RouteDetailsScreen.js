@@ -1,49 +1,94 @@
-import React, { useState } from 'react';
-import { View, StyleSheet, ScrollView, SafeAreaView, Dimensions, Animated } from 'react-native';
+import React, { useState, useCallback } from 'react';
+import { View, StyleSheet, ScrollView, SafeAreaView } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 // Import Components
 import {
-  RouteHeader,
-  RouteOverview,
-  LiveAlert,
-  JourneySteps,
-  EnvironmentalImpact,
-  AlternateRoutes,
-  QuickActions
+  RouteLayout,
+  TopAppBar,
+  JourneyOverview,
+  SegmentList,
+  RouteErrorBoundary,
+  RouteSkeleton,
 } from './components';
 
-// Import constants and theme
-import { routeTheme } from './styles/routeTheme';
-import { MOCK_ROUTE_DATA } from './constants/routeConstants';
+// Import context and hooks
+import { RouteProvider, useRoute } from './context/RouteContext';
+import { useAccessibility } from './hooks/useAccessibility';
+import { useLiveTracking } from './hooks/useLiveTracking';
 
-export default function RouteDetailsScreen({ route, navigation }) {
-  // Use passed route data or fallback to mock data
-  const routeData = route?.params?.route || MOCK_ROUTE_DATA;
+// Import constants
+import { MOCK_ROUTE_DATA } from './constants/routeConstants';
+import { routeTheme } from './theme/routeTheme';
+
+/**
+ * Main Route Details Screen Content
+ */
+function RouteDetailsContent({ navigation, route }) {
+  const { currentRoute, isLoading, error, updateRoute } = useRoute();
+  const { triggerHapticFeedback } = useAccessibility();
+  const { startTracking, stopTracking } = useLiveTracking();
+  const insets = useSafeAreaInsets();
+
+  // Use route data from params or mock data
+  React.useEffect(() => {
+    if (route?.params?.route) {
+      updateRoute(route.params.route);
+    }
+  }, [route?.params?.route]);
+
+  const handleBack = useCallback(() => {
+    triggerHapticFeedback('impact-light');
+    navigation.goBack();
+  }, [navigation]);
+
+  const handleStartJourney = useCallback(() => {
+    triggerHapticFeedback('success');
+    startTracking();
+    // Navigate to navigation mode or start journey
+    console.log('Starting journey...');
+  }, [startTracking]);
+
+  if (isLoading) {
+    return <RouteSkeleton segmentCount={4} />;
+  }
 
   return (
-    <SafeAreaView style={styles.container}>
-      <RouteHeader 
-        onBack={() => navigation.goBack()} 
-        onMenu={() => console.log('Menu options')} 
+    <RouteLayout>
+      <TopAppBar 
+        onBack={handleBack} 
+        onStartJourney={handleStartJourney}
       />
 
       <ScrollView 
-        contentContainerStyle={styles.scrollContent}
+        contentContainerStyle={[
+          styles.scrollContent,
+          { paddingBottom: insets.bottom + 80 }
+        ]}
         showsVerticalScrollIndicator={false}
+        bounces={false}
       >
-        <RouteOverview routeData={routeData} />
+        <JourneyOverview routeData={currentRoute} />
         
-        <LiveAlert />
-
-        <JourneySteps />
-
-        <EnvironmentalImpact />
-
-        <AlternateRoutes />
-
-        <QuickActions />
+        <SegmentList segments={currentRoute?.segments || []} />
       </ScrollView>
-    </SafeAreaView>
+    </RouteLayout>
+  );
+}
+
+/**
+ * RouteDetailsScreen with Error Boundary and Context Provider
+ */
+export default function RouteDetailsScreen(props) {
+  return (
+    <RouteProvider>
+      <RouteErrorBoundary
+        onError={(error) => console.error('Route screen error:', error)}
+        onRetry={() => console.log('Retrying route screen...')}
+      >
+        <RouteDetailsContent {...props} />
+      </RouteErrorBoundary>
+    </RouteProvider>
   );
 }
 
@@ -53,7 +98,7 @@ const styles = StyleSheet.create({
     backgroundColor: routeTheme.colors.background,
   },
   scrollContent: {
-    padding: 24,
-    paddingBottom: 40,
+    paddingHorizontal: 24,
+    paddingTop: routeTheme.spacing.xl,
   },
 });
