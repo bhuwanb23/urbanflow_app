@@ -27,7 +27,7 @@ export default function TopAppBar({ onBack, onStartJourney, title = 'UrbanFlow' 
 
   return (
     <LinearGradient 
-      colors={[routeTheme.colors.primary, routeTheme.colors.primaryDark]} 
+      colors={['#059669', '#047857']} 
       style={[styles.header, { paddingTop: insets.top + 16 }]}
       start={{ x: 0, y: 0 }}
       end={{ x: 1, y: 0 }}

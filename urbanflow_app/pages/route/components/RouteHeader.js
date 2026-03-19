@@ -10,7 +10,7 @@ export default function RouteHeader({ onBack, onMenu }) {
   
   return (
     <LinearGradient 
-      colors={[routeTheme.colors.primary, routeTheme.colors.primaryDark]} 
+      colors={['#059669', '#047857']} 
       style={[styles.headerGradient, { paddingTop: insets.top + 16 }]}
     >
       <View style={styles.headerRow}>

@@ -71,9 +71,9 @@ export const routeTheme = {
   
   typography: {
     fontFamily: {
-      headline: 'Manrope_800ExtraBold',
-      body: 'Manrope_400Regular',
-      label: 'Inter_400Regular',
+      headline: 'Poppins_700Bold',
+      body: 'Urbanist_400Regular',
+      label: 'Urbanist_400Regular',
     },
     fontSize: {
       xs: 10,
