@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, StyleSheet, Text, Dimensions, Platform, TouchableOpacity } from 'react-native';
+import { View, StyleSheet, Text, Dimensions, Platform, TouchableOpacity, StatusBar } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { MotiView } from 'moti';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -9,7 +9,9 @@ const { width, height } = Dimensions.get('window');
 export default function IntroScreen({ navigation }) {
 
   return (
-    <View style={styles.container}>
+    <>
+      <StatusBar barStyle="dark-content" backgroundColor="#FFFFFF" translucent={false} />
+      <View style={styles.container}>
       <View style={styles.content}>
         <MotiView
           from={{ opacity: 0, translateY: 20 }}
@@ -54,6 +56,7 @@ export default function IntroScreen({ navigation }) {
         </TouchableOpacity>
       </MotiView>
     </View>
+    </>
   );
 }
 

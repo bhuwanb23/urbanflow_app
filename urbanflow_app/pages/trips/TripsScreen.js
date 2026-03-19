@@ -240,7 +240,7 @@ export default function TripsScreen({ navigation }) {
 
 const styles = StyleSheet.create({
   headerContainer: {
-    paddingTop: Platform.OS === 'android' ? 40 : 20,
+    paddingTop: Platform.OS === 'android' ? 20 : 20,
     paddingBottom: 20,
     paddingHorizontal: 24,
     backgroundColor: '#FFFFFF',

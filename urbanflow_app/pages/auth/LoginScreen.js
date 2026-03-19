@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, StyleSheet, Text, Platform, TouchableOpacity, TextInput, KeyboardAvoidingView, ScrollView } from 'react-native';
+import { View, StyleSheet, Text, Platform, TouchableOpacity, TextInput, KeyboardAvoidingView, ScrollView, StatusBar } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { MotiView } from 'moti';
 import { LinearGradient } from 'expo-linear-gradient';
@@ -16,7 +16,9 @@ export default function LoginScreen({ navigation }) {
   };
 
   return (
-    <View style={styles.mainContainer}>
+    <>
+      <StatusBar barStyle="dark-content" backgroundColor="#FFFFFF" translucent={false} />
+      <View style={styles.mainContainer}>
       <KeyboardAvoidingView 
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         style={styles.keyboardView}
@@ -182,6 +184,7 @@ export default function LoginScreen({ navigation }) {
         </ScrollView>
       </KeyboardAvoidingView>
     </View>
+    </>
   );
 }
 

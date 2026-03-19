@@ -12,7 +12,7 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { useFonts as useUrbanist, Urbanist_400Regular, Urbanist_700Bold } from '@expo-google-fonts/urbanist';
 import { useFonts as usePoppins, Poppins_400Regular, Poppins_700Bold } from '@expo-google-fonts/poppins';
 import { useFonts as useMontserrat, Montserrat_400Regular, Montserrat_700Bold } from '@expo-google-fonts/montserrat';
-import { View, ActivityIndicator, Platform } from 'react-native';
+import { View, ActivityIndicator, Platform, StatusBar } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import LiveScreen from './pages/live/LiveScreen';
 import ProfileScreen from './pages/profile/ProfileScreen';
@@ -247,6 +247,7 @@ export default function App() {
     return (
       <SafeAreaProvider>
         <SafeAreaView style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: '#fff' }}>
+          <StatusBar barStyle="dark-content" backgroundColor="#FFFFFF" />
           <ActivityIndicator size="large" color="#185a9d" />
         </SafeAreaView>
       </SafeAreaProvider>
@@ -284,6 +285,7 @@ export default function App() {
     <SafeAreaProvider>
       <PaperProvider theme={theme}>
         <NavigationContainer>
+          <StatusBar barStyle="dark-content" backgroundColor="#FFFFFF" translucent={false} />
           <Stack.Navigator 
             initialRouteName={isLoggedIn ? "MainTabs" : "Intro"} 
             screenOptions={{ headerShown: false }}
