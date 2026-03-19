@@ -1,23 +1,27 @@
 import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { LinearGradient } from 'expo-linear-gradient';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { MotiView } from 'moti';
+import { routeTheme } from '../styles/routeTheme';
 
-export default function QuickActions({ onStartRoute, onSaveRoute, onShareRoute }) {
+export default function QuickActions() {
   return (
-    <MotiView from={{ opacity: 0, translateY: 20 }} animate={{ opacity: 1, translateY: 0 }} transition={{ type: 'timing', duration: 600, delay: 1000 }}>
-      <View style={styles.quickActions}>
-        <TouchableOpacity style={styles.primaryAction} onPress={onStartRoute}>
-          <Icon name="play" size={20} color="#fff" />
-          <Text style={styles.primaryActionText}>Start</Text>
+    <MotiView from={{ opacity: 0, translateY: 40 }} animate={{ opacity: 1, translateY: 0 }} transition={{ type: 'timing', duration: 600, delay: 1000 }}>
+      <View style={styles.actionContainer}>
+        <TouchableOpacity style={styles.saveButton}>
+          <Icon name="heart-outline" size={24} color={routeTheme.colors.primary} />
         </TouchableOpacity>
-        <TouchableOpacity style={styles.secondaryAction} onPress={onSaveRoute}>
-          <Icon name="bookmark-outline" size={20} color="#64748b" />
-          <Text style={styles.secondaryActionText}>Save</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.secondaryAction} onPress={onShareRoute}>
-          <Icon name="share-variant-outline" size={20} color="#64748b" />
-          <Text style={styles.secondaryActionText}>Share</Text>
+        <TouchableOpacity style={styles.startButton}>
+          <LinearGradient
+            colors={routeTheme.colors.primary}
+            start={{ x: 0, y: 0 }}
+            end={{ x: 1, y: 1 }}
+            style={styles.startButtonGradient}
+          >
+            <Text style={styles.startButtonText}>Start Journey</Text>
+            <Icon name="navigation" size={20} color="#fff" style={styles.startIcon} />
+          </LinearGradient>
         </TouchableOpacity>
       </View>
     </MotiView>
@@ -25,37 +29,45 @@ export default function QuickActions({ onStartRoute, onSaveRoute, onShareRoute }
 }
 
 const styles = StyleSheet.create({
-  quickActions: {
+  actionContainer: {
     flexDirection: 'row',
-    gap: 12,
-    marginBottom: 20, // Add bottom margin to prevent overlap with system UI
+    gap: 16,
+    marginTop: 10,
   },
-  primaryAction: {
-    flex: 1,
-    backgroundColor: '#6366f1',
-    borderRadius: 12,
-    paddingVertical: 16,
+  saveButton: {
+    width: 56,
+    height: 56,
+    borderRadius: 16,
+    backgroundColor: '#ECFDF5',
     alignItems: 'center',
-    gap: 4,
+    justifyContent: 'center',
+    borderWidth: 1,
+    borderColor: '#A7F3D0',
   },
-  primaryActionText: {
-    fontSize: 14,
-    fontWeight: '500',
+  startButton: {
+    flex: 1,
+    height: 56,
+    borderRadius: 16,
+    overflow: 'hidden',
+    elevation: 4,
+    shadowColor: routeTheme.colors.primary,
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.3,
+    shadowRadius: 8,
+  },
+  startButtonGradient: {
+    flex: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  startButtonText: {
+    fontSize: 16,
+    fontWeight: 'bold',
     color: '#fff',
-    fontFamily: 'Urbanist_400Regular',
+    fontFamily: 'Poppins_700Bold',
   },
-  secondaryAction: {
-    flex: 1,
-    backgroundColor: '#f1f5f9',
-    borderRadius: 12,
-    paddingVertical: 16,
-    alignItems: 'center',
-    gap: 4,
-  },
-  secondaryActionText: {
-    fontSize: 14,
-    fontWeight: '500',
-    color: '#64748b',
-    fontFamily: 'Urbanist_400Regular',
+  startIcon: {
+    marginLeft: 8,
   },
 });

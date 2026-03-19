@@ -2,13 +2,14 @@ import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { MotiView } from 'moti';
+import { routeTheme } from '../styles/routeTheme';
 
 export default function EnvironmentalImpact() {
   return (
     <MotiView from={{ opacity: 0, translateY: 20 }} animate={{ opacity: 1, translateY: 0 }} transition={{ type: 'timing', duration: 600, delay: 600 }}>
       <View style={styles.ecoStats}>
         <View style={styles.ecoHeader}>
-          <Icon name="leaf" size={20} color="#16a34a" />
+          <Icon name="leaf" size={20} color={routeTheme.colors.success} />
           <Text style={styles.ecoTitle}>Environmental Impact</Text>
         </View>
         <View style={styles.ecoGrid}>
@@ -28,12 +29,12 @@ export default function EnvironmentalImpact() {
 
 const styles = StyleSheet.create({
   ecoStats: {
-    backgroundColor: '#f0fdf4',
+    backgroundColor: '#ECFDF5', // Emerald 50
     borderRadius: 16,
     padding: 20,
     marginBottom: 20,
     borderWidth: 1,
-    borderColor: '#bbf7d0',
+    borderColor: '#A7F3D0', // Emerald 200
   },
   ecoHeader: {
     flexDirection: 'row',
@@ -43,7 +44,7 @@ const styles = StyleSheet.create({
   ecoTitle: {
     fontSize: 16,
     fontWeight: '600',
-    color: '#15803d',
+    color: routeTheme.colors.primaryDark,
     fontFamily: 'Poppins_700Bold',
     marginLeft: 8,
   },
@@ -58,12 +59,12 @@ const styles = StyleSheet.create({
   ecoValue: {
     fontSize: 24,
     fontWeight: 'bold',
-    color: '#16a34a',
+    color: routeTheme.colors.primary,
     fontFamily: 'Poppins_700Bold',
   },
   ecoLabel: {
     fontSize: 12,
-    color: '#15803d',
+    color: routeTheme.colors.primaryDark,
     fontFamily: 'Urbanist_400Regular',
   },
 });

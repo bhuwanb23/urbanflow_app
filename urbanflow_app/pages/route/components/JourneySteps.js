@@ -3,6 +3,7 @@ import { View, Text, StyleSheet } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { MotiView } from 'moti';
 import { ROUTE_STEPS } from '../constants/routeConstants';
+import { routeTheme } from '../styles/routeTheme';
 
 export default function JourneySteps() {
   return (
@@ -10,33 +11,44 @@ export default function JourneySteps() {
       <View style={styles.section}>
         <Text style={styles.sectionTitle}>Journey Steps</Text>
         <View style={styles.stepsContainer}>
-          {ROUTE_STEPS.map((step, index) => (
-            <View key={step.id} style={styles.stepItem}>
-              <View style={styles.stepLeft}>
-                <View style={[styles.stepIcon, { backgroundColor: step.iconBg }]}>
-                  <Icon name={step.icon} size={18} color={step.iconColor} />
+          {ROUTE_STEPS.map((step, index) => {
+            // Apply green theme colors to steps
+            const iconBg = step.icon === 'walk' ? '#ECFDF5' : 
+                           step.icon === 'train' ? '#F8FAFC' : 
+                           step.iconBg;
+            
+            const iconColor = step.icon === 'walk' ? routeTheme.colors.primary : 
+                              step.icon === 'train' ? routeTheme.colors.secondary : 
+                              step.iconColor;
+
+            return (
+              <View key={step.id} style={styles.stepItem}>
+                <View style={styles.stepLeft}>
+                  <View style={[styles.stepIcon, { backgroundColor: iconBg }]}>
+                    <Icon name={step.icon} size={18} color={iconColor} />
+                  </View>
+                  {index < ROUTE_STEPS.length - 1 && <View style={styles.stepLine} />}
                 </View>
-                {index < ROUTE_STEPS.length - 1 && <View style={styles.stepLine} />}
+                <View style={styles.stepContent}>
+                  <View style={styles.stepHeader}>
+                    <Text style={styles.stepTitle}>{step.title}</Text>
+                    <Text style={styles.stepDuration}>{step.duration}</Text>
+                  </View>
+                  <Text style={styles.stepDescription}>
+                    {step.stops ? `${step.stops} • ${step.description}` : 
+                     step.distance ? `${step.distance} • ${step.description}` : step.description}
+                  </Text>
+                  <View style={styles.stepFeatures}>
+                    {step.features.map((feature, idx) => (
+                      <View key={idx} style={styles.stepFeature}>
+                        <Text style={styles.stepFeatureText}>{feature}</Text>
+                      </View>
+                    ))}
+                  </View>
+                </View>
               </View>
-              <View style={styles.stepContent}>
-                <View style={styles.stepHeader}>
-                  <Text style={styles.stepTitle}>{step.title}</Text>
-                  <Text style={styles.stepDuration}>{step.duration}</Text>
-                </View>
-                <Text style={styles.stepDescription}>
-                  {step.stops ? `${step.stops} • ${step.description}` : 
-                   step.distance ? `${step.distance} • ${step.description}` : step.description}
-                </Text>
-                <View style={styles.stepFeatures}>
-                  {step.features.map((feature, idx) => (
-                    <View key={idx} style={styles.stepFeature}>
-                      <Text style={styles.stepFeatureText}>{feature}</Text>
-                    </View>
-                  ))}
-                </View>
-              </View>
-            </View>
-          ))}
+            );
+          })}
         </View>
       </View>
     </MotiView>
@@ -50,7 +62,7 @@ const styles = StyleSheet.create({
   sectionTitle: {
     fontSize: 20,
     fontWeight: 'bold',
-    color: '#1e293b',
+    color: routeTheme.colors.textPrimary,
     fontFamily: 'Poppins_700Bold',
     marginBottom: 16,
   },
@@ -74,7 +86,7 @@ const styles = StyleSheet.create({
   stepLine: {
     width: 2,
     height: 48,
-    backgroundColor: '#e2e8f0',
+    backgroundColor: routeTheme.colors.border,
     borderRadius: 1,
     marginTop: 8,
   },
@@ -82,7 +94,7 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingBottom: 16,
     borderBottomWidth: 1,
-    borderBottomColor: '#f1f5f9',
+    borderBottomColor: routeTheme.colors.borderLight,
   },
   stepHeader: {
     flexDirection: 'row',
@@ -93,17 +105,17 @@ const styles = StyleSheet.create({
   stepTitle: {
     fontSize: 16,
     fontWeight: '600',
-    color: '#1e293b',
+    color: routeTheme.colors.textPrimary,
     fontFamily: 'Poppins_700Bold',
   },
   stepDuration: {
     fontSize: 14,
-    color: '#64748b',
+    color: routeTheme.colors.textSecondary,
     fontFamily: 'Urbanist_400Regular',
   },
   stepDescription: {
     fontSize: 14,
-    color: '#64748b',
+    color: routeTheme.colors.textSecondary,
     fontFamily: 'Urbanist_400Regular',
     marginBottom: 8,
   },
@@ -112,14 +124,14 @@ const styles = StyleSheet.create({
     gap: 8,
   },
   stepFeature: {
-    backgroundColor: '#f8fafc',
+    backgroundColor: routeTheme.colors.surfaceVariant,
     paddingHorizontal: 8,
     paddingVertical: 4,
     borderRadius: 8,
   },
   stepFeatureText: {
     fontSize: 12,
-    color: '#475569',
+    color: routeTheme.colors.textSecondary,
     fontFamily: 'Urbanist_400Regular',
   },
 });

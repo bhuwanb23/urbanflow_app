@@ -3,12 +3,16 @@ import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { routeTheme } from '../styles/routeTheme';
 
 export default function RouteHeader({ onBack, onMenu }) {
   const insets = useSafeAreaInsets();
   
   return (
-    <LinearGradient colors={["#6366f1", "#8b5cf6"]} style={[styles.headerGradient, { paddingTop: insets.top + 16 }]}>
+    <LinearGradient 
+      colors={routeTheme.colors.primary} 
+      style={[styles.headerGradient, { paddingTop: insets.top + 16 }]}
+    >
       <View style={styles.headerRow}>
         <View style={styles.headerLeft}>
           <TouchableOpacity onPress={onBack} style={styles.backButton}>
@@ -31,9 +35,9 @@ const styles = StyleSheet.create({
     borderBottomLeftRadius: 32,
     borderBottomRightRadius: 32,
     elevation: 6,
-    shadowColor: '#6366f1',
+    shadowColor: routeTheme.colors.primary,
     shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.10,
+    shadowOpacity: 0.20,
     shadowRadius: 16,
   },
   headerRow: {

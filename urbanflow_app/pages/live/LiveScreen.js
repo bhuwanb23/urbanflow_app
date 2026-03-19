@@ -3,78 +3,10 @@ import { View, Text, StyleSheet, ScrollView, TouchableOpacity, SafeAreaView, Act
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { MotiView } from 'moti';
 
-// Import API hooks
-import { useTraffic, useDemoData } from '../../utils/hooks/useAPI';
-
-const { width, height } = Dimensions.get('window');
-
-// Import Components
-import LiveMap from './components/LiveMap';
-import TrafficConditions from './components/TrafficConditions';
-import RecentUpdates from './components/RecentUpdates';
-import PopularRoutes from './components/PopularRoutes';
-import TransitStatus from './components/TransitStatus';
+// Import LiveDashboard component
+import LiveDashboard from './components/LiveDashboard';
 
 export default function LiveScreen() {
-    const [selectedArea, setSelectedArea] = useState('all');
-
-    // API hooks
-    const { trafficData, fetchLiveTraffic, getTrafficConditions, getTrafficAlerts, loading, error } = useTraffic();
-    const { demoData, fetchTrafficData, fetchRouteSuggestions, loading: demoLoading } = useDemoData();
-
-    useEffect(() => {
-        loadLiveData();
-    }, []);
-
-    // Show error alert if there's an API error
-    useEffect(() => {
-        if (error) {
-            Alert.alert('Error', error, [
-                { text: 'Retry', onPress: loadLiveData },
-                { text: 'OK' }
-            ]);
-        }
-    }, [error]);
-
-    const loadLiveData = async () => {
-        try {
-            await fetchLiveTraffic({ area: selectedArea });
-        } catch (err) {
-            console.log('Error loading live traffic, falling back to demo data');
-            // Fallback to demo data
-            await fetchTrafficData();
-            await fetchRouteSuggestions();
-        }
-    };
-
-    const handleAreaChange = async (area) => {
-        setSelectedArea(area);
-        try {
-            const conditions = await getTrafficConditions(area);
-            // Update traffic conditions for specific area
-        } catch (error) {
-            console.log('Error loading area conditions:', error);
-        }
-    };
-
-    const loadAlerts = async () => {
-        try {
-            const alerts = await getTrafficAlerts();
-            // Handle traffic alerts
-        } catch (error) {
-            console.log('Error loading alerts:', error);
-        }
-    };
-
-    if (loading && demoLoading) {
-        return (
-            <SafeAreaView style={{ flex: 1, backgroundColor: '#FFFFFF', justifyContent: 'center', alignItems: 'center' }}>
-                <ActivityIndicator size="large" color="#10B981" />
-                <Text style={{ marginTop: 16, color: '#10B981', fontFamily: 'Poppins_400Regular', fontSize: 16 }}>Loading live data...</Text>
-            </SafeAreaView>
-        );
-    }
-
     return (
         <SafeAreaView style={styles.container}>
             {/* Clean White Header */}
@@ -98,33 +30,7 @@ export default function LiveScreen() {
                 </View>
             </View>
             
-            <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
-                {/* Live Map Component */}
-                <LiveMap 
-                    trafficData={trafficData || demoData?.traffic}
-                    onAreaSelect={handleAreaChange}
-                />
-                
-                {/* Traffic Conditions Component */}
-                <TrafficConditions 
-                    conditions={trafficData?.conditions || demoData?.traffic?.conditions}
-                    onRefresh={loadLiveData}
-                />
-                
-                {/* Recent Updates Component */}
-                <RecentUpdates 
-                    updates={trafficData?.updates || demoData?.traffic?.updates}
-                    onLoadAlerts={loadAlerts}
-                />
-                
-                {/* Popular Routes Component */}
-                <PopularRoutes 
-                    routes={demoData?.routes}
-                />
-                
-                {/* Transit Status Component */}
-                <TransitStatus />
-            </ScrollView>
+            <LiveDashboard />
         </SafeAreaView>
     );
 }
@@ -202,9 +108,5 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     borderWidth: 1,
     borderColor: '#E2E8F0', // Slate 200
-  },
-  scrollContent: { 
-    padding: 24, 
-    paddingBottom: 100 
   },
 });

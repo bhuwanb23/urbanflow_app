@@ -2,6 +2,7 @@ import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { MotiView } from 'moti';
+import { routeTheme } from '../styles/routeTheme';
 
 export default function RouteOverview({ routeData }) {
   return (
@@ -9,7 +10,7 @@ export default function RouteOverview({ routeData }) {
       <View style={styles.routeOverview}>
         <View style={styles.routePoints}>
           <View style={styles.routePoint}>
-            <View style={[styles.routeDot, { backgroundColor: '#10b981' }]} />
+            <View style={[styles.routeDot, { backgroundColor: routeTheme.colors.success }]} />
             <View style={styles.routePointInfo}>
               <Text style={styles.routePointText}>{routeData.from}</Text>
               <Text style={styles.routePointTime}>8:30 AM</Text>
@@ -24,11 +25,11 @@ export default function RouteOverview({ routeData }) {
             </View>
             <View style={styles.routeFeatures}>
               <View style={styles.routeFeature}>
-                <Icon name="leaf" size={16} color="#10b981" />
+                <Icon name="leaf" size={16} color={routeTheme.colors.success} />
                 <Text style={styles.routeFeatureText}>Eco-friendly</Text>
               </View>
               <View style={styles.routeFeature}>
-                <Icon name="star" size={14} color="#fbbf24" />
+                <Icon name="star" size={14} color={routeTheme.colors.accent} />
                 <Text style={styles.routeFeatureText}>4.2</Text>
                 <Text style={styles.routeFeatureText}>Comfort</Text>
               </View>
@@ -36,7 +37,7 @@ export default function RouteOverview({ routeData }) {
           </View>
 
           <View style={styles.routePoint}>
-            <View style={[styles.routeDot, { backgroundColor: '#ef4444' }]} />
+            <View style={[styles.routeDot, { backgroundColor: routeTheme.colors.error }]} />
             <View style={styles.routePointInfo}>
               <Text style={styles.routePointText}>{routeData.to}</Text>
               <Text style={styles.routePointTime}>9:02 AM</Text>
@@ -50,12 +51,12 @@ export default function RouteOverview({ routeData }) {
 
 const styles = StyleSheet.create({
   routeOverview: {
-    backgroundColor: '#dbeafe',
+    backgroundColor: '#ECFDF5', // Emerald 50
     borderRadius: 16,
     padding: 20,
     marginBottom: 16,
     borderWidth: 1,
-    borderColor: '#bfdbfe',
+    borderColor: '#A7F3D0', // Emerald 200
   },
   routePoints: {
     gap: 16,
@@ -76,12 +77,12 @@ const styles = StyleSheet.create({
   routePointText: {
     fontSize: 16,
     fontWeight: '600',
-    color: '#1e293b',
+    color: routeTheme.colors.textPrimary,
     fontFamily: 'Poppins_700Bold',
   },
   routePointTime: {
     fontSize: 12,
-    color: '#64748b',
+    color: routeTheme.colors.textSecondary,
     fontFamily: 'Urbanist_400Regular',
   },
   routeStats: {
@@ -92,7 +93,7 @@ const styles = StyleSheet.create({
   routeLine: {
     width: 2,
     height: 32,
-    backgroundColor: '#94a3b8',
+    backgroundColor: routeTheme.colors.textTertiary,
     borderRadius: 1,
   },
   routeStatsCenter: {
@@ -103,12 +104,12 @@ const styles = StyleSheet.create({
   routeDuration: {
     fontSize: 24,
     fontWeight: 'bold',
-    color: '#2563eb',
+    color: routeTheme.colors.primary,
     fontFamily: 'Poppins_700Bold',
   },
   routeDistance: {
     fontSize: 12,
-    color: '#64748b',
+    color: routeTheme.colors.textSecondary,
     fontFamily: 'Urbanist_400Regular',
   },
   routeFeatures: {
@@ -121,7 +122,7 @@ const styles = StyleSheet.create({
   },
   routeFeatureText: {
     fontSize: 12,
-    color: '#475569',
+    color: routeTheme.colors.textSecondary,
     fontFamily: 'Urbanist_400Regular',
     marginTop: 2,
   },
