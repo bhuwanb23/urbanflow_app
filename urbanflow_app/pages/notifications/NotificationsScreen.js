@@ -55,6 +55,15 @@ const NotificationsScreen = ({ navigation }) => {
     }
   };
 
+  const markAsRead = (notificationId) => {
+    // Mark single notification as read locally
+    setNotifications(prev => 
+      prev.map(n => 
+        n.id === notificationId ? { ...n, isRead: true } : n
+      )
+    );
+  };
+
   const handleFilterPress = () => {
     // Show filter modal or navigate to filter screen
     console.log('Filter pressed');
