@@ -86,7 +86,7 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 20,
-    color: '#10B981', // Emerald 500
+    color: '#059669', // Emerald 600 - Darker for better contrast
     fontFamily: 'Poppins_700Bold',
     letterSpacing: 1.5,
     textTransform: 'uppercase',
@@ -94,20 +94,20 @@ const styles = StyleSheet.create({
   },
   subtitle: {
     fontSize: 40,
-    color: '#0F172A', // Slate 900
+    color: '#0F172A', // Slate 900 - Keep this dark
     fontFamily: 'Poppins_700Bold',
     lineHeight: 48,
   },
   subtitleGreener: {
     fontSize: 40,
-    color: '#64748B', // Slate 500
+    color: '#1e293b', // Slate 800 - Darker for better visibility
     fontFamily: 'Poppins_700Bold',
     lineHeight: 48,
     marginBottom: 24,
   },
   description: {
     fontSize: 16,
-    color: '#475569', // Slate 600
+    color: '#334155', // Slate 700 - Darker for readability
     fontFamily: 'Urbanist_400Regular',
     lineHeight: 24,
   },
