@@ -67,6 +67,15 @@ export default function SegmentItem({ segment, isLast = false, onPress }) {
       );
     }
 
+    if (segment.accessibility) {
+      return (
+        <View style={styles.accessibilityContainer}>
+          <Icon name="wheelchair-accessibility" size={14} color={routeTheme.colors.primary} />
+          <Text style={styles.accessibilityText}>Accessible</Text>
+        </View>
+      );
+    }
+
     return null;
   };
 
@@ -241,5 +250,17 @@ const styles = StyleSheet.create({
     fontWeight: routeTheme.typography.fontWeight.bold,
     color: routeTheme.colors.primary,
     fontFamily: routeTheme.typography.fontFamily.label,
+  },
+  accessibilityContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: routeTheme.spacing.xs,
+    marginTop: routeTheme.spacing.sm,
+  },
+  accessibilityText: {
+    fontSize: routeTheme.typography.fontSize.xs,
+    color: routeTheme.colors.primary,
+    fontFamily: routeTheme.typography.fontFamily.label,
+    fontWeight: routeTheme.typography.fontWeight.medium,
   },
 });
