@@ -42,8 +42,9 @@ const ScreenWrapper = ({ children }) => {
   return (
     <View style={{ 
       flex: 1, 
-      paddingBottom: 0, // Remove padding to prevent interference with tab bar
-      backgroundColor: '#fff'
+      paddingTop: 0,
+      paddingBottom: 0,
+      backgroundColor: '#FFFFFF'
     }}>
       {children}
     </View>
@@ -130,6 +131,16 @@ function MainTabs() {
           paddingLeft: 0,
           paddingRight: 0,
         },
+        headerStyle: {
+          backgroundColor: '#FFFFFF',
+          elevation: 0,
+          shadowOpacity: 0,
+        },
+        headerTintColor: '#0F172A',
+        headerTitleStyle: {
+          fontFamily: 'Poppins_700Bold',
+          fontSize: 24,
+        },
         tabBarLabelStyle: { 
           fontFamily: 'Urbanist_700Bold', 
           fontSize: 11,
@@ -168,8 +179,8 @@ function MainTabs() {
             />
           );
         },
-        tabBarActiveTintColor: '#34D399', // Emerald 400 - Bright green
-        tabBarInactiveTintColor: '#6B7280', // Gray 500
+        tabBarActiveTintColor: '#34D399',
+        tabBarInactiveTintColor: '#6B7280',
       })}
     >
       <Tab.Screen 
