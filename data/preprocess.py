@@ -218,17 +218,27 @@ print(f"  Clean routes: {len(routes_out)}")
 
 print("\n[4/7] Building schedule (trip → stops → times)...")
 
-# Merge trips with routes to get route_id on each trip
+# Merge trips with routes to get route_short_name and route_long_name
+# Note: trips already has _mode from step 1
 trips_merged = trips.merge(
-    routes[["route_id", "route_short_name", "route_long_name", "_mode"]],
+    routes[["route_id", "route_short_name", "route_long_name"]],
     on="route_id", how="left"
 )
 
+# Ensure _mode is preserved (it should already be there from step 1)
+if "_mode" not in trips_merged.columns and "_mode" in trips.columns:
+    trips_merged["_mode"] = trips["_mode"]
+
 # Merge stop_times with trips
+# stop_times already has _mode from step 1
 schedule_merged = stop_times.merge(
-    trips_merged[["trip_id", "route_id", "route_short_name", "direction_id", "_mode"]],
+    trips_merged[["trip_id", "route_id", "route_short_name", "direction_id"]],
     on="trip_id", how="left"
 )
+
+# Ensure _mode is preserved from stop_times
+if "_mode" not in schedule_merged.columns and "_mode" in stop_times.columns:
+    schedule_merged["_mode"] = stop_times["_mode"]
 
 # Sort by trip + stop sequence
 schedule_merged["stop_sequence"] = pd.to_numeric(
