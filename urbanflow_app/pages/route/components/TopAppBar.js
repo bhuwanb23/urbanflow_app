@@ -1,16 +1,14 @@
 import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
-import { LinearGradient } from 'expo-linear-gradient';
+import { View, Text, StyleSheet, TouchableOpacity, Platform } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { routeTheme } from '../theme/routeTheme';
 import { useAccessibility } from '../hooks/useAccessibility';
 
 /**
  * TopAppBar Component
  * Header with back button and Start Journey action
  */
-export default function TopAppBar({ onBack, onStartJourney, title = 'UrbanFlow' }) {
+export default function TopAppBar({ onBack, onStartJourney, title = 'Route Details' }) {
   const insets = useSafeAreaInsets();
   const { triggerHapticFeedback, announceForAccessibility } = useAccessibility();
 
@@ -26,12 +24,7 @@ export default function TopAppBar({ onBack, onStartJourney, title = 'UrbanFlow' 
   };
 
   return (
-    <LinearGradient 
-      colors={['#059669', '#047857']} 
-      style={[styles.header, { paddingTop: insets.top + 16 }]}
-      start={{ x: 0, y: 0 }}
-      end={{ x: 1, y: 0 }}
-    >
+    <View style={[styles.header, { paddingTop: Platform.OS === 'android' ? 40 : 20 }]}>
       <View style={styles.headerRow}>
         <View style={styles.headerLeft}>
           <TouchableOpacity 
@@ -41,7 +34,7 @@ export default function TopAppBar({ onBack, onStartJourney, title = 'UrbanFlow' 
             accessibilityLabel="Go back"
             accessibilityHint="Return to previous screen"
           >
-            <Icon name="arrow-left" size={24} color="#fff" />
+            <Icon name="arrow-left" size={22} color="#0F172A" />
           </TouchableOpacity>
           <Text style={styles.headerTitle}>{title}</Text>
         </View>
@@ -56,17 +49,17 @@ export default function TopAppBar({ onBack, onStartJourney, title = 'UrbanFlow' 
           <Text style={styles.startButtonText}>Start Journey</Text>
         </TouchableOpacity>
       </View>
-    </LinearGradient>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
   header: {
-    paddingBottom: 24,
+    paddingBottom: 20,
     paddingHorizontal: 24,
-    borderBottomLeftRadius: routeTheme.borderRadius.xl,
-    borderBottomRightRadius: routeTheme.borderRadius.xl,
-    ...routeTheme.shadows.md,
+    backgroundColor: '#FFFFFF',
+    borderBottomWidth: 1,
+    borderBottomColor: '#F1F5F9',
   },
   headerRow: {
     flexDirection: 'row',
@@ -74,36 +67,43 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
   headerLeft: {
+    flex: 1,
     flexDirection: 'row',
     alignItems: 'center',
   },
   backButton: {
-    padding: 8,
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    backgroundColor: '#F8FAFC',
+    alignItems: 'center',
+    justifyContent: 'center',
     marginRight: 12,
-    borderRadius: routeTheme.borderRadius.lg,
-    backgroundColor: 'rgba(255,255,255,0.2)',
+    borderWidth: 1,
+    borderColor: '#E2E8F0',
   },
   headerTitle: {
-    fontSize: routeTheme.typography.fontSize['2xl'],
-    fontWeight: routeTheme.typography.fontWeight.extrabold,
-    color: '#fff',
-    fontFamily: routeTheme.typography.fontFamily.headline,
+    fontSize: 24,
+    fontWeight: '700',
+    color: '#0F172A',
+    fontFamily: 'Poppins_700Bold',
+    letterSpacing: -0.5,
   },
   startButton: {
-    backgroundColor: routeTheme.colors.primary,
+    backgroundColor: '#10B981',
     paddingHorizontal: 20,
     paddingVertical: 10,
-    borderRadius: routeTheme.borderRadius.full,
-    shadowColor: routeTheme.colors.shadow,
+    borderRadius: 20,
+    shadowColor: '#10B981',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.2,
     shadowRadius: 4,
     elevation: 3,
   },
   startButtonText: {
-    color: routeTheme.colors.onPrimary,
-    fontSize: routeTheme.typography.fontSize.base,
-    fontWeight: routeTheme.typography.fontWeight.bold,
-    fontFamily: routeTheme.typography.fontFamily.label,
+    color: '#FFFFFF',
+    fontSize: 14,
+    fontWeight: '700',
+    fontFamily: 'Urbanist_700Bold',
   },
 });

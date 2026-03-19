@@ -1,8 +1,6 @@
 import React from 'react';
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
-import { LinearGradient } from 'expo-linear-gradient';
+import { View, Text, TouchableOpacity, StyleSheet, Platform } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import notificationTheme from '../theme/notificationTheme';
 
 const NotificationHeader = ({ 
   navigation, 
@@ -15,16 +13,11 @@ const NotificationHeader = ({
   };
 
   return (
-    <LinearGradient 
-      colors={notificationTheme.gradients.primary}
-      start={{ x: 0, y: 0 }}
-      end={{ x: 1, y: 1 }}
-      style={styles.headerGradient}
-    >
+    <View style={styles.headerContainer}>
       <View style={styles.headerRow}>
         <View style={styles.headerLeft}>
           <TouchableOpacity onPress={handleBack} style={styles.backButton}>
-            <Icon name="arrow-left" size={22} color={notificationTheme.colors.textInverse} />
+            <Icon name="arrow-left" size={22} color="#0F172A" />
           </TouchableOpacity>
           <View style={styles.titleContainer}>
             <Text style={styles.headerTitle}>Notifications</Text>
@@ -32,8 +25,8 @@ const NotificationHeader = ({
           </View>
         </View>
         <View style={styles.headerRight}>
-          <TouchableOpacity onPress={onFilterPress} style={styles.headerButton}>
-            <Icon name="filter-variant" size={18} color={notificationTheme.colors.textInverse} />
+          <TouchableOpacity onPress={onFilterPress} style={styles.filterButton}>
+            <Icon name="filter-variant" size={20} color="#0F172A" />
           </TouchableOpacity>
         </View>
       </View>
@@ -61,95 +54,102 @@ const NotificationHeader = ({
           </View>
         </View>
       )}
-    </LinearGradient>
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
-  headerGradient: {
-    paddingTop: notificationTheme.spacing['3xl'],
-    paddingBottom: notificationTheme.spacing.xl,
-    paddingHorizontal: notificationTheme.spacing.xl,
-    borderBottomLeftRadius: notificationTheme.borderRadius['2xl'],
-    borderBottomRightRadius: notificationTheme.borderRadius['2xl'],
-    ...notificationTheme.shadows.lg,
+  headerContainer: {
+    paddingTop: Platform.OS === 'android' ? 40 : 20,
+    paddingBottom: 20,
+    paddingHorizontal: 24,
+    backgroundColor: '#FFFFFF',
+    borderBottomWidth: 1,
+    borderBottomColor: '#F1F5F9',
   },
   headerRow: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    marginBottom: notificationTheme.spacing.md,
   },
   headerLeft: {
+    flex: 1,
     flexDirection: 'row',
     alignItems: 'center',
-    flex: 1,
   },
   backButton: {
-    padding: notificationTheme.spacing.sm,
-    marginRight: notificationTheme.spacing.md,
-    borderRadius: notificationTheme.borderRadius.base,
-    backgroundColor: 'rgba(255,255,255,0.15)',
-    ...notificationTheme.shadows.sm,
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    backgroundColor: '#F8FAFC',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginRight: 12,
+    borderWidth: 1,
+    borderColor: '#E2E8F0',
   },
   titleContainer: {
     flex: 1,
   },
   headerTitle: {
-    fontSize: notificationTheme.typography.fontSize['2xl'],
-    fontWeight: notificationTheme.typography.fontWeight.bold,
-    color: notificationTheme.colors.textInverse,
-    fontFamily: notificationTheme.typography.fontFamily.primary,
-    marginBottom: notificationTheme.spacing.xs,
+    fontSize: 24,
+    fontFamily: 'Poppins_700Bold',
+    color: '#0F172A',
+    marginBottom: 4,
+    letterSpacing: -0.5,
   },
   headerSubtitle: {
-    fontSize: notificationTheme.typography.fontSize.sm,
-    color: 'rgba(255,255,255,0.85)',
-    fontFamily: notificationTheme.typography.fontFamily.secondary,
+    fontSize: 14,
+    color: '#64748B',
+    fontFamily: 'Urbanist_400Regular',
   },
   headerRight: {
-    flexDirection: 'row',
     alignItems: 'center',
   },
-  headerButton: {
-    padding: notificationTheme.spacing.sm,
-    marginLeft: notificationTheme.spacing.sm,
-    borderRadius: notificationTheme.borderRadius.base,
-    backgroundColor: 'rgba(255,255,255,0.15)',
-    ...notificationTheme.shadows.sm,
+  filterButton: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    backgroundColor: '#F8FAFC',
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderWidth: 1,
+    borderColor: '#E2E8F0',
   },
   statsContainer: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-around',
-    backgroundColor: 'rgba(255,255,255,0.12)',
-    borderRadius: notificationTheme.borderRadius.md,
-    paddingVertical: notificationTheme.spacing.md,
-    paddingHorizontal: notificationTheme.spacing.lg,
-    marginTop: notificationTheme.spacing.sm,
+    backgroundColor: '#F8FAFC',
+    borderRadius: 12,
+    paddingVertical: 12,
+    paddingHorizontal: 16,
+    marginTop: 16,
+    borderWidth: 1,
+    borderColor: '#E2E8F0',
   },
   statItem: {
     alignItems: 'center',
     flex: 1,
   },
   statNumber: {
-    fontSize: notificationTheme.typography.fontSize.xl,
-    fontWeight: notificationTheme.typography.fontWeight.bold,
-    color: notificationTheme.colors.textInverse,
-    fontFamily: notificationTheme.typography.fontFamily.primary,
-    marginBottom: notificationTheme.spacing.xs,
+    fontSize: 20,
+    fontWeight: '700',
+    color: '#10B981',
+    fontFamily: 'Poppins_700Bold',
+    marginBottom: 4,
   },
   statLabel: {
-    fontSize: notificationTheme.typography.fontSize.xs,
-    color: 'rgba(255,255,255,0.8)',
-    fontFamily: notificationTheme.typography.fontFamily.secondary,
+    fontSize: 11,
+    color: '#64748B',
+    fontFamily: 'Urbanist_400Regular',
     textTransform: 'uppercase',
     letterSpacing: 0.5,
   },
   statDivider: {
     width: 1,
-    height: 24,
-    backgroundColor: 'rgba(255,255,255,0.2)',
+    height: 32,
+    backgroundColor: '#E2E8F0',
   },
 });
 
