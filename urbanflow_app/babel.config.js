@@ -4,4 +4,7 @@ module.exports = {
     '@babel/preset-react',
     '@react-native/babel-preset'
   ],
+  plugins: [
+    'react-native-reanimated/plugin',
+  ],
 };
