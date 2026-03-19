@@ -14,7 +14,7 @@ export default function QuickActions() {
         </TouchableOpacity>
         <TouchableOpacity style={styles.startButton}>
           <LinearGradient
-            colors={routeTheme.colors.primary}
+            colors={[routeTheme.colors.primary, routeTheme.colors.primaryDark]}
             start={{ x: 0, y: 0 }}
             end={{ x: 1, y: 1 }}
             style={styles.startButtonGradient}
