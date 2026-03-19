@@ -43,11 +43,15 @@ const styles = StyleSheet.create({
   },
   mapContainer: {
     height: routeTheme.spacing['2xl'] * 4, // 128px
-    borderRadius: routeTheme.borderRadius['2xl'],
+    borderRadius: routeTheme.borderRadius.xl,
     overflow: 'hidden',
     borderWidth: 0.5,
     borderColor: routeTheme.colors.outlineVariant,
-    ...routeTheme.shadows.sm,
+    shadowColor: 'transparent',
+    shadowOffset: { width: 0, height: 0 },
+    shadowOpacity: 0,
+    shadowRadius: 0,
+    elevation: 0,
   },
   mapImage: {
     width: '100%',

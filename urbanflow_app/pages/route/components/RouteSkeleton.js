@@ -49,9 +49,11 @@ const styles = StyleSheet.create({
   },
   skeletonCard: {
     flex: 1,
-    backgroundColor: routeTheme.colors.surfaceContainerLowest,
-    borderRadius: routeTheme.borderRadius['2xl'],
+    backgroundColor: routeTheme.colors.surface,
+    borderRadius: routeTheme.borderRadius.xl,
     padding: routeTheme.spacing.lg,
+    borderWidth: 0.5,
+    borderColor: routeTheme.colors.outlineVariant,
   },
   skeletonBlock: {
     backgroundColor: routeTheme.colors.surfaceContainerHigh,

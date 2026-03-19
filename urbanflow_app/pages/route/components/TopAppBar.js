@@ -24,7 +24,7 @@ export default function TopAppBar({ onBack, onStartJourney, title = 'Route Detai
   };
 
   return (
-    <View style={[styles.header, { paddingTop: Platform.OS === 'android' ? 40 : 20 }]}>
+    <View style={styles.header}>
       <View style={styles.headerRow}>
         <View style={styles.headerLeft}>
           <TouchableOpacity 
@@ -46,7 +46,7 @@ export default function TopAppBar({ onBack, onStartJourney, title = 'Route Detai
           accessibilityLabel="Start journey"
           accessibilityHint="Begin navigation for this route"
         >
-          <Text style={styles.startButtonText}>Start Journey</Text>
+          <Text style={styles.startButtonText}>Start</Text>
         </TouchableOpacity>
       </View>
     </View>
@@ -55,8 +55,9 @@ export default function TopAppBar({ onBack, onStartJourney, title = 'Route Detai
 
 const styles = StyleSheet.create({
   header: {
-    paddingBottom: 20,
+    paddingTop: Platform.OS === 'android' ? 20 : 20,
     paddingHorizontal: 24,
+    paddingBottom: Platform.OS === 'android' ? 15 : 15,
     backgroundColor: '#FFFFFF',
     borderBottomWidth: 1,
     borderBottomColor: '#F1F5F9',
