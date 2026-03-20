@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { SafeAreaView, ActivityIndicator, ScrollView, Text, StyleSheet, Dimensions, Alert } from 'react-native';
+import { SafeAreaView, ActivityIndicator, ScrollView, Text, StyleSheet, Dimensions, Alert, RefreshControl } from 'react-native';
 
 // Import components
 import {
@@ -12,6 +12,9 @@ import {
 
 // Import styles
 import { plannerStyles } from './styles/plannerStyles';
+
+// Import API
+import api from '../../utils/api';
 
 // Mock Data
 const MOCK_ROUTES = [
@@ -47,25 +50,89 @@ const MOCK_ROUTES = [
 const { width } = Dimensions.get('window');
 
 export default function PlannerScreen({ navigation }) {
-  const [selectedMode, setSelectedMode] = useState('train');
+  const [selectedMode, setSelectedMode] = useState('all');
   const [searchQuery, setSearchQuery] = useState('');
-  const [routes, setRoutes] = useState(MOCK_ROUTES);
+  const [routes, setRoutes] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+  const [refreshing, setRefreshing] = useState(false);
 
-  const handleSearch = (query) => {
-    setSearchQuery(query);
-    if (query.trim()) {
-      const filtered = MOCK_ROUTES.filter(route => 
-        route.from.toLowerCase().includes(query.toLowerCase()) || 
-        route.to.toLowerCase().includes(query.toLowerCase())
-      );
-      setRoutes(filtered);
-    } else {
+  // Load popular routes on mount
+  useEffect(() => {
+    loadPopularRoutes();
+  }, []);
+
+  const loadPopularRoutes = async () => {
+    try {
+      setLoading(true);
+      setError(null);
+      
+      // Try to fetch from backend
+      const response = await api.routesAPI.getPopularRoutes();
+      if (response.success && response.data) {
+        setRoutes(response.data);
+      } else {
+        // Fallback to mock data if API fails
+        setRoutes(MOCK_ROUTES);
+      }
+    } catch (err) {
+      console.error('Error loading popular routes:', err);
+      // Use mock data as fallback
       setRoutes(MOCK_ROUTES);
+      setError('Unable to load routes. Using offline data.');
+    } finally {
+      setLoading(false);
+      setRefreshing(false);
+    }
+  };
+
+  const handleSearch = async (query) => {
+    setSearchQuery(query);
+    
+    if (query.trim()) {
+      try {
+        setLoading(true);
+        // Parse search query for from/to locations
+        const parts = query.split(' to ');
+        const searchParams = {};
+        
+        if (parts.length === 2) {
+          searchParams.fromPlace = parts[0].trim();
+          searchParams.toPlace = parts[1].trim();
+          
+          // Call journey planning API
+          const response = await api.journeyAPI.planJourney(searchParams);
+          
+          if (response.success && response.data?.itineraries) {
+            setRoutes(response.data.itineraries);
+          }
+        } else {
+          // Simple search - filter existing routes
+          const filtered = routes.filter(route => 
+            route.from?.toLowerCase().includes(query.toLowerCase()) || 
+            route.to?.toLowerCase().includes(query.toLowerCase())
+          );
+          setRoutes(filtered);
+        }
+      } catch (err) {
+        console.error('Search error:', err);
+        Alert.alert('Search Error', 'Unable to search routes. Please try again.');
+      } finally {
+        setLoading(false);
+      }
+    } else {
+      // Reset to popular routes
+      loadPopularRoutes();
     }
   };
 
   const handleRoutePress = (route) => {
     navigation.navigate('RouteDetailsScreen', { route });
+  };
+
+  const onRefresh = () => {
+    setRefreshing(true);
+    loadPopularRoutes();
   };
 
   return (
@@ -74,25 +141,39 @@ export default function PlannerScreen({ navigation }) {
       <PlannerHeader navigation={navigation} />
       
       {/* Main Content */}
-      <ScrollView contentContainerStyle={plannerStyles.scrollContent} showsVerticalScrollIndicator={false}>
-        {/* Search Bar Component */}
-        <SearchBar onSearch={handleSearch} value={searchQuery} />
-        
-        {/* Mode Filters Component */}
-        <ModeFilters 
-          selectedMode={selectedMode} 
-          setSelectedMode={setSelectedMode} 
-        />
+      <ScrollView 
+        contentContainerStyle={plannerStyles.scrollContent} 
+        showsVerticalScrollIndicator={false}
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        }
+      >
+        {loading && routes.length === 0 ? (
+          <ActivityIndicator size="large" color="#34D399" style={{ marginTop: 50 }} />
+        ) : error ? (
+          <Text style={{ textAlign: 'center', color: '#666', marginTop: 20 }}>{error}</Text>
+        ) : (
+          <>
+            {/* Search Bar Component */}
+            <SearchBar onSearch={handleSearch} value={searchQuery} />
+            
+            {/* Mode Filters Component */}
+            <ModeFilters 
+              selectedMode={selectedMode} 
+              setSelectedMode={setSelectedMode} 
+            />
 
-        {/* Quick Actions Component */}
-        <QuickActions />
+            {/* Quick Actions Component */}
+            <QuickActions />
 
-        {/* Popular Routes Component */}
-        <PopularRoutes 
-          navigation={navigation} 
-          routes={routes}
-          onRoutePress={handleRoutePress}
-        />
+            {/* Popular Routes Component */}
+            <PopularRoutes 
+              navigation={navigation} 
+              routes={routes}
+              onRoutePress={handleRoutePress}
+            />
+          </>
+        )}
       </ScrollView>
     </SafeAreaView>
   );

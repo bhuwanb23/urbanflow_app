@@ -2,9 +2,9 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 // API Configuration
 const API_CONFIG = {
-  BASE_URL: 'http://localhost:3001',
+  BASE_URL: 'http://localhost:3000', // Updated to match backend server port
   VERSION: 'v1',
-  TIMEOUT: 10000,
+  TIMEOUT: 30000, // Increased timeout for journey planning
 };
 
 // Storage Keys
@@ -348,6 +348,36 @@ export const notificationsAPI = {
 };
 
 // ============================================================================
+// JOURNEY PLANNING API (Phase 2 - OpenTripPlanner Integration)
+// ============================================================================
+
+export const journeyAPI = {
+  // Plan a journey with multimodal routing
+  planJourney: async (journeyData) => {
+    return await apiCall('/plan', {
+      method: 'POST',
+      body: JSON.stringify(journeyData),
+    });
+  },
+
+  // Get real-time arrivals for a stop
+  getRealTimeArrivals: async (stopId) => {
+    return await apiCall(`/realtime/arrivals/${stopId}`);
+  },
+
+  // Get vehicle positions
+  getVehiclePositions: async (params = {}) => {
+    const queryString = new URLSearchParams(params).toString();
+    return await apiCall(`/realtime/vehicles?${queryString}`);
+  },
+
+  // Get service alerts
+  getServiceAlerts: async () => {
+    return await apiCall('/realtime/alerts');
+  },
+};
+
+// ============================================================================
 // DEMO DATA API (for backward compatibility)
 // ============================================================================
 
@@ -549,6 +579,7 @@ export default {
   ecoStatsAPI,
   trafficAPI,
   notificationsAPI,
+  journeyAPI, // Phase 2 OTP integration
   demoAPI,
   healthAPI,
   

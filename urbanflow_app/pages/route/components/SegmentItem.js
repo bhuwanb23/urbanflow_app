@@ -14,6 +14,34 @@ import { useAccessibility } from '../hooks/useAccessibility';
 export default function SegmentItem({ segment, isLast = false, onPress }) {
   const { triggerHapticFeedback } = useAccessibility();
 
+  // Extract Phase 2 enriched data
+  const {
+    mode,
+    distance,
+    duration,
+    carbonSaved,
+    emissions,
+    fare,
+    formattedFare,
+    isEcoFriendly,
+    iconName,
+    color,
+    routeColor,
+    agencyName,
+    headsign
+  } = segment;
+
+  // Format values with fallbacks
+  const displayDistance = distance ? `${((distance / 1000) || 0).toFixed(1)} km` : null;
+  const displayDuration = duration ? `${Math.round((duration || 0) / 60)} min` : segment.duration;
+  const displayFare = formattedFare || (fare ? `₹${fare}` : null);
+  const displayCarbonSaved = carbonSaved ? `${carbonSaved.toFixed(2)} kg CO₂` : null;
+  
+  // Use provided icon and color or fallbacks
+  const segmentIconName = iconName || mode?.toLowerCase() || 'transit';
+  const segmentColor = color || routeColor || routeTheme.colors.primary;
+  const ecoColor = isEcoFriendly ? '#10B981' : routeTheme.colors.secondary;
+
   const handlePress = () => {
     triggerHapticFeedback('selection');
     onPress?.();
@@ -107,14 +135,34 @@ export default function SegmentItem({ segment, isLast = false, onPress }) {
           </View>
           
           <View style={styles.detailsRow}>
-            {segment.distance && (
-              <Text style={styles.detailText}>{segment.distance}</Text>
+            {displayDistance && (
+              <Text style={styles.detailText}>{displayDistance}</Text>
             )}
             {segment.stops && (
               <Text style={styles.detailText}>• {segment.stops} stops</Text>
             )}
-            <Text style={styles.detailText}>• {segment.duration}</Text>
+            {displayDuration && (
+              <Text style={styles.detailText}>• {displayDuration}</Text>
+            )}
           </View>
+          
+          {/* Phase 2: Carbon and Fare Info */}
+          {(displayCarbonSaved || displayFare) && (
+            <View style={styles.phase2InfoRow}>
+              {displayCarbonSaved && (
+                <View style={styles.carbonBadge}>
+                  <Icon name="sprout" size={10} color="#10B981" />
+                  <Text style={styles.carbonText}>{displayCarbonSaved}</Text>
+                </View>
+              )}
+              {displayFare && (
+                <View style={styles.fareBadge}>
+                  <Icon name="currency-inr" size={10} color={routeTheme.colors.secondary} />
+                  <Text style={styles.fareText}>{displayFare}</Text>
+                </View>
+              )}
+            </View>
+          )}
           
           {renderAdditionalInfo()}
           {renderFeatures()}
@@ -266,5 +314,39 @@ const styles = StyleSheet.create({
     color: routeTheme.colors.primary,
     fontFamily: routeTheme.typography.fontFamily.label,
     fontWeight: routeTheme.typography.fontWeight.medium,
+  },
+  phase2InfoRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: routeTheme.spacing.sm,
+    marginTop: routeTheme.spacing.sm,
+  },
+  carbonBadge: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#DCFCE7',
+    paddingHorizontal: 6,
+    paddingVertical: 3,
+    borderRadius: routeTheme.borderRadius.full,
+    gap: 3,
+  },
+  carbonText: {
+    fontSize: 9,
+    fontWeight: routeTheme.typography.fontWeight.medium,
+    color: '#059669',
+  },
+  fareBadge: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: routeTheme.colors.secondaryContainer,
+    paddingHorizontal: 6,
+    paddingVertical: 3,
+    borderRadius: routeTheme.borderRadius.full,
+    gap: 3,
+  },
+  fareText: {
+    fontSize: 9,
+    fontWeight: routeTheme.typography.fontWeight.medium,
+    color: routeTheme.colors.onSecondaryContainer,
   },
 });

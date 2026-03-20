@@ -6,17 +6,44 @@ import { routeTheme } from '../theme/routeTheme';
 /**
  * JourneyOverview Component
  * Displays route duration, arrival time, and basic info
+ * Updated for Phase 2 - displays carbon score, fare in INR, distance
  */
 export default function JourneyOverview({ routeData }) {
   if (!routeData) return null;
 
-  const { duration, arrivalTime, from, to, distance, ecoScore, cost } = routeData;
+  // Extract Phase 2 enriched data
+  const { 
+    duration, 
+    arrivalTime, 
+    from, 
+    to, 
+    distance,
+    totalDistanceKm,
+    ecoScore, 
+    cost,
+    fare,
+    formattedFare,
+    carbonSaved,
+    formattedCarbonSaved,
+    legs = []
+  } = routeData;
+
+  // Format values with fallbacks
+  const displayDuration = duration || `${Math.round((routeData.durationMinutes || 0))} min`;
+  const displayFare = formattedFare || `₹${fare || cost || 0}`;
+  const displayEcoScore = ecoScore || 'N/A';
+  const displayDistance = totalDistanceKm ? `${totalDistanceKm.toFixed(1)} km` : (distance || 'N/A');
+  const displayCarbonSaved = formattedCarbonSaved || `${(carbonSaved || 0).toFixed(2)} kg CO₂`;
+
+  // Get primary mode from first leg
+  const primaryMode = legs.length > 0 ? (legs[0].mode || 'TRANSIT') : 'TRANSIT';
+  const isEcoFriendly = legs.every(leg => leg.isEcoFriendly !== false);
 
   return (
     <View style={styles.container} accessibilityRole="header">
       <Text 
         style={styles.title}
-        accessibilityLabel={`Route from ${from} to ${to}`}
+        accessibilityLabel={`Route from ${from || 'Start'} to ${to || 'End'}`}
       >
         UrbanFlow
       </Text>
@@ -24,40 +51,54 @@ export default function JourneyOverview({ routeData }) {
       <View style={styles.infoRow}>
         <Icon name="clock-outline" size={16} color={routeTheme.colors.onSurfaceVariant} />
         <Text style={styles.infoText}>
-          {duration} • Arriving {arrivalTime}
+          {displayDuration} • Arriving {arrivalTime || 'Soon'}
         </Text>
       </View>
 
-      {/* Enhanced Route Stats */}
+      {/* Enhanced Route Stats - Phase 2 */}
       <View style={styles.statsContainer}>
         <View style={styles.statItem}>
-          <View style={[styles.statIcon, { backgroundColor: routeTheme.colors.primaryFixed }]}>
-            <Icon name="map-marker-distance" size={18} color={routeTheme.colors.onPrimaryFixed} />
+          <View style={[styles.statIcon, { backgroundColor: routeTheme.colors.primaryFixed }]}>            <Icon name="map-marker-distance" size={18} color={routeTheme.colors.onPrimaryFixed} />
           </View>
           <Text style={styles.statLabel}>Distance</Text>
-          <Text style={styles.statValue}>{distance}</Text>
+          <Text style={styles.statValue}>{displayDistance}</Text>
         </View>
 
         <View style={styles.statDivider} />
 
         <View style={styles.statItem}>
-          <View style={[styles.statIcon, { backgroundColor: routeTheme.colors.secondaryFixed }]}>
-            <Icon name="cash-multiple" size={18} color={routeTheme.colors.onSecondaryFixed} />
+          <View style={[styles.statIcon, { backgroundColor: routeTheme.colors.secondaryFixed }]}>            <Icon name="currency-inr-circle" size={18} color={routeTheme.colors.onSecondaryFixed} />
           </View>
-          <Text style={styles.statLabel}>Cost</Text>
-          <Text style={styles.statValue}>{cost}</Text>
+          <Text style={styles.statLabel}>Fare</Text>
+          <Text style={styles.statValue}>{displayFare}</Text>
         </View>
 
         <View style={styles.statDivider} />
 
         <View style={styles.statItem}>
-          <View style={[styles.statIcon, { backgroundColor: '#DCFCE7' }]}>
-            <Icon name="leaf-circle" size={18} color="#10B981" />
+          <View style={[styles.statIcon, { backgroundColor: isEcoFriendly ? '#DCFCE7' : '#FEF3C7' }]}>
+            <Icon 
+              name={isEcoFriendly ? "leaf-circle" : "gauge"} 
+              size={18} 
+              color={isEcoFriendly ? "#10B981" : "#F59E0B"} 
+            />
           </View>
           <Text style={styles.statLabel}>Eco Score</Text>
-          <Text style={[styles.statValue, { color: '#10B981' }]}>{ecoScore}/10</Text>
+          <Text style={[styles.statValue, { color: isEcoFriendly ? '#10B981' : '#F59E0B' }]}>
+            {typeof displayEcoScore === 'string' ? displayEcoScore : `${displayEcoScore}/10`}
+          </Text>
         </View>
       </View>
+
+      {/* Carbon Savings Display */}
+      {carbonSaved > 0 && (
+        <View style={styles.carbonSavings}>
+          <Icon name="sprout" size={16} color="#10B981" />
+          <Text style={styles.carbonSavingsText}>
+            Saved {displayCarbonSaved}
+          </Text>
+        </View>
+      )}
     </View>
   );
 }
@@ -129,5 +170,20 @@ const styles = StyleSheet.create({
     height: 40,
     backgroundColor: routeTheme.colors.outlineVariant,
     marginHorizontal: routeTheme.spacing.xs,
+  },
+  carbonSavings: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: routeTheme.spacing.xs,
+    backgroundColor: '#DCFCE7',
+    padding: routeTheme.spacing.sm,
+    borderRadius: routeTheme.borderRadius.md,
+    marginTop: routeTheme.spacing.sm,
+  },
+  carbonSavingsText: {
+    fontSize: routeTheme.typography.fontSize.sm,
+    color: '#059669',
+    fontFamily: routeTheme.typography.fontFamily.label,
+    fontWeight: routeTheme.typography.fontWeight.medium,
   },
 });
