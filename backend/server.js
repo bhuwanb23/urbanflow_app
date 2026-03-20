@@ -16,6 +16,11 @@ const shapesRouter = require('./routes/shapes');
 const searchRouter = require('./routes/search');
 const planRouter = require('./routes/plan');
 
+// Import Phase 4 realtime routes
+const liveVehiclesRouter = require('./routes/liveVehicles');
+const liveDelaysRouter = require('./routes/liveDelays');
+const liveAlertsRouter = require('./routes/liveAlerts');
+
 // Initialize Express app
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -90,6 +95,11 @@ app.use('/api/v1/shapes', shapesRouter);
 app.use('/api/v1/search', searchRouter);
 app.use('/api/v1/plan', planRouter);
 
+// Mount Phase 4 realtime routes
+app.use('/api/v1/live/vehicles', liveVehiclesRouter);
+app.use('/api/v1/live/delays', liveDelaysRouter);
+app.use('/api/v1/live/alerts', liveAlertsRouter);
+
 // API information endpoint
 app.get('/api/v1', (req, res) => {
   res.json({
@@ -103,7 +113,11 @@ app.get('/api/v1', (req, res) => {
       schedule: '/api/v1/schedule/:routeId',
       shapes: '/api/v1/shapes/:shapeId',
       search: '/api/v1/search?q=query',
-      plan: '/api/v1/plan (POST)'
+      plan: '/api/v1/plan (POST)',
+      // Phase 4 realtime endpoints
+      'live/vehicles': '/api/v1/live/vehicles',
+      'live/delays': '/api/v1/live/delays',
+      'live/alerts': '/api/v1/live/alerts'
     }
   });
 });
