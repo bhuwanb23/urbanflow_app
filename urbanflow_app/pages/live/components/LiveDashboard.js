@@ -7,11 +7,79 @@ import { MotiView } from 'moti';
 import TrafficWidget from './TrafficWidget';
 import AQIWidget from './AQIWidget';
 
+// Import Phase 4 hooks
+import { useLiveAlerts } from '../../hooks/useLiveAlerts';
+
 const { width } = Dimensions.get('window');
+
+// Phase 4: Helper functions for feed item styling
+const getFeedItemStyle = (type) => {
+  const styles = {
+    alert: { backgroundColor: '#ffd9de' },
+    warning: { backgroundColor: '#fff3cd' },
+    update: { backgroundColor: '#b4f0c9' }
+  };
+  return styles[type] || styles.update;
+};
+
+const getFeedItemIcon = (type) => {
+  const icons = {
+    alert: 'alert-outline',
+    warning: 'warning',
+    update: 'information-outline'
+  };
+  return icons[type] || 'information-outline';
+};
+
+const getFeedItemColor = (type) => {
+  const colors = {
+    alert: '#a72d51',
+    warning: '#856404',
+    update: '#006b2c'
+  };
+  return colors[type] || '#006b2c';
+};
+
+const getFeedBadgeStyle = (severity) => {
+  const styles = {
+    CRITICAL: { backgroundColor: '#ffb2bf' },
+    WARNING: { backgroundColor: '#ffe69c' },
+    INFO: { backgroundColor: '#b4f0c9' }
+  };
+  return styles[severity] || styles.INFO;
+};
+
+const getFeedBadgeTextColor = (severity) => {
+  const colors = {
+    CRITICAL: { color: '#a72d51' },
+    WARNING: { color: '#856404' },
+    INFO: { color: '#006b2c' }
+  };
+  return colors[severity] || colors.INFO;
+};
+
+const formatFeedTime = (timestamp) => {
+  if (!timestamp) return 'RECENT';
+  const date = new Date(timestamp);
+  const now = new Date();
+  const diffMs = now - date;
+  const diffMins = Math.floor(diffMs / 60000);
+  
+  if (diffMins < 1) return 'JUST NOW';
+  if (diffMins < 60) return `${diffMins} MIN AGO`;
+  const diffHours = Math.floor(diffMins / 60);
+  return `${diffHours} HOUR${diffHours > 1 ? 'S' : ''} AGO`;
+};
 
 const LiveDashboard = () => {
   const [lastUpdated, setLastUpdated] = useState(new Date());
   const [refreshing, setRefreshing] = useState(false);
+
+  // Phase 4: Fetch real alerts from backend
+  const { feedItems, loading: alertsLoading, hasData } = useLiveAlerts({
+    limit: 5,
+    refreshInterval: 60000
+  });
 
   // Auto-refresh timer
   useEffect(() => {
@@ -128,6 +196,43 @@ const LiveDashboard = () => {
         </View>
 
         <View style={styles.feedList}>
+          {alertsLoading ? (
+            // Loading skeleton
+            <View style={styles.feedItem}>
+              <View style={styles.feedItemLeft}>
+                <View style={[styles.feedItemIcon, { backgroundColor: '#e1e3e4' }]} />
+                <View>
+                  <View style={styles.skeletonTextShort} />
+                  <View style={styles.skeletonTextLong} />
+                </View>
+              </View>
+            </View>
+          ) : hasData && feedItems.length > 0 ? (
+            // Render real alerts from API
+            feedItems.map((item, index) => (
+              <View key={item.id} style={styles.feedItem}>
+                <View style={styles.feedItemLeft}>
+                  <View style={[styles.feedItemIcon, getFeedItemStyle(item.type)]}>
+                    <Icon name={getFeedItemIcon(item.type)} size={24} color={getFeedItemColor(item.type)} />
+                  </View>
+                  <View>
+                    <Text style={styles.feedItemTitle}>{item.title}</Text>
+                    <Text style={styles.feedItemDesc}>{item.description}</Text>
+                  </View>
+                </View>
+                <View style={styles.feedItemRight}>
+                  <View style={[styles.feedBadge, getFeedBadgeStyle(item.severity)]}>
+                    <Text style={[styles.feedBadgeText, getFeedBadgeTextColor(item.severity)]}>
+                      {item.severity === 'CRITICAL' ? 'ALERT' : item.severity === 'WARNING' ? 'WARN' : 'INFO'}
+                    </Text>
+                  </View>
+                  <Text style={styles.feedTime}>{formatFeedTime(item.timestamp)}</Text>
+                </View>
+              </View>
+            ))
+          ) : (
+            // Fallback to hardcoded mock data if no API data
+            <>
           {/* Item 1 */}
           <View style={styles.feedItem}>
             <View style={styles.feedItemLeft}>
@@ -200,6 +305,8 @@ const LiveDashboard = () => {
               <Text style={styles.feedTime}>1 HOUR AGO</Text>
             </View>
           </View>
+            </>
+          )}
         </View>
       </View>
 

@@ -20,6 +20,7 @@ const planRouter = require('./routes/plan');
 const liveVehiclesRouter = require('./routes/liveVehicles');
 const liveDelaysRouter = require('./routes/liveDelays');
 const liveAlertsRouter = require('./routes/liveAlerts');
+const livePredictionsRouter = require('./routes/livePredictions');
 
 // Initialize Express app
 const app = express();
@@ -99,6 +100,7 @@ app.use('/api/v1/plan', planRouter);
 app.use('/api/v1/live/vehicles', liveVehiclesRouter);
 app.use('/api/v1/live/delays', liveDelaysRouter);
 app.use('/api/v1/live/alerts', liveAlertsRouter);
+app.use('/api/v1/live/predictions', livePredictionsRouter);
 
 // API information endpoint
 app.get('/api/v1', (req, res) => {
@@ -117,8 +119,9 @@ app.get('/api/v1', (req, res) => {
       // Phase 4 realtime endpoints
       'live/vehicles': '/api/v1/live/vehicles',
       'live/delays': '/api/v1/live/delays',
-      'live/alerts': '/api/v1/live/alerts'
-    }
+      'live/alerts': '/api/v1/live/alerts',
+      'live/predictions': '/api/v1/live/predictions'
+    },
   });
 });
 

@@ -13,26 +13,42 @@ class TripUpdateService {
     this.lastUpdated = null;
     this.nextUpdate = null;
     this.updateInterval = 30000; // 30 seconds
-    this.dultApiUrl = process.env.DULT_TRIP_UPDATES_URL || '';
-    this.dultApiKey = process.env.DULT_API_KEY || '';
+    
+    // Support multiple GTFS-RT sources
+    this.apiSource = process.env.GTFS_RT_SOURCE || 'delhi';
+    
+    if (this.apiSource === 'delhi') {
+      this.apiUrl = process.env.DELHI_API_URL || '';
+      this.apiKey = process.env.DELHI_API_KEY || '';
+      this.endpointPath = '/TripUpdates.pb';
+    } else {
+      this.apiUrl = process.env.DULT_TRIP_UPDATES_URL || '';
+      this.apiKey = process.env.DULT_API_KEY || '';
+      this.endpointPath = '';
+    }
     
     // Start auto-refresh
     this.startAutoRefresh();
   }
 
   /**
-   * Fetch latest trip updates from DULT API
+   * Fetch latest trip updates from GTFS-RT API
    */
   async fetchTripUpdates() {
     try {
-      if (!this.dultApiUrl) {
-        logger.warn('DULT_TRIP_UPDATES_URL not configured, using mock data');
+      const endpointUrl = this.apiUrl ? `${this.apiUrl}${this.endpointPath}` : '';
+      
+      if (!endpointUrl) {
+        logger.warn('GTFS-RT API not configured, using mock data');
         return this._getMockTripUpdates();
       }
 
-      const response = await axios.get(this.dultApiUrl, {
+      const url = this.apiKey 
+        ? `${endpointUrl}?key=${this.apiKey}`
+        : endpointUrl;
+
+      const response = await axios.get(url, {
         headers: {
-          'Authorization': `Bearer ${this.dultApiKey}`,
           'Accept': 'application/x-protobuf'
         },
         responseType: 'arraybuffer',
