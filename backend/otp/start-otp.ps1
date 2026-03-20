@@ -8,8 +8,8 @@ $OTP_JAR = "otp-2.5.0-shaded.jar"
 $GRAPH_DIR = ".\graph"
 $LOG_DIR = ".\logs"
 
-# Memory configuration - hardcoded for now
-$XMX = "4G"
+# Memory configuration - increased to 6GB for Southern Zone
+$XMX = "6G"
 
 Write-Host "Starting OpenTripPlanner v2.5..." -ForegroundColor Cyan
 Write-Host "Working directory: $SCRIPT_DIR" -ForegroundColor Yellow
@@ -29,10 +29,10 @@ if (!(Test-Path "$SCRIPT_DIR\$OTP_JAR")) {
 # Check if graph exists
 $graphEmpty = !(Test-Path "$GRAPH_DIR") -or ((Get-ChildItem "$GRAPH_DIR" -Recurse -File).Count -eq 0)
 if ($graphEmpty) {
-    Write-Host "Building graph with 4G heap..." -ForegroundColor Yellow
+    Write-Host "Building graph with 6G heap..." -ForegroundColor Yellow
     
     # Build graph and save
-    & java -Xmx4G -jar "$OTP_JAR" --build --save "$GRAPH_DIR"
+    & java -Xmx6G -jar "$OTP_JAR" --build --save "$GRAPH_DIR"
     
     if ($LASTEXITCODE -ne 0) {
         Write-Host "Graph build failed!" -ForegroundColor Red

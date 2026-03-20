@@ -6,5 +6,21 @@ coverage/
 .vscode/
 .idea/
 *.war
-*.jar
-*.pbf
+
+# OTP binaries and large data files (exclude from git)
+otp/*.jar
+otp/*.pbf
+otp/graph/
+otp/logs/
+otp/data/*.pbf
+
+# Large data files
+data/output/*.zip
+data/raw/*.zip
+*.osm.pbf
+
+# Build artifacts
+build/
+dist/
+*.pyc
+__pycache__/
