@@ -30,7 +30,9 @@ if (!(Test-Path "$SCRIPT_DIR\$OTP_JAR")) {
 $graphEmpty = !(Test-Path "$GRAPH_DIR") -or ((Get-ChildItem "$GRAPH_DIR" -Recurse -File).Count -eq 0)
 if ($graphEmpty) {
     Write-Host "Building graph with 4G heap..." -ForegroundColor Yellow
-    & java -Xmx4G -jar "$OTP_JAR" --build "$GRAPH_DIR"
+    
+    # Build graph and save
+    & java -Xmx4G -jar "$OTP_JAR" --build --save "$GRAPH_DIR"
     
     if ($LASTEXITCODE -ne 0) {
         Write-Host "Graph build failed!" -ForegroundColor Red

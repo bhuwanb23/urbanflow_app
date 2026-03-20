@@ -1,0 +1,6 @@
+{
+  "osmFile": "../karnataka.osm.pbf",
+  "areaVisibility": true,
+  "streetNetwork": true,
+  "localTimezone": "Asia/Kolkata"
+}
