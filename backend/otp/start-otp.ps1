@@ -8,8 +8,8 @@ $OTP_JAR = "otp-2.5.0-shaded.jar"
 $GRAPH_DIR = ".\graph"
 $LOG_DIR = ".\logs"
 
-# Memory configuration - increased to 6GB for Southern Zone
-$XMX = "6G"
+# Memory configuration - increased to 10GB for large Southern Zone
+$XMX = "10G"
 
 Write-Host "Starting OpenTripPlanner v2.5..." -ForegroundColor Cyan
 Write-Host "Working directory: $SCRIPT_DIR" -ForegroundColor Yellow
