@@ -1,5 +1,5 @@
-import React, { useState, useCallback } from 'react';
-import { View, StyleSheet, ScrollView, SafeAreaView } from 'react-native';
+import React, { useState, useCallback, useMemo } from 'react';
+import { View, StyleSheet, ScrollView, SafeAreaView, Linking, Alert } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 // Import Components
@@ -10,6 +10,7 @@ import {
   SegmentList,
   RouteErrorBoundary,
   RouteSkeleton,
+  ItineraryTabs,
 } from './components';
 
 // Import context and hooks
@@ -30,6 +31,9 @@ function RouteDetailsContent({ navigation, route }) {
   const { startTracking, stopTracking } = useLiveTracking();
   const insets = useSafeAreaInsets();
 
+  // State for itinerary sorting
+  const [sortBy, setSortBy] = useState('recommended');
+
   // Use route data from params or mock data
   React.useEffect(() => {
     if (route?.params?.route) {
@@ -45,8 +49,66 @@ function RouteDetailsContent({ navigation, route }) {
   const handleStartJourney = useCallback(() => {
     triggerHapticFeedback('success');
     startTracking();
-    console.log('Starting journey...');
-  }, [startTracking]);
+    
+    // Open Google Maps with the route destination
+    if (currentRoute && currentRoute.legs && currentRoute.legs.length > 0) {
+      const lastLeg = currentRoute.legs[currentRoute.legs.length - 1];
+      const { to } = lastLeg;
+      
+      if (to && to.lat && to.lon) {
+        const url = `https://www.google.com/maps/dir/?api=1&destination=${to.lat},${to.lon}`;
+        
+        Linking.canOpenURL(url)
+          .then((supported) => {
+            if (supported) {
+              return Linking.openURL(url);
+            } else {
+              Alert.alert(
+                'Unable to Open Maps',
+                'Google Maps is not available on your device.',
+                [{ text: 'OK' }]
+              );
+            }
+          })
+          .catch((err) => {
+            console.error('Error opening Google Maps:', err);
+            Alert.alert(
+              'Error',
+              'Failed to open Google Maps. Please try again.',
+              [{ text: 'OK' }]
+            );
+          });
+      } else {
+        Alert.alert(
+          'No Destination',
+          'Destination coordinates not available for this route.',
+          [{ text: 'OK' }]
+        );
+      }
+    } else {
+      Alert.alert(
+        'Starting Navigation',
+        'Get ready for your journey!',
+        [{ text: 'OK' }]
+      );
+    }
+  }, [startTracking, currentRoute]);
+
+  // Sort itineraries based on selected criteria
+  const sortedItineraries = useMemo(() => {
+    if (!currentRoute) return [];
+    
+    // For now, we just have one route, but this prepares for multiple
+    const itineraries = [currentRoute];
+    
+    if (sortBy === 'cheapest') {
+      return itineraries.sort((a, b) => (a.fare || 0) - (b.fare || 0));
+    } else if (sortBy === 'fastest') {
+      return itineraries.sort((a, b) => (a.durationMinutes || 0) - (b.durationMinutes || 0));
+    }
+    // recommended - keep original order
+    return itineraries;
+  }, [currentRoute, sortBy]);
 
   if (isLoading) {
     return <RouteSkeleton segmentCount={4} />;
@@ -54,6 +116,13 @@ function RouteDetailsContent({ navigation, route }) {
 
   return (
     <RouteLayout>
+      {/* Itinerary Tabs */}
+      <ItineraryTabs 
+        sortBy={sortBy}
+        onSortChange={setSortBy}
+        itineraryCount={sortedItineraries.length}
+      />
+      
       <TopAppBar 
         onBack={handleBack} 
         onStartJourney={handleStartJourney}
@@ -67,9 +136,12 @@ function RouteDetailsContent({ navigation, route }) {
         showsVerticalScrollIndicator={false}
         bounces={false}
       >
-        <JourneyOverview routeData={currentRoute} />
-        
-        <SegmentList segments={currentRoute?.segments || []} />
+        {sortedItineraries.map((itinerary, index) => (
+          <View key={index}>
+            <JourneyOverview routeData={itinerary} />
+            <SegmentList segments={itinerary?.segments || []} />
+          </View>
+        ))}
       </ScrollView>
     </RouteLayout>
   );

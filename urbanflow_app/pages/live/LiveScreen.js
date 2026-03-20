@@ -5,34 +5,47 @@ import { MotiView } from 'moti';
 
 // Import LiveDashboard component
 import LiveDashboard from './components/LiveDashboard';
+import SearchAutocomplete from './components/SearchAutocomplete';
 
 export default function LiveScreen() {
-    return (
-        <SafeAreaView style={styles.container}>
-            {/* Clean White Header */}
-            <View style={styles.headerContainer}>
-                <View style={styles.headerRow}>
-                    <View style={styles.headerLeft}>
-                        <Text style={styles.headerTitle}>Live Traffic</Text>
-                        <View style={styles.headerSubtitleRow}>
-                            <View style={styles.liveIndicator}>
-                                <View style={styles.liveDot} />
-                                <Text style={styles.liveText}>LIVE</Text>
-                            </View>
-                            <Text style={styles.headerSubtitle}>Real-time updates</Text>
-                        </View>
-                    </View>
-                    <View style={styles.headerRight}>
-                        <TouchableOpacity style={styles.settingsButton}>
-                            <Icon name="cog-outline" size={20} color="#0F172A" />
-                        </TouchableOpacity>
-                    </View>
-                </View>
+  const [selectedLocation, setSelectedLocation] = useState('Bengaluru');
+
+  const handleLocationSelect = (location) => {
+    setSelectedLocation(location.name);
+    console.log('Location selected:', location);
+  };
+
+  return (
+    <SafeAreaView style={styles.container}>
+      {/* Clean White Header */}
+      <View style={styles.headerContainer}>
+        <View style={styles.headerRow}>
+          <View style={styles.headerLeft}>
+            <Text style={styles.headerTitle}>Live Traffic</Text>
+            <View style={styles.headerSubtitleRow}>
+              <View style={styles.liveIndicator}>
+                <View style={styles.liveDot} />
+                <Text style={styles.liveText}>LIVE</Text>
+              </View>
+              <Text style={styles.headerSubtitle}>{selectedLocation}</Text>
             </View>
-            
-            <LiveDashboard />
-        </SafeAreaView>
-    );
+          </View>
+          <View style={styles.headerRight}>
+            <TouchableOpacity style={styles.settingsButton}>
+              <Icon name="cog-outline" size={20} color="#0F172A" />
+            </TouchableOpacity>
+          </View>
+        </View>
+        
+        {/* Search Bar in Header */}
+        <View style={styles.searchContainer}>
+          <SearchAutocomplete onLocationSelect={handleLocationSelect} />
+        </View>
+      </View>
+      
+      <LiveDashboard />
+    </SafeAreaView>
+  );
 }
 
 const styles = StyleSheet.create({
@@ -108,5 +121,8 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     borderWidth: 1,
     borderColor: '#E2E8F0', // Slate 200
+  },
+  searchContainer: {
+    marginTop: 16,
   },
 });

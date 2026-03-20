@@ -258,8 +258,9 @@ export default function App() {
     ...DefaultTheme,
     colors: {
       ...DefaultTheme.colors,
-      primary: '#185a9d',
-      secondary: '#43cea2',
+      primary: '#16a34a', // Updated to green (Tailwind green-600)
+      secondary: '#10b981', // Emerald-500
+      accent: '#34d399', // Emerald-400
     },
     fonts: {
       ...DefaultTheme.fonts,

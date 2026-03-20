@@ -296,6 +296,28 @@ export const trafficAPI = {
 };
 
 // ============================================================================
+// WEATHER & ENVIRONMENT API
+// ============================================================================
+
+export const environmentAPI = {
+  // Get air quality index
+  getAQI: async (location = 'bengaluru') => {
+    return await apiCall(`/environment/aqi?location=${location}`);
+  },
+
+  // Get weather data
+  getWeather: async (params = {}) => {
+    const queryString = new URLSearchParams(params).toString();
+    return await apiCall(`/environment/weather?${queryString}`);
+  },
+
+  // Get environmental stats
+  getEnvironmentalStats: async () => {
+    return await apiCall('/environment/stats');
+  },
+};
+
+// ============================================================================
 // NOTIFICATIONS API
 // ============================================================================
 
@@ -578,6 +600,7 @@ export default {
   routesAPI,
   ecoStatsAPI,
   trafficAPI,
+  environmentAPI, // NEW - for AQI and weather
   notificationsAPI,
   journeyAPI, // Phase 2 OTP integration
   demoAPI,

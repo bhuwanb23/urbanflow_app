@@ -1,11 +1,42 @@
-import React from 'react';
-import { View, Text, StyleSheet, ScrollView, Image, TouchableOpacity, Dimensions } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, Text, StyleSheet, ScrollView, Image, TouchableOpacity, Dimensions, ActivityIndicator } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { MotiView } from 'moti';
+
+// Import real-time widgets
+import TrafficWidget from './TrafficWidget';
+import AQIWidget from './AQIWidget';
 
 const { width } = Dimensions.get('window');
 
 const LiveDashboard = () => {
+  const [lastUpdated, setLastUpdated] = useState(new Date());
+  const [refreshing, setRefreshing] = useState(false);
+
+  // Auto-refresh timer
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setLastUpdated(new Date());
+    }, 30000); // Update every 30 seconds
+    
+    return () => clearInterval(interval);
+  }, []);
+
+  const handleRefresh = () => {
+    setRefreshing(true);
+    setLastUpdated(new Date());
+    setTimeout(() => setRefreshing(false), 1000);
+  };
+
+  const formatLastUpdated = (date) => {
+    const now = new Date();
+    const diffMs = now - date;
+    const diffSecs = Math.floor(diffMs / 1000);
+    
+    if (diffSecs < 60) return `Updated ${diffSecs}s ago`;
+    const diffMins = Math.floor(diffSecs / 60);
+    return `Updated ${diffMins}m ago`;
+  };
   return (
     <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.container}>
       
@@ -34,29 +65,11 @@ const LiveDashboard = () => {
         </View>
 
         <View style={styles.statsGrid}>
-          {/* AQI */}
-          <View style={styles.statCard}>
-            <View style={styles.statHeader}>
-              <Icon name="weather-windy" size={20} color="#31694b" />
-              <View style={styles.statBadge}>
-                <Text style={styles.statBadgeText}>Optimal</Text>
-              </View>
-            </View>
-            <Text style={styles.statLabel}>AIR QUALITY INDEX</Text>
-            <Text style={styles.statValue}>42 <Text style={styles.statUnit}>aqi</Text></Text>
-          </View>
+          {/* AQI - Real-time */}
+          <AQIWidget />
 
-          {/* Traffic */}
-          <View style={styles.statCard}>
-            <View style={styles.statHeader}>
-              <Icon name="car-multiple" size={20} color="#a72d51" />
-              <View style={[styles.statBadge, { backgroundColor: '#ffd9de' }]}>
-                <Text style={[styles.statBadgeText, { color: '#a72d51' }]}>Moderate</Text>
-              </View>
-            </View>
-            <Text style={styles.statLabel}>TRAFFIC LOAD</Text>
-            <Text style={styles.statValue}>64<Text style={styles.statUnit}>%</Text></Text>
-          </View>
+          {/* Traffic - Real-time */}
+          <TrafficWidget />
 
           {/* Incidents */}
           <View style={styles.statCard}>

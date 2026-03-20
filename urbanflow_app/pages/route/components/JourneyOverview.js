@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import { MotiView } from 'moti';
 import { routeTheme } from '../theme/routeTheme';
 
 /**
@@ -90,14 +91,32 @@ export default function JourneyOverview({ routeData }) {
         </View>
       </View>
 
-      {/* Carbon Savings Display */}
+      {/* Carbon Savings Display with Animation */}
       {carbonSaved > 0 && (
-        <View style={styles.carbonSavings}>
-          <Icon name="sprout" size={16} color="#10B981" />
-          <Text style={styles.carbonSavingsText}>
-            Saved {displayCarbonSaved}
-          </Text>
-        </View>
+        <MotiView
+          from={{ opacity: 0, scale: 0.8, translateY: 20 }}
+          animate={{ opacity: 1, scale: 1, translateY: 0 }}
+          transition={{ type: 'timing', duration: 600, delay: 300 }}
+          style={styles.carbonSavingsWrapper}
+        >
+          <View style={styles.carbonSavings}>
+            <MotiView
+              from={{ rotate: '0deg' }}
+              animate={{ rotate: '360deg' }}
+              transition={{ 
+                type: 'timing', 
+                duration: 2000, 
+                loop: true,
+                delay: 1000 
+              }}
+            >
+              <Icon name="sprout" size={16} color="#10B981" />
+            </MotiView>
+            <Text style={styles.carbonSavingsText}>
+              Saved {displayCarbonSaved}
+            </Text>
+          </View>
+        </MotiView>
       )}
     </View>
   );
@@ -171,6 +190,9 @@ const styles = StyleSheet.create({
     backgroundColor: routeTheme.colors.outlineVariant,
     marginHorizontal: routeTheme.spacing.xs,
   },
+  carbonSavingsWrapper: {
+    marginTop: routeTheme.spacing.sm,
+  },
   carbonSavings: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -178,7 +200,6 @@ const styles = StyleSheet.create({
     backgroundColor: '#DCFCE7',
     padding: routeTheme.spacing.sm,
     borderRadius: routeTheme.borderRadius.md,
-    marginTop: routeTheme.spacing.sm,
   },
   carbonSavingsText: {
     fontSize: routeTheme.typography.fontSize.sm,
