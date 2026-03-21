@@ -82,45 +82,107 @@ export default function PopularRoutes({ navigation }) {
 
   return (
     <View style={styles.popularRoutes}>
-      <Text style={styles.sectionTitle}>Popular Routes</Text>
+      <MotiView
+        from={{ opacity: 0, translateX: -20 }}
+        animate={{ opacity: 1, translateX: 0 }}
+        transition={{ type: 'spring', damping: 12 }}
+      >
+        <Text style={styles.sectionTitle}>Popular Routes</Text>
+      </MotiView>
       {ROUTES.map((route, index) => (
         <MotiView
           key={route.id}
-          from={{ opacity: 0, translateY: 20 }}
-          animate={{ opacity: 1, translateY: 0 }}
-          transition={{ type: 'timing', duration: 600, delay: index * 100 }}
+          from={{ opacity: 0, scale: 0.95, translateY: 20 }}
+          animate={{ opacity: 1, scale: 1, translateY: 0 }}
+          transition={{ 
+            type: 'spring',
+            damping: 12,
+            delay: 200 + index * 100 
+          }}
+          style={{ width: '100%' }}
         >
           <TouchableOpacity 
             style={styles.routeCard}
             onPress={() => handleRoutePress(route)}
-            activeOpacity={0.7}
+            activeOpacity={0.6}
           >
             <View style={styles.routeHeader}>
-              <View style={styles.routeInfo}>
-                <Text style={styles.routeFrom}>{route.from}</Text>
-                <Icon name="arrow-down" size={16} color="#94A3B8" style={{ marginVertical: 4 }} />
-                <Text style={styles.routeTo}>{route.to}</Text>
-              </View>
-              <View style={styles.routeStats}>
-                <Text style={styles.routeTime}>{route.time}</Text>
-                <Text style={styles.routeCost}>{route.cost}</Text>
-              </View>
+              <MotiView
+                from={{ opacity: 0, translateX: -10 }}
+                animate={{ opacity: 1, translateX: 0 }}
+                transition={{ 
+                  type: 'spring',
+                  damping: 12,
+                  delay: 300 + index * 100
+                }}
+              >
+                <View style={styles.routeInfo}>
+                  <Text style={styles.routeFrom}>{route.from}</Text>
+                  <Icon name="arrow-down" size={16} color="#94A3B8" style={{ marginVertical: 4 }} />
+                  <Text style={styles.routeTo}>{route.to}</Text>
+                </View>
+              </MotiView>
+              <MotiView
+                from={{ opacity: 0, scale: 0.8 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ 
+                  type: 'spring',
+                  damping: 12,
+                  delay: 400 + index * 100
+                }}
+              >
+                <View style={styles.routeStats}>
+                  <Text style={styles.routeTime}>{route.time}</Text>
+                  <Text style={styles.routeCost}>{route.cost}</Text>
+                </View>
+              </MotiView>
             </View>
             <View style={styles.routeFooter}>
-              <View style={styles.routeModes}>
-                {route.modes.map((mode, i) => (
-                  <Icon 
-                    key={i} 
-                    name={getIconName(mode)} 
-                    size={16} 
-                    color="#64748B" 
-                    style={{ marginRight: 8 }} 
-                  />
-                ))}
-              </View>
-              <View style={[styles.ecoBadge, { backgroundColor: route.ecoColor + '15' }]}>
-                <Text style={[styles.ecoText, { color: route.ecoColor }]}>{route.eco} Eco</Text>
-              </View>
+              <MotiView
+                from={{ opacity: 0, scale: 0.9 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ 
+                  type: 'spring',
+                  damping: 12,
+                  delay: 500 + index * 100
+                }}
+              >
+                <View style={styles.routeModes}>
+                  {route.modes.map((mode, i) => (
+                    <MotiView
+                      key={i}
+                      from={{ scale: 0, rotate: '-180deg' }}
+                      animate={{ scale: 1, rotate: '0deg' }}
+                      transition={{ 
+                        type: 'spring',
+                        damping: 15,
+                        delay: 600 + index * 100 + (i * 50)
+                      }}
+                    >
+                      <Icon 
+                        key={i} 
+                        name={getIconName(mode)} 
+                        size={16} 
+                        color="#64748B" 
+                        style={{ marginRight: 8 }} 
+                      />
+                    </MotiView>
+                  ))}
+                </View>
+              </MotiView>
+              <MotiView
+                from={{ opacity: 0, scale: 0.8 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ 
+                  type: 'spring',
+                  damping: 12,
+                  delay: 700 + index * 100
+                }}
+              >
+                <View style={[styles.ecoBadge, { backgroundColor: route.ecoColor + '15' }]}>
+                  <Text style={[styles.ecoText, { color: route.ecoColor }]}>{route.eco} Eco</Text>
+                </View>
+              </MotiView>
             </View>
           </TouchableOpacity>
         </MotiView>
