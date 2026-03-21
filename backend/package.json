@@ -9,6 +9,7 @@
     "dev": "nodemon server.js",
     "test": "jest",
     "seed": "node scripts/seed-data.js",
+    "setup:chennai": "node scripts/setup-chennai.js",
     "otp:download": "cd otp && pwsh -ExecutionPolicy Bypass -File download-data.ps1",
     "otp:start": "cd otp && pwsh -ExecutionPolicy Bypass -File start-otp.ps1",
     "otp:stop": "cd otp && pwsh -ExecutionPolicy Bypass -File stop-otp.ps1"
