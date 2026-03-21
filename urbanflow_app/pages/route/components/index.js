@@ -10,3 +10,4 @@ export { default as MapPreview } from './MapPreview';
 export { default as LiveStatusBadge } from './LiveStatusBadge';
 export { default as RouteErrorBoundary } from './RouteErrorBoundary';
 export { default as RouteSkeleton } from './RouteSkeleton';
+export { default as ItineraryTabs } from './ItineraryTabs';
