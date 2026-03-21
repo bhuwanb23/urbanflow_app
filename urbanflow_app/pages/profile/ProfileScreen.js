@@ -5,7 +5,7 @@ import { View, StyleSheet, ScrollView, SafeAreaView, ActivityIndicator, Alert } 
 import profileTheme from './theme/profileTheme';
 
 // Import API Hooks
-import { useUser, useTrips } from '../../utils/hooks/useAPI';
+import { useAuth, useTrips } from '../../utils/hooks/useAPI';
 
 // Import Components
 import ProfileHeader from './components/ProfileHeader';
@@ -41,7 +41,7 @@ const SUSTAINABILITY_DATA = [
 
 export default function ProfileScreen({ navigation }) {
   // Use real API data instead of mock
-  const { user, loading: userLoading } = useUser();
+  const { user, loading: userLoading } = useAuth();
   const { trips } = useTrips();
   const [loading, setLoading] = useState(false);
 
