@@ -39,9 +39,9 @@ export function useLiveAlerts(options = {}) {
       const response = await axios.get(url);
       
       if (response.data.success) {
-        const alertsData = response.data.data.alerts;
+        const alertsData = response.data.data?.alerts || [];
         setAlerts(alertsData);
-        setLastUpdated(new Date(response.data.data.lastUpdated));
+        setLastUpdated(new Date(response.data.data?.lastUpdated || Date.now()));
         
         // Transform alerts to feed items for LiveDashboard
         const transformedFeedItems = alertsData.map(alert => ({
@@ -95,13 +95,13 @@ export function useLiveAlerts(options = {}) {
   };
 
   const getAlertsForRoute = useCallback((routeId) => {
-    return alerts.filter(alert => 
+    return alerts?.filter(alert => 
       alert.informedEntities?.some(e => e.routeId === routeId)
-    );
+    ) || [];
   }, [alerts]);
 
-  const hasCriticalAlerts = alerts.some(a => a.severity === 'CRITICAL');
-  const hasWarningAlerts = alerts.some(a => a.severity === 'WARNING');
+  const hasCriticalAlerts = alerts?.some(a => a.severity === 'CRITICAL') || false;
+  const hasWarningAlerts = alerts?.some(a => a.severity === 'WARNING') || false;
 
   return {
     alerts,

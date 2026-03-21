@@ -16,6 +16,8 @@ const shapesRouter = require('./routes/shapes');
 const searchRouter = require('./routes/search');
 const planRouter = require('./routes/plan');
 const citiesRouter = require('./routes/cities');
+const environmentRouter = require('./routes/environment');
+const trafficRouter = require('./routes/traffic');
 
 // Import Phase 4 realtime routes
 const liveVehiclesRouter = require('./routes/liveVehicles');
@@ -97,6 +99,8 @@ app.use('/api/v1/shapes', shapesRouter);
 app.use('/api/v1/search', searchRouter);
 app.use('/api/v1/plan', planRouter);
 app.use('/api/v1/cities', citiesRouter);
+app.use('/api/v1/environment', environmentRouter);
+app.use('/api/v1/traffic', trafficRouter);
 
 // Mount Phase 4 realtime routes
 app.use('/api/v1/live/vehicles', liveVehiclesRouter);
@@ -119,6 +123,8 @@ app.get('/api/v1', (req, res) => {
       search: '/api/v1/search?q=query',
       plan: '/api/v1/plan (POST)',
       cities: '/api/v1/cities',
+      environment: '/api/v1/environment/aqi',
+      traffic: '/api/v1/traffic',
       // Phase 4 realtime endpoints
       'live/vehicles': '/api/v1/live/vehicles',
       'live/delays': '/api/v1/live/delays',
