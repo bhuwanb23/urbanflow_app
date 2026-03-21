@@ -4,12 +4,14 @@ import {
   ScrollView, 
   SafeAreaView, 
   StyleSheet, 
-  RefreshControl 
+  RefreshControl,
+  ActivityIndicator,
+  Text
 } from 'react-native';
 import notificationTheme from './theme/notificationTheme';
 
-// Import mock data
-import { mockNotifications, getNotificationsByFilter } from './data/mockNotifications';
+// Import API hook
+import { useNotifications } from '../../utils/hooks/useAPI';
 
 // Components
 import NotificationHeader from './components/NotificationHeader';
@@ -19,46 +21,76 @@ import EmptyState from './components/EmptyState';
 const NotificationsScreen = ({ navigation }) => {
   const [refreshing, setRefreshing] = useState(false);
   const [activeFilter, setActiveFilter] = useState('all');
-  const [notifications, setNotifications] = useState(mockNotifications);
+  
+  // Use real API data instead of mock
+  const { 
+    notifications, 
+    fetchNotifications, 
+    markAsRead, 
+    markAllAsRead,
+    deleteNotification,
+    loading,
+    error 
+  } = useNotifications();
+
+  // Calculate stats from real data
   const stats = {
-    total: notifications.length,
-    unread: notifications.filter(n => !n.isRead).length,
-    important: notifications.filter(n => n.isImportant).length,
-    today: notifications.filter(n => {
+    total: notifications?.length || 0,
+    unread: notifications?.filter(n => !n.isRead).length || 0,
+    important: notifications?.filter(n => n.severity === 'warning').length || 0,
+    today: notifications?.filter(n => {
       const today = new Date();
-      const notifDate = new Date(n.timestamp);
+      const notifDate = new Date(n.createdAt || n.timestamp);
       return notifDate.toDateString() === today.toDateString();
-    }).length,
+    }).length || 0,
+  };
+
+  useEffect(() => {
+    loadNotifications();
+  }, []);
+
+  const loadNotifications = async () => {
+    try {
+      await fetchNotifications({ limit: 50 });
+    } catch (err) {
+      console.error('Error loading notifications:', err);
+    }
   };
 
   const handleRefresh = async () => {
     setRefreshing(true);
-    // Simulate refresh delay
-    setTimeout(() => {
-      setRefreshing(false);
-    }, 1000);
+    await loadNotifications();
+    setRefreshing(false);
   };
 
   const handleNotificationPress = async (notification) => {
     console.log('Notification pressed:', notification.title);
     
-    // Mark as read locally when pressed
+    // Mark as read via API when pressed
     if (!notification.isRead) {
-      setNotifications(prev => 
-        prev.map(n => 
-          n.id === notification.id ? { ...n, isRead: true } : n
-        )
-      );
+      try {
+        await markAsRead(notification.id);
+      } catch (err) {
+        console.error('Error marking notification as read:', err);
+      }
     }
   };
 
-  const markAsRead = (notificationId) => {
-    // Mark single notification as read locally
-    setNotifications(prev => 
-      prev.map(n => 
-        n.id === notificationId ? { ...n, isRead: true } : n
-      )
-    );
+  const handleDeleteNotification = async (notificationId) => {
+    try {
+      await deleteNotification(notificationId);
+    } catch (err) {
+      console.error('Error deleting notification:', err);
+      Alert.alert('Error', 'Failed to delete notification');
+    }
+  };
+
+  const handleMarkAllAsRead = async () => {
+    try {
+      await markAllAsRead();
+    } catch (err) {
+      console.error('Error marking all as read:', err);
+    }
   };
 
   const handleFilterSelect = (filter) => {
@@ -66,18 +98,8 @@ const NotificationsScreen = ({ navigation }) => {
     console.log('Filter selected:', filter);
   };
 
-  const handleDeleteNotification = (notificationId) => {
-    // Remove notification locally
-    setNotifications(prev => prev.filter(n => n.id !== notificationId));
-  };
-
-  const handleMarkAllAsRead = () => {
-    // Mark all as read locally
-    setNotifications(prev => prev.map(n => ({ ...n, isRead: true })));
-  };
-
   // Group notifications by date and apply filter
-  const filteredNotifications = getNotificationsByFilter(activeFilter, notifications);
+  const filteredNotifications = notifications || [];
   
   const groupedNotifications = filteredNotifications.reduce((groups, notification) => {
     const date = new Date(notification.createdAt || notification.timestamp);
@@ -138,7 +160,7 @@ const NotificationsScreen = ({ navigation }) => {
       );
     }
 
-    // This week section
+    // This Week section
     if (groupedNotifications.thisWeek && groupedNotifications.thisWeek.length > 0) {
       sections.push(
         <NotificationSection
@@ -175,12 +197,26 @@ const NotificationsScreen = ({ navigation }) => {
     return sections;
   };
 
-  if (notifications.length === 0) {
+  // Show loading state
+  if (loading && !notifications) {
+    return (
+      <SafeAreaView style={styles.container}>
+        <View style={styles.emptyContainer}>
+          <ActivityIndicator size="large" color={notificationTheme.colors.primary} />
+          <Text style={{ marginTop: 16, color: notificationTheme.colors.textSecondary }}>
+            Loading notifications...
+          </Text>
+        </View>
+      </SafeAreaView>
+    );
+  }
+
+  if (notifications && notifications.length === 0) {
     return (
       <SafeAreaView style={styles.container}>
         <NotificationHeader
           navigation={navigation}
-          onFilterPress={handleFilterPress}
+          onFilterPress={handleFilterSelect}
           stats={stats}
           showStats={true}
         />
@@ -220,12 +256,12 @@ const NotificationsScreen = ({ navigation }) => {
           />
         }
       >
-        {notifications.length === 0 ? (
+        {notifications && notifications.length === 0 ? (
           <EmptyState
             title="No notifications yet"
             message="Stay tuned for updates about your routes, traffic conditions, and transit information."
             icon="bell-off"
-            onRefresh={loadNotifications}
+            onRefresh={handleRefresh}
           />
         ) : (
           renderNotificationSections()

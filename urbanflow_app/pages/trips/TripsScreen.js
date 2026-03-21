@@ -1,91 +1,92 @@
-import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, FlatList, ScrollView, TouchableOpacity, ActivityIndicator, SafeAreaView, Dimensions, Alert, Platform } from 'react-native';
+import React, { useState, useEffect, useMemo } from 'react';
+import { View, Text, StyleSheet, FlatList, ScrollView, TouchableOpacity, ActivityIndicator, SafeAreaView, Dimensions, Alert, Platform, RefreshControl } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { MotiView, AnimatePresence } from 'moti';
+
+// Import API hooks
+import { useTrips, useRoutes } from '../../utils/hooks/useAPI';
 
 const { width, height } = Dimensions.get('window');
 
 const FILTERS = ['All Trips', 'This Week', 'This Month', 'Eco-Friendly'];
 const SORTS = ['Date', 'Mode', 'Eco-Impact'];
 
-const favoriteRoutes = [
-  {
-    id: 'fav1',
-    from: 'Home',
-    to: 'Office',
-    eco: 95,
-    duration: '25 min',
-    modes: [
-      { name: 'bike', color: '#10B981' }, // Emerald 500
-      { name: 'train', color: '#0F172A' }, // Slate 900
-    ],
-    bg: '#ECFDF5', // Emerald 50
-    border: '#A7F3D0', // Emerald 200
-  },
-  {
-    id: 'fav2',
-    from: 'Mall',
-    to: 'Home',
-    eco: 88,
-    duration: '18 min',
-    modes: [
-      { name: 'bus', color: '#3B82F6' }, // Blue 500
-      { name: 'walk', color: '#64748B' }, // Slate 500
-    ],
-    bg: '#F8FAFC', // Slate 50
-    border: '#E2E8F0', // Slate 200
-  },
-];
-
-const MOCK_TRIPS = [
-  {
-    id: 't1',
-    from: 'Home',
-    to: 'City Center',
-    date: 'Today, 10:30 AM',
-    duration: '45 min',
-    cost: '$2.50',
-    eco: 12,
-    ecoBg: '#DEF7EC', // Green 100
-    ecoColor: '#059669', // Emerald 600
-    modes: [{ name: 'bus', color: '#3B82F6' }, { name: 'walk', color: '#64748B' }],
-  },
-  {
-    id: 't2',
-    from: 'Office',
-    to: 'Gym',
-    date: 'Yesterday, 6:00 PM',
-    duration: '15 min',
-    cost: 'Free',
-    eco: 5,
-    ecoBg: '#DEF7EC',
-    ecoColor: '#059669',
-    modes: [{ name: 'bike', color: '#10B981' }],
-  },
-  {
-    id: 't3',
-    from: 'Gym',
-    to: 'Home',
-    date: 'Yesterday, 7:30 PM',
-    duration: '20 min',
-    cost: '$1.20',
-    eco: 8,
-    ecoBg: '#F1F5F9', // Slate 100
-    ecoColor: '#475569', // Slate 600
-    modes: [{ name: 'train', color: '#0F172A' }],
-  },
-];
-
 export default function TripsScreen({ navigation }) {
   const [selectedFilter, setSelectedFilter] = useState('All Trips');
   const [selectedSort, setSelectedSort] = useState('Date');
   const [filterIdx, setFilterIdx] = useState(0);
   const [sortIdx, setSortIdx] = useState(0);
-  const [tripHistory, setTripHistory] = useState(MOCK_TRIPS);
   const [isRefreshing, setIsRefreshing] = useState(false);
+
+  // Use real API data
+  const { trips, fetchTrips, loading: tripsLoading, error: tripsError } = useTrips();
+  const { routes, fetchRoutes } = useRoutes();
+
+  // Get favorite routes from API
+  const favoriteRoutes = useMemo(() => {
+    if (!routes || !routes.length) return [];
+    return routes.filter(r => r.isFavorite).slice(0, 2);
+  }, [routes]);
+
+  // Filter trips based on selected filter
+  const filteredTrips = useMemo(() => {
+    if (!trips || !trips.length) return [];
+
+    const now = new Date();
+    const startOfWeek = new Date(now.setDate(now.getDate() - now.getDay()));
+    const startOfMonth = new Date(new Date().setDate(1));
+
+    switch (selectedFilter) {
+      case 'This Week':
+        return trips.filter(t => new Date(t.date) >= startOfWeek);
+      case 'This Month':
+        return trips.filter(t => new Date(t.date) >= startOfMonth);
+      case 'Eco-Friendly':
+        return trips.filter(t => (t.carbonSaved || 0) > 5);
+      default:
+        return trips;
+    }
+  }, [trips, selectedFilter]);
+
+  useEffect(() => {
+    loadTrips();
+    loadRoutes();
+  }, []);
+
+  const loadTrips = async () => {
+    try {
+      await fetchTrips({ limit: 50 });
+    } catch (err) {
+      console.error('Error loading trips:', err);
+    }
+  };
+
+  const loadRoutes = async () => {
+    try {
+      await fetchRoutes({ limit: 20 });
+    } catch (err) {
+      console.error('Error loading routes:', err);
+    }
+  };
+
+  const handleRefresh = async () => {
+    setIsRefreshing(true);
+    await Promise.all([loadTrips(), loadRoutes()]);
+    setIsRefreshing(false);
+  };
 
   const handleFilter = () => setFilterIdx((filterIdx + 1) % FILTERS.length);
   const handleSort = () => setSortIdx((sortIdx + 1) % SORTS.length);
+
+  // Show loading state
+  if (tripsLoading && !trips) {
+    return (
+      <SafeAreaView style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+        <ActivityIndicator size="large" color="#10B981" />
+        <Text style={{ marginTop: 16, color: '#64748B' }}>Loading your trips...</Text>
+      </SafeAreaView>
+    );
+  }
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: '#FFFFFF' }}>
@@ -124,7 +125,18 @@ export default function TripsScreen({ navigation }) {
         </ScrollView>
       </View>
       
-      <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContent}>
+      <ScrollView 
+        showsVerticalScrollIndicator={false} 
+        contentContainerStyle={styles.scrollContent}
+        refreshControl={
+          <RefreshControl
+            refreshing={isRefreshing}
+            onRefresh={handleRefresh}
+            colors={['#10B981']}
+            tintColor={'#10B981'}
+          />
+        }
+      >
         {/* Saved Routes Section */}
         <View style={styles.section}>
           <View style={styles.sectionHeader}>
@@ -134,35 +146,39 @@ export default function TripsScreen({ navigation }) {
             </TouchableOpacity>
           </View>
           <View style={styles.favoritesGrid}>
-            {favoriteRoutes.map((route, index) => (
-              <MotiView
-                key={route.id}
-                from={{ opacity: 0, scale: 0.95 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ type: 'spring', delay: index * 100 }}
-                style={[styles.favoriteCard, {borderColor: route.border, backgroundColor: route.bg}]}
-              >
-                <View style={styles.favoriteTopRow}>
-                  <View style={styles.routeInfo}>
-                    <Text style={styles.favoriteTrip} numberOfLines={1}>{route.from}</Text>
-                    <Icon name="arrow-right" size={14} color="#64748B" style={{marginHorizontal: 4}} />
-                    <Text style={styles.favoriteTrip} numberOfLines={1}>{route.to}</Text>
+            {favoriteRoutes.length === 0 ? (
+              <Text style={{ color: '#94A3B8', fontStyle: 'italic', paddingVertical: 20 }}>No saved routes yet. Start planning journeys!</Text>
+            ) : (
+              favoriteRoutes.map((route, index) => (
+                <MotiView
+                  key={route.id}
+                  from={{ opacity: 0, scale: 0.95 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{ type: 'spring', delay: index * 100 }}
+                  style={[styles.favoriteCard, {borderColor: route.border || '#E2E8F0', backgroundColor: route.bg || '#F8FAFC'}]}
+                >
+                  <View style={styles.favoriteTopRow}>
+                    <View style={styles.routeInfo}>
+                      <Text style={styles.favoriteTrip} numberOfLines={1}>{route.from}</Text>
+                      <Icon name="arrow-right" size={14} color="#64748B" style={{marginHorizontal: 4}} />
+                      <Text style={styles.favoriteTrip} numberOfLines={1}>{route.to}</Text>
+                    </View>
+                    <Icon name="heart" size={16} color="#EF4444" />
                   </View>
-                  <Icon name="heart" size={16} color="#EF4444" />
-                </View>
-                <View style={styles.favoriteBottomRow}>
-                  <View style={styles.modeInfo}>
-                    {route.modes.map((m, i) => (
-                      <Icon key={i} name={m.name} size={18} color={m.color} style={{marginRight: 8}} />
-                    ))}
-                    <Text style={styles.favoriteDuration}>{route.duration}</Text>
+                  <View style={styles.favoriteBottomRow}>
+                    <View style={styles.modeInfo}>
+                      {route.modes.map((m, i) => (
+                        <Icon key={i} name={m.name} size={18} color={m.color} style={{marginRight: 8}} />
+                      ))}
+                      <Text style={styles.favoriteDuration}>{route.duration}</Text>
+                    </View>
+                    <TouchableOpacity style={styles.goBtn}>
+                      <Text style={styles.goBtnText}>GO</Text>
+                    </TouchableOpacity>
                   </View>
-                  <TouchableOpacity style={styles.goBtn}>
-                    <Text style={styles.goBtnText}>GO</Text>
-                  </TouchableOpacity>
-                </View>
-              </MotiView>
-            ))}
+                </MotiView>
+              ))
+            )}
           </View>
         </View>
         
@@ -170,68 +186,97 @@ export default function TripsScreen({ navigation }) {
         <View style={styles.section}>
           <View style={styles.sectionHeader}>
             <Text style={styles.sectionTitle}>Recent Trips</Text>
-            <Text style={styles.sectionSubtitle}>24 trips this month</Text>
+            <Text style={styles.sectionSubtitle}>
+              {filteredTrips?.length || 0} trips{selectedFilter !== 'All Trips' ? ` in ${selectedFilter.toLowerCase()}` : ''}
+            </Text>
           </View>
           <View style={styles.timelineContainer}>
-            {tripHistory.map((item, index) => (
-              <MotiView
-                key={item.id}
-                from={{ opacity: 0, translateX: -20 }}
-                animate={{ opacity: 1, translateX: 0 }}
-                transition={{ type: 'timing', duration: 400, delay: index * 150 }}
-                style={styles.timelineItem}
-              >
-                {/* Timeline Dot & Line */}
-                <View style={styles.timelineGraphic}>
-                  <View style={styles.timelineDot} />
-                  {index < tripHistory.length - 1 && <View style={styles.timelineLine} />}
-                </View>
+            {filteredTrips && filteredTrips.length > 0 ? (
+              filteredTrips.map((item, index) => (
+                <MotiView
+                  key={item.id}
+                  from={{ opacity: 0, translateX: -20 }}
+                  animate={{ opacity: 1, translateX: 0 }}
+                  transition={{ type: 'timing', duration: 400, delay: index * 150 }}
+                  style={styles.timelineItem}
+                >
+                  {/* Timeline Dot & Line */}
+                  <View style={styles.timelineGraphic}>
+                    <View style={styles.timelineDot} />
+                    {index < filteredTrips.length - 1 && <View style={styles.timelineLine} />}
+                  </View>
 
-                {/* Trip Card */}
-                <View style={styles.tripCard}>
-                  <View style={styles.tripCardTop}>
-                    <View style={styles.tripInfo}>
-                      <View style={styles.routeDisplay}>
-                        <Text style={styles.tripFrom}>{item.from}</Text>
-                        <Icon name="arrow-right" size={14} color="#94A3B8" style={{marginHorizontal: 6}} />
-                        <Text style={styles.tripTo}>{item.to}</Text>
+                  {/* Trip Card */}
+                  <View style={styles.tripCard}>
+                    <View style={styles.tripCardTop}>
+                      <View style={styles.tripInfo}>
+                        <View style={styles.routeDisplay}>
+                          <Text style={styles.tripFrom}>{item.from?.name || item.from || 'Unknown'}</Text>
+                          <Icon name="arrow-right" size={14} color="#94A3B8" style={{marginHorizontal: 6}} />
+                          <Text style={styles.tripTo}>{item.to?.name || item.to || 'Unknown'}</Text>
+                        </View>
+                        <Text style={styles.tripDate}>
+                          {new Date(item.date).toLocaleDateString('en-US', { 
+                            month: 'short', 
+                            day: 'numeric',
+                            hour: 'numeric',
+                            minute: '2-digit'
+                          })}
+                        </Text>
                       </View>
-                      <Text style={styles.tripDate}>{item.date}</Text>
+                      <View style={[styles.ecoBadge, {backgroundColor: item.ecoBg || '#DEF7EC'}]}>
+                        <Icon name="leaf" size={12} color={item.ecoColor || '#059669'} style={{marginRight: 4}} />
+                        <Text style={[styles.ecoBadgeText, {color: item.ecoColor || '#059669'}]}>
+                          {(item.carbonSaved || 0).toFixed(1)}
+                        </Text>
+                      </View>
                     </View>
-                    <View style={[styles.ecoBadge, {backgroundColor: item.ecoBg}]}>
-                      <Icon name="leaf" size={12} color={item.ecoColor} style={{marginRight: 4}} />
-                      <Text style={[styles.ecoBadgeText, {color: item.ecoColor}]}>{item.eco}</Text>
+                    
+                    <View style={styles.tripDivider} />
+                    
+                    <View style={styles.tripCardBottom}>
+                      <View style={styles.tripDetails}>
+                        <View style={styles.modesContainer}>
+                          {item.modes && item.modes.length > 0 ? (
+                            item.modes.map((m, i) => (
+                              <View key={i} style={styles.modeIconWrapper}>
+                                <Icon name={m.name} size={14} color={m.color} />
+                              </View>
+                            ))
+                          ) : (
+                            <Icon name={item.mode || 'bus'} size={14} color="#3B82F6" />
+                          )}
+                        </View>
+                        <Text style={styles.tripDuration}>{item.duration || 0} min</Text>
+                        <Text style={styles.dot}>•</Text>
+                        <Text style={styles.tripCost}>{item.cost ? `$${item.cost}` : 'Free'}</Text>
+                      </View>
+                      <TouchableOpacity style={styles.moreBtn}>
+                        <Icon name="chevron-right" size={20} color="#94A3B8" />
+                      </TouchableOpacity>
                     </View>
                   </View>
-                  
-                  <View style={styles.tripDivider} />
-                  
-                  <View style={styles.tripCardBottom}>
-                    <View style={styles.tripDetails}>
-                      <View style={styles.modesContainer}>
-                        {item.modes.map((m, i) => (
-                          <View key={i} style={styles.modeIconWrapper}>
-                            <Icon name={m.name} size={14} color={m.color} />
-                          </View>
-                        ))}
-                      </View>
-                      <Text style={styles.tripDuration}>{item.duration}</Text>
-                      <Text style={styles.dot}>•</Text>
-                      <Text style={styles.tripCost}>{item.cost}</Text>
-                    </View>
-                    <TouchableOpacity style={styles.moreBtn}>
-                      <Icon name="chevron-right" size={20} color="#94A3B8" />
-                    </TouchableOpacity>
-                  </View>
-                </View>
-              </MotiView>
-            ))}
+                </MotiView>
+              ))
+            ) : (
+              <View style={{ alignItems: 'center', paddingVertical: 40 }}>
+                <Icon name="map-search" size={64} color="#CBD5E1" />
+                <Text style={{ marginTop: 16, fontSize: 16, color: '#64748B', textAlign: 'center' }}>
+                  No trips found{selectedFilter !== 'All Trips' ? ` for ${selectedFilter}` : ''}
+                </Text>
+                <Text style={{ marginTop: 8, fontSize: 14, color: '#94A3B8', textAlign: 'center' }}>
+                  Start planning journeys to see them here!
+                </Text>
+              </View>
+            )}
           </View>
           
-          <TouchableOpacity style={styles.loadMoreBtn}>
-            <Text style={styles.loadMoreText}>View All History</Text>
-            <Icon name="arrow-down" size={16} color="#10B981" style={{marginLeft: 4}} />
-          </TouchableOpacity>
+          {filteredTrips && filteredTrips.length > 0 && (
+            <TouchableOpacity style={styles.loadMoreBtn}>
+              <Text style={styles.loadMoreText}>View All History</Text>
+              <Icon name="arrow-down" size={16} color="#10B981" style={{marginLeft: 4}} />
+            </TouchableOpacity>
+          )}
         </View>
       </ScrollView>
     </SafeAreaView>
