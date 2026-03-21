@@ -19,6 +19,10 @@ const citiesRouter = require('./routes/cities');
 const environmentRouter = require('./routes/environment');
 const trafficRouter = require('./routes/traffic');
 const ecostatsRouter = require('./routes/ecostats');
+const userRouter = require('./routes/user');
+const tripsRouter = require('./routes/trips');
+const notificationsRouter = require('./routes/notifications');
+const authRouter = require('./routes/auth');
 
 // Import Phase 4 realtime routes
 const liveVehiclesRouter = require('./routes/liveVehicles');
@@ -93,6 +97,10 @@ app.get('/api/stats', (req, res) => {
 });
 
 // Mount routes
+app.use('/api/v1/auth', authRouter);
+app.use('/api/v1/user', userRouter);
+app.use('/api/v1/trips', tripsRouter);
+app.use('/api/v1/notifications', notificationsRouter);
 app.use('/api/v1/stops', stopsRouter);
 app.use('/api/v1/routes', routesRouter);
 app.use('/api/v1/schedule', scheduleRouter);
@@ -118,6 +126,36 @@ app.get('/api/v1', (req, res) => {
     version: process.env.API_VERSION || 'v1',
     description: 'Multimodal Urban Transport System for Bengaluru',
     endpoints: {
+      // Authentication
+      auth: {
+        register: '/api/v1/auth/register (POST)',
+        login: '/api/v1/auth/login (POST)',
+        verify: '/api/v1/auth/verify (POST)',
+        logout: '/api/v1/auth/logout (POST)',
+        refresh: '/api/v1/auth/refresh (POST)'
+      },
+      // User Profile
+      user: {
+        profile: '/api/v1/user/profile',
+        preferences: '/api/v1/user/preferences'
+      },
+      // Trips
+      trips: {
+        list: '/api/v1/trips',
+        details: '/api/v1/trips/:id',
+        stats: '/api/v1/trips/stats',
+        create: '/api/v1/trips (POST)',
+        delete: '/api/v1/trips/:id (DELETE)'
+      },
+      // Notifications
+      notifications: {
+        list: '/api/v1/notifications',
+        details: '/api/v1/notifications/:id',
+        markRead: '/api/v1/notifications/:id/read (PUT)',
+        markAllRead: '/api/v1/notifications/read-all (PUT)',
+        settings: '/api/v1/notifications/settings'
+      },
+      // Core Transit Data
       stops: '/api/v1/stops',
       routes: '/api/v1/routes',
       schedule: '/api/v1/schedule/:routeId',
