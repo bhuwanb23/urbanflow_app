@@ -24,19 +24,37 @@ const NotificationSection = ({
     <MotiView 
       from={{ opacity: 0, translateY: 20 }} 
       animate={{ opacity: 1, translateY: 0 }} 
-      transition={{ type: 'timing', duration: 600, delay }}
+      transition={{ type: 'spring', damping: 12, delay }}
       style={styles.section}
     >
-      <View style={styles.sectionHeader}>
-        <View style={styles.sectionTitleRow}>
-          <View style={[styles.sectionTitleDot, { backgroundColor: iconColor }]} />
-          <Text style={styles.sectionTitle}>{title}</Text>
-          {icon && (
-            <Icon name={icon} size={18} color={iconColor} style={styles.sectionIcon} />
-          )}
+      <MotiView
+        from={{ opacity: 0, translateX: -10 }}
+        animate={{ opacity: 1, translateX: 0 }}
+        transition={{ type: 'timing', duration: 300, delay: delay + 100 }}
+      >
+        <View style={styles.sectionHeader}>
+          <View style={styles.sectionTitleRow}>
+            <MotiView
+              from={{ scale: 0 }}
+              animate={{ scale: 1 }}
+              transition={{ type: 'spring', damping: 10, delay: delay + 200 }}
+            >
+              <View style={[styles.sectionTitleDot, { backgroundColor: iconColor }]} />
+            </MotiView>
+            <Text style={styles.sectionTitle}>{title}</Text>
+            {icon && (
+              <MotiView
+                from={{ rotate: '-90deg', opacity: 0 }}
+                animate={{ rotate: '0deg', opacity: 1 }}
+                transition={{ type: 'timing', duration: 400, delay: delay + 300 }}
+              >
+                <Icon name={icon} size={18} color={iconColor} style={styles.sectionIcon} />
+              </MotiView>
+            )}
+          </View>
+          <Text style={styles.sectionCount}>{notifications.length} notification{notifications.length !== 1 ? 's' : ''}</Text>
         </View>
-        <Text style={styles.sectionCount}>{notifications.length} notification{notifications.length !== 1 ? 's' : ''}</Text>
-      </View>
+      </MotiView>
 
       {notifications.map((notification, index) => (
         <NotificationCard

@@ -41,11 +41,11 @@ const NotificationCard = ({
 
   return (
     <MotiView
-      from={{ opacity: 0, translateY: 20 }}
-      animate={{ opacity: 1, translateY: 0 }}
+      from={{ opacity: 0, translateX: -20 }}
+      animate={{ opacity: 1, translateX: 0 }}
       transition={{ 
-        type: 'timing', 
-        duration: 500, 
+        type: 'spring',
+        damping: 12,
         delay: index * 100 
       }}
       style={[
@@ -58,14 +58,30 @@ const NotificationCard = ({
         onPress={handlePress}
         activeOpacity={0.7}
       >
-        <View style={styles.notificationLeft}>
-          <View style={[styles.iconContainer, { backgroundColor: config.iconBg }]}>
-            <Icon name={config.icon} size={18} color={config.iconColor} />
+        <MotiView
+          from={{ scale: 0.8, opacity: 0 }}
+          animate={{ scale: 1, opacity: 1 }}
+          transition={{ 
+            type: 'spring',
+            damping: 15,
+            delay: index * 100 + 50
+          }}
+        >
+          <View style={styles.notificationLeft}>
+            <View style={[styles.iconContainer, { backgroundColor: config.iconBg }]}>
+              <Icon name={config.icon} size={18} color={config.iconColor} />
+            </View>
+            {!notification.isRead && (
+              <MotiView
+                from={{ scale: 0 }}
+                animate={{ scale: 1 }}
+                transition={{ type: 'spring', damping: 10, delay: index * 100 + 100 }}
+              >
+                <View style={styles.unreadDot} />
+              </MotiView>
+            )}
           </View>
-          {!notification.isRead && (
-            <View style={styles.unreadDot} />
-          )}
-        </View>
+        </MotiView>
         
         <View style={styles.notificationRight}>
           <View style={styles.notificationHeader}>
@@ -105,31 +121,64 @@ const NotificationCard = ({
 
       <View style={styles.actionButtons}>
         {!notification.isRead && (
-          <TouchableOpacity 
-            style={styles.actionButton} 
-            onPress={handleMarkRead}
+          <MotiView
+            from={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ 
+              type: 'spring',
+              damping: 12,
+              delay: index * 100 + 200
+            }}
           >
-            <Icon name="check" size={14} color={notificationTheme.colors.success} />
-          </TouchableOpacity>
+            <TouchableOpacity 
+              style={styles.actionButton} 
+              onPress={handleMarkRead}
+              activeOpacity={0.6}
+            >
+              <Icon name="check" size={14} color={notificationTheme.colors.success} />
+            </TouchableOpacity>
+          </MotiView>
         )}
         
-        <TouchableOpacity 
-          style={styles.actionButton} 
-          onPress={handleToggleImportant}
+        <MotiView
+          from={{ opacity: 0, scale: 0.8 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ 
+            type: 'spring',
+            damping: 12,
+            delay: index * 100 + 250
+          }}
         >
-          <Icon 
-            name={notification.isImportant ? "star" : "star-outline"} 
-            size={14} 
-            color={notification.isImportant ? notificationTheme.colors.warning : notificationTheme.colors.textSecondary} 
-          />
-        </TouchableOpacity>
+          <TouchableOpacity 
+            style={styles.actionButton} 
+            onPress={handleToggleImportant}
+            activeOpacity={0.6}
+          >
+            <Icon 
+              name={notification.isImportant ? "star" : "star-outline"} 
+              size={14} 
+              color={notification.isImportant ? notificationTheme.colors.warning : notificationTheme.colors.textSecondary} 
+            />
+          </TouchableOpacity>
+        </MotiView>
         
-        <TouchableOpacity 
-          style={styles.actionButton} 
-          onPress={handleDelete}
+        <MotiView
+          from={{ opacity: 0, scale: 0.8 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ 
+            type: 'spring',
+            damping: 12,
+            delay: index * 100 + 300
+          }}
         >
-          <Icon name="delete-outline" size={14} color={notificationTheme.colors.error} />
-        </TouchableOpacity>
+          <TouchableOpacity 
+            style={styles.actionButton} 
+            onPress={handleDelete}
+            activeOpacity={0.6}
+          >
+            <Icon name="delete-outline" size={14} color={notificationTheme.colors.error} />
+          </TouchableOpacity>
+        </MotiView>
       </View>
     </MotiView>
   );

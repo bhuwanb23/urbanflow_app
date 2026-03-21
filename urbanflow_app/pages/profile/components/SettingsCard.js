@@ -10,7 +10,7 @@ export default function SettingsCard({ title, settings, onSettingPress }) {
       <MotiView
         from={{ opacity: 0, translateY: 20 }}
         animate={{ opacity: 1, translateY: 0 }}
-        transition={{ type: 'timing', duration: profileTheme.animation.duration.slower, delay: 400 }}
+        transition={{ type: 'spring', damping: 12, delay: 400 }}
       >
         <Text style={styles.sectionTitle}>{title}</Text>
       </MotiView>
@@ -22,20 +22,45 @@ export default function SettingsCard({ title, settings, onSettingPress }) {
               key={setting.label}
               from={{ opacity: 0, translateX: -30 }}
               animate={{ opacity: 1, translateX: 0 }}
-              transition={{ type: 'timing', duration: 600, delay: 600 + index * 100 }}
+              transition={{ 
+                type: 'spring',
+                damping: 12,
+                delay: 600 + index * 100 
+              }}
+              style={{ width: '100%' }}
             >
               <TouchableOpacity 
                 style={[styles.settingItem, index !== settings.length - 1 && styles.settingItemBorder]}
                 onPress={() => onSettingPress(setting)}
-                activeOpacity={0.7}
+                activeOpacity={0.6}
               >
-                <View style={styles.settingLeft}>
-                  <View style={[styles.settingIconWrap, { backgroundColor: setting.bg }]}>
-                    <Icon name={setting.icon} size={20} color={setting.color[0]} />
+                <MotiView
+                  from={{ scale: 0.8, opacity: 0 }}
+                  animate={{ scale: 1, opacity: 1 }}
+                  transition={{ 
+                    type: 'spring',
+                    damping: 15,
+                    delay: 700 + index * 100
+                  }}
+                >
+                  <View style={styles.settingLeft}>
+                    <View style={[styles.settingIconWrap, { backgroundColor: setting.bg }]}>
+                      <Icon name={setting.icon} size={20} color={setting.color[0]} />
+                    </View>
+                    <Text style={styles.settingLabel}>{setting.label}</Text>
                   </View>
-                  <Text style={styles.settingLabel}>{setting.label}</Text>
-                </View>
-                <Icon name="chevron-right" size={20} color={profileTheme.colors.textTertiary} />
+                </MotiView>
+                <MotiView
+                  from={{ opacity: 0, scale: 0.5 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{ 
+                    type: 'spring',
+                    damping: 12,
+                    delay: 800 + index * 100
+                  }}
+                >
+                  <Icon name="chevron-right" size={20} color={profileTheme.colors.textTertiary} />
+                </MotiView>
               </TouchableOpacity>
             </MotiView>
           ))}

@@ -13,31 +13,38 @@ const FilterTabs = ({
     <MotiView 
       from={{ opacity: 0, translateY: -20 }} 
       animate={{ opacity: 1, translateY: 0 }} 
-      transition={{ type: 'timing', duration: 600 }}
+      transition={{ type: 'spring', damping: 12, stiffness: 100 }}
       style={styles.tabsContainer}
     >
       <View style={styles.tabsWrapper}>
         {filters.map((filter, index) => {
           const isActive = activeFilter === filter.toLowerCase();
           return (
-            <TouchableOpacity
+            <MotiView
               key={filter}
-              style={[styles.tab, isActive && styles.tabActive]}
-              onPress={() => onFilterChange(filter.toLowerCase())}
-              activeOpacity={0.7}
+              from={{ scale: isActive ? 1.05 : 1 }}
+              animate={{ scale: 1 }}
+              transition={{ type: 'timing', duration: 200 }}
+              style={{ flex: 1 }}
             >
-              <Text style={[styles.tabText, isActive && styles.tabTextActive]}>
-                {filter}
-              </Text>
-              {isActive && (
-                <MotiView 
-                  from={{ scale: 0, opacity: 0 }}
-                  animate={{ scale: 1, opacity: 1 }}
-                  transition={{ type: 'spring', damping: 15, stiffness: 200 }}
-                  style={styles.tabIndicator}
-                />
-              )}
-            </TouchableOpacity>
+              <TouchableOpacity
+                style={[styles.tab, isActive && styles.tabActive]}
+                onPress={() => onFilterChange(filter.toLowerCase())}
+                activeOpacity={0.6}
+              >
+                <Text style={[styles.tabText, isActive && styles.tabTextActive]}>
+                  {filter}
+                </Text>
+                {isActive && (
+                  <MotiView 
+                    from={{ scale: 0, opacity: 0 }}
+                    animate={{ scale: 1, opacity: 1 }}
+                    transition={{ type: 'spring', damping: 15, stiffness: 200, delay: 100 }}
+                    style={styles.tabIndicator}
+                  />
+                )}
+              </TouchableOpacity>
+            </MotiView>
           );
         })}
       </View>

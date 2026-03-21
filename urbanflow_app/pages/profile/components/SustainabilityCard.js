@@ -10,7 +10,7 @@ export default function SustainabilityCard({ title, sustainabilityData }) {
       <MotiView
         from={{ opacity: 0, translateY: 20 }}
         animate={{ opacity: 1, translateY: 0 }}
-        transition={{ type: 'timing', duration: profileTheme.animation.duration.slower, delay: 600 }}
+        transition={{ type: 'spring', damping: 12, delay: 600 }}
       >
         <Text style={styles.sectionTitle}>{title}</Text>
       </MotiView>
@@ -22,22 +22,47 @@ export default function SustainabilityCard({ title, sustainabilityData }) {
               key={item.label}
               from={{ opacity: 0, translateY: 30, scale: 0.9 }}
               animate={{ opacity: 1, translateY: 0, scale: 1 }}
-              transition={{ type: 'spring', duration: profileTheme.animation.duration.slower, delay: 800 + index * 150 }}
+              transition={{ 
+                type: 'spring',
+                damping: 12,
+                delay: 800 + index * 150 
+              }}
+              style={{ width: '100%' }}
             >
               <View style={[styles.sustainItem, index !== sustainabilityData.length - 1 && styles.sustainItemBorder]}>
-                <View style={[styles.sustainIconWrap, { backgroundColor: item.bg }]}>
-                  <Icon name={item.icon} size={22} color={item.color[0]} />
-                </View>
+                <MotiView
+                  from={{ scale: 0.8, opacity: 0 }}
+                  animate={{ scale: 1, opacity: 1 }}
+                  transition={{ 
+                    type: 'spring',
+                    damping: 15,
+                    delay: 900 + index * 150
+                  }}
+                >
+                  <View style={[styles.sustainIconWrap, { backgroundColor: item.bg }]}>
+                    <Icon name={item.icon} size={22} color={item.color[0]} />
+                  </View>
+                </MotiView>
                 <View style={styles.sustainInfo}>
                   <Text style={styles.sustainLabel}>{item.label}</Text>
                   <Text style={styles.sustainValue}>{item.value}</Text>
                 </View>
-                <View style={styles.sustainStats}>
-                  <Text style={[styles.sustainPercent, { color: item.percentColor }]}>
-                    {item.percent}
-                  </Text>
-                  <Text style={styles.sustainMonth}>This month</Text>
-                </View>
+                <MotiView
+                  from={{ opacity: 0, scale: 0.8 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{ 
+                    type: 'spring',
+                    damping: 12,
+                    delay: 1000 + index * 150
+                  }}
+                >
+                  <View style={styles.sustainStats}>
+                    <Text style={[styles.sustainPercent, { color: item.percentColor }]}>
+                      {item.percent}
+                    </Text>
+                    <Text style={styles.sustainMonth}>This month</Text>
+                  </View>
+                </MotiView>
               </View>
             </MotiView>
           ))}
