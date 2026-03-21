@@ -8,7 +8,7 @@ import TrafficWidget from './TrafficWidget';
 import AQIWidget from './AQIWidget';
 
 // Import Phase 4 hooks
-import { useLiveAlerts } from '../../hooks/useLiveAlerts';
+import { useLiveAlerts } from '../../../hooks/useLiveAlerts';
 
 const { width } = Dimensions.get('window');
 
