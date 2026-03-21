@@ -25,6 +25,25 @@ router.get('/', (req, res, next) => {
 });
 
 /**
+ * GET /api/v1/routes/popular
+ * Returns popular routes (placeholder for now)
+ */
+router.get('/popular', (req, res, next) => {
+  try {
+    // TODO: Implement popularity algorithm based on usage data
+    const routes = req.dataLoader.getRoutes(20);
+    
+    res.json({
+      success: true,
+      count: routes.length,
+      data: routes
+    });
+  } catch (error) {
+    next(error);
+  }
+});
+
+/**
  * GET /api/v1/routes/:id
  * Returns a single route with details
  */
@@ -43,25 +62,6 @@ router.get('/:id', (req, res, next) => {
     res.json({
       success: true,
       data: route
-    });
-  } catch (error) {
-    next(error);
-  }
-});
-
-/**
- * GET /api/v1/routes/popular
- * Returns popular routes (placeholder for now)
- */
-router.get('/popular', (req, res, next) => {
-  try {
-    // TODO: Implement popularity algorithm based on usage data
-    const routes = req.dataLoader.getRoutes(20);
-    
-    res.json({
-      success: true,
-      count: routes.length,
-      data: routes
     });
   } catch (error) {
     next(error);
