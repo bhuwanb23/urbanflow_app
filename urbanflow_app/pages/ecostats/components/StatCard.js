@@ -17,9 +17,15 @@ export default function StatCard({
 }) {
     return (
         <MotiView 
-            from={{ opacity: 0, translateY: 30 }} 
-            animate={{ opacity: 1, translateY: 0 }} 
-            transition={{ type: 'timing', duration: 700, delay }}
+            from={{ opacity: 0, scale: 0.95, translateY: 20 }} 
+            animate={{ opacity: 1, scale: 1, translateY: 0 }} 
+            transition={{ 
+                type: 'spring',
+                damping: 15,
+                mass: 0.8,
+                stiffness: 100,
+                delay 
+            }}
             style={style}
         >
             <View style={styles.statCard}>
@@ -48,12 +54,13 @@ const styles = StyleSheet.create({
         padding: 16,
         backgroundColor: '#FFFFFF',
         borderWidth: 1,
-        borderColor: '#F1F5F9', // Slate 100
+        borderColor: '#F1F5F9',
         shadowColor: '#64748B',
         shadowOffset: { width: 0, height: 2 },
         shadowOpacity: 0.05,
         shadowRadius: 8,
         elevation: 2,
+        overflow: 'hidden',
     },
     cardIconRow: {
         flexDirection: 'row',

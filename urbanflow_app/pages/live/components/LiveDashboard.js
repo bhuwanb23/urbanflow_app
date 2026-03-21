@@ -81,7 +81,7 @@ const LiveDashboard = () => {
     refreshInterval: 60000
   });
 
-  // Auto-refresh timer
+  // Auto-refresh timer with animation trigger
   useEffect(() => {
     const interval = setInterval(() => {
       setLastUpdated(new Date());
@@ -93,7 +93,8 @@ const LiveDashboard = () => {
   const handleRefresh = () => {
     setRefreshing(true);
     setLastUpdated(new Date());
-    setTimeout(() => setRefreshing(false), 1000);
+    // Simulate refresh delay for smooth animation
+    setTimeout(() => setRefreshing(false), 800);
   };
 
   const formatLastUpdated = (date) => {
@@ -133,32 +134,60 @@ const LiveDashboard = () => {
         </View>
 
         <View style={styles.statsGrid}>
-          {/* AQI - Real-time */}
-          <AQIWidget />
+          {/* AQI - Real-time with animation */}
+          <MotiView
+            from={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ type: 'spring', damping: 12, delay: 100 }}
+            style={{ flex: 1 }}
+          >
+            <AQIWidget />
+          </MotiView>
 
-          {/* Traffic - Real-time */}
-          <TrafficWidget />
+          {/* Traffic - Real-time with animation */}
+          <MotiView
+            from={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ type: 'spring', damping: 12, delay: 200 }}
+            style={{ flex: 1 }}
+          >
+            <TrafficWidget />
+          </MotiView>
 
           {/* Incidents */}
-          <View style={styles.statCard}>
-            <View style={styles.statHeader}>
-              <Icon name="alert-outline" size={20} color="#191c1d" />
+          <MotiView
+            from={{ opacity: 0, translateY: 20 }}
+            animate={{ opacity: 1, translateY: 0 }}
+            transition={{ type: 'timing', duration: 400, delay: 300 }}
+            style={{ width: (width - 32 - 12) / 2 }}
+          >
+            <View style={styles.statCard}>
+              <View style={styles.statHeader}>
+                <Icon name="alert-outline" size={20} color="#191c1d" />
+              </View>
+              <Text style={styles.statLabel}>ACTIVE ALERTS</Text>
+              <Text style={styles.statValue}>03</Text>
             </View>
-            <Text style={styles.statLabel}>ACTIVE ALERTS</Text>
-            <Text style={styles.statValue}>03</Text>
-          </View>
+          </MotiView>
 
           {/* Transport */}
-          <View style={styles.statCard}>
-            <View style={styles.statHeader}>
-              <Icon name="bus" size={20} color="#006b2c" />
-              <View style={[styles.statBadge, { backgroundColor: '#b4f0c9' }]}>
-                <Text style={[styles.statBadgeText, { color: '#006b2c' }]}>Active</Text>
+          <MotiView
+            from={{ opacity: 0, translateY: 20 }}
+            animate={{ opacity: 1, translateY: 0 }}
+            transition={{ type: 'timing', duration: 400, delay: 400 }}
+            style={{ width: (width - 32 - 12) / 2 }}
+          >
+            <View style={styles.statCard}>
+              <View style={styles.statHeader}>
+                <Icon name="bus" size={20} color="#006b2c" />
+                <View style={[styles.statBadge, { backgroundColor: '#b4f0c9' }]}>
+                  <Text style={[styles.statBadgeText, { color: '#006b2c' }]}>Active</Text>
+                </View>
               </View>
+              <Text style={styles.statLabel}>TRANSIT CAP.</Text>
+              <Text style={styles.statValue}>92<Text style={styles.statUnit}>%</Text></Text>
             </View>
-            <Text style={styles.statLabel}>TRANSIT CAP.</Text>
-            <Text style={styles.statValue}>92<Text style={styles.statUnit}>%</Text></Text>
-          </View>
+          </MotiView>
         </View>
       </View>
 
@@ -185,12 +214,18 @@ const LiveDashboard = () => {
       <View style={styles.feedSection}>
         <View style={styles.feedHeader}>
           <View style={styles.feedHeaderLeft}>
-            <View style={styles.feedIconBg}>
-              <Icon name="access-point" size={20} color="#006b2c" />
-            </View>
+            <MotiView
+              from={{ rotate: '0deg', scale: 0.8 }}
+              animate={{ rotate: '360deg', scale: 1 }}
+              transition={{ type: 'timing', duration: 800, delay: 500 }}
+            >
+              <View style={styles.feedIconBg}>
+                <Icon name="access-point" size={20} color="#006b2c" />
+              </View>
+            </MotiView>
             <Text style={styles.feedTitle}>Real-Time Activity</Text>
           </View>
-          <TouchableOpacity>
+          <TouchableOpacity onPress={() => console.log('View Archive pressed')}>
             <Text style={styles.feedLink}>VIEW ARCHIVE</Text>
           </TouchableOpacity>
         </View>
@@ -208,49 +243,100 @@ const LiveDashboard = () => {
               </View>
             </View>
           ) : hasData && feedItems.length > 0 ? (
-            // Render real alerts from API
+            // Render real alerts from API with staggered animations
             feedItems.map((item, index) => (
-              <View key={item.id} style={styles.feedItem}>
-                <View style={styles.feedItemLeft}>
-                  <View style={[styles.feedItemIcon, getFeedItemStyle(item.type)]}>
-                    <Icon name={getFeedItemIcon(item.type)} size={24} color={getFeedItemColor(item.type)} />
+              <MotiView
+                key={item.id}
+                from={{ opacity: 0, translateX: -30 }}
+                animate={{ opacity: 1, translateX: 0 }}
+                transition={{ 
+                  type: 'spring',
+                  damping: 12,
+                  delay: 600 + (index * 100)
+                }}
+                style={{ width: '100%' }}
+              >
+                <View style={styles.feedItem}>
+                  <View style={styles.feedItemLeft}>
+                    <MotiView
+                      from={{ scale: 0.5, opacity: 0 }}
+                      animate={{ scale: 1, opacity: 1 }}
+                      transition={{ 
+                        type: 'spring',
+                        damping: 15,
+                        delay: 700 + (index * 100)
+                      }}
+                    >
+                      <View style={[styles.feedItemIcon, getFeedItemStyle(item.type)]}>
+                        <Icon name={getFeedItemIcon(item.type)} size={24} color={getFeedItemColor(item.type)} />
+                      </View>
+                    </MotiView>
+                    <View>
+                      <Text style={styles.feedItemTitle}>{item.title}</Text>
+                      <Text style={styles.feedItemDesc}>{item.description}</Text>
+                    </View>
                   </View>
-                  <View>
-                    <Text style={styles.feedItemTitle}>{item.title}</Text>
-                    <Text style={styles.feedItemDesc}>{item.description}</Text>
+                  <View style={styles.feedItemRight}>
+                    <MotiView
+                      from={{ scale: 0.8, opacity: 0 }}
+                      animate={{ scale: 1, opacity: 1 }}
+                      transition={{ 
+                        type: 'spring',
+                        damping: 12,
+                        delay: 800 + (index * 100)
+                      }}
+                    >
+                      <View style={[styles.feedBadge, getFeedBadgeStyle(item.severity)]}>
+                        <Text style={[styles.feedBadgeText, getFeedBadgeTextColor(item.severity)]}>
+                          {item.severity === 'CRITICAL' ? 'ALERT' : item.severity === 'WARNING' ? 'WARN' : 'INFO'}
+                        </Text>
+                      </View>
+                    </MotiView>
+                    <Text style={styles.feedTime}>{formatFeedTime(item.timestamp)}</Text>
                   </View>
                 </View>
-                <View style={styles.feedItemRight}>
-                  <View style={[styles.feedBadge, getFeedBadgeStyle(item.severity)]}>
-                    <Text style={[styles.feedBadgeText, getFeedBadgeTextColor(item.severity)]}>
-                      {item.severity === 'CRITICAL' ? 'ALERT' : item.severity === 'WARNING' ? 'WARN' : 'INFO'}
-                    </Text>
-                  </View>
-                  <Text style={styles.feedTime}>{formatFeedTime(item.timestamp)}</Text>
-                </View>
-              </View>
+              </MotiView>
             ))
           ) : (
             // Fallback to hardcoded mock data if no API data
             <>
           {/* Item 1 */}
-          <View style={styles.feedItem}>
-            <View style={styles.feedItemLeft}>
-              <View style={[styles.feedItemIcon, { backgroundColor: '#b4f0c9' }]}>
-                <Icon name="train" size={24} color="#31694b" />
+          <MotiView
+            from={{ opacity: 0, translateX: -30 }}
+            animate={{ opacity: 1, translateX: 0 }}
+            transition={{ type: 'spring', damping: 12, delay: 600 }}
+            style={{ width: '100%' }}
+          >
+            <View style={styles.feedItem}>
+              <View style={styles.feedItemLeft}>
+                <MotiView
+                  from={{ scale: 0.5, opacity: 0 }}
+                  animate={{ scale: 1, opacity: 1 }}
+                  transition={{ type: 'spring', damping: 15, delay: 700 }}
+                >
+                  <View style={[styles.feedItemIcon, { backgroundColor: '#b4f0c9' }]}>
+                    <Icon name="train" size={24} color="#31694b" />
+                  </View>
+                </MotiView>
+                <View>
+                  <Text style={styles.feedItemTitle}>Line 4 Expansion</Text>
+                  <Text style={styles.feedItemDesc}>North Station to Riverside Route Active</Text>
+                </View>
               </View>
-              <View>
-                <Text style={styles.feedItemTitle}>Line 4 Expansion</Text>
-                <Text style={styles.feedItemDesc}>North Station to Riverside Route Active</Text>
+              <View style={styles.feedItemRight}>
+                <MotiView
+                  from={{ scale: 0.8, opacity: 0 }}
+                  animate={{ scale: 1, opacity: 1 }}
+                  transition={{ type: 'spring', damping: 12, delay: 800 }}
+                >
+                  <View style={[styles.feedBadge, { backgroundColor: '#7ffc97' }]}>
+                    <Text style={[styles.feedBadgeText, { color: '#006b2c' }]}>NEW</Text>
+                  </View>
+                </MotiView>
+                <Text style={styles.feedTime}>2 MIN AGO</Text>
               </View>
             </View>
-            <View style={styles.feedItemRight}>
-              <View style={[styles.feedBadge, { backgroundColor: '#7ffc97' }]}>
-                <Text style={[styles.feedBadgeText, { color: '#006b2c' }]}>NEW</Text>
-              </View>
-              <Text style={styles.feedTime}>2 MIN AGO</Text>
-            </View>
-          </View>
+          </MotiView>
 
           {/* Item 2 */}
           <View style={styles.feedItem}>
