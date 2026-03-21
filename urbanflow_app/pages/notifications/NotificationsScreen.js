@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { 
   View, 
   ScrollView, 
@@ -34,11 +34,13 @@ const NotificationsScreen = ({ navigation }) => {
   } = useNotifications();
 
   // Calculate stats from real data
+  const notificationsArray = Array.isArray(notifications) ? notifications : [];
+  
   const stats = {
-    total: notifications?.length || 0,
-    unread: notifications?.filter(n => !n.isRead).length || 0,
-    important: notifications?.filter(n => n.severity === 'warning').length || 0,
-    today: notifications?.filter(n => {
+    total: notificationsArray.length,
+    unread: notificationsArray.filter(n => !n.isRead).length || 0,
+    important: notificationsArray.filter(n => n.severity === 'warning').length || 0,
+    today: notificationsArray.filter(n => {
       const today = new Date();
       const notifDate = new Date(n.createdAt || n.timestamp);
       return notifDate.toDateString() === today.toDateString();
@@ -98,8 +100,25 @@ const NotificationsScreen = ({ navigation }) => {
     console.log('Filter selected:', filter);
   };
 
-  // Group notifications by date and apply filter
-  const filteredNotifications = notifications || [];
+  // Filter notifications based on active filter
+  const filteredNotifications = useMemo(() => {
+    if (!notificationsArray.length) return [];
+    
+    switch (activeFilter) {
+      case 'unread':
+        return notificationsArray.filter(n => !n.isRead);
+      case 'important':
+        return notificationsArray.filter(n => n.severity === 'warning' || n.priority === 'high');
+      case 'today':
+        const today = new Date();
+        return notificationsArray.filter(n => {
+          const notifDate = new Date(n.createdAt || n.timestamp);
+          return notifDate.toDateString() === today.toDateString();
+        });
+      default:
+        return notificationsArray;
+    }
+  }, [notificationsArray, activeFilter]);
   
   const groupedNotifications = filteredNotifications.reduce((groups, notification) => {
     const date = new Date(notification.createdAt || notification.timestamp);
