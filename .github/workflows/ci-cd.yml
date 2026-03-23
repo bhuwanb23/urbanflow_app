@@ -124,6 +124,7 @@ jobs:
         tags: urbanflow-backend:${{ github.sha }}
         cache-from: type=registry,ref=urbanflow-backend:buildcache
         cache-to: type=inline
+        no-cache: true
     
     - name: Build frontend Docker image
       uses: docker/build-push-action@v4
