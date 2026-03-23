@@ -10,8 +10,9 @@ RUN npm ci
 # Copy source code
 COPY . .
 
-# Create expo configuration
-EXPO_PUBLIC_API_URL=http://localhost:3000/api/v1
+# Set environment variables
+ENV EXPO_PUBLIC_API_URL=http://localhost:3000/api/v1
+ENV EXPO_NO_TELEMETRY=1
 
 # Expose port for Expo
 EXPOSE 8081
