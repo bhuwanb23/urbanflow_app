@@ -24,8 +24,8 @@ class CityManager {
         west: 76.8333
       },
       gtfs: {
-        staticDir: path.join(__dirname, '../../data/delhi/gtfs'),
-        shapesDir: path.join(__dirname, '../../data/delhi/shapes')
+        staticDir: path.join(__dirname, '../../data/delhi/output'),
+        shapesDir: path.join(__dirname, '../../data/delhi/output/shapes')
       },
       gtfsRt: {
         source: 'dimts',
@@ -47,8 +47,8 @@ class CityManager {
         west: 77.4167
       },
       gtfs: {
-        staticDir: path.join(__dirname, '../../data/bangalore/gtfs'),
-        shapesDir: path.join(__dirname, '../../data/bangalore/shapes')
+        staticDir: path.join(__dirname, '../../data/output'),
+        shapesDir: path.join(__dirname, '../../data/output/shapes')
       },
       gtfsRt: {
         source: 'bmtc',
@@ -70,8 +70,8 @@ class CityManager {
         west: 80.1667
       },
       gtfs: {
-        staticDir: path.join(__dirname, '../../data/chennai/gtfs'),
-        shapesDir: path.join(__dirname, '../../data/chennai/shapes')
+        staticDir: path.join(__dirname, '../../data/chennai/output'),
+        shapesDir: path.join(__dirname, '../../data/chennai/output/shapes')
       },
       gtfsRt: {
         source: 'mota',

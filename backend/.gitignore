@@ -24,3 +24,5 @@ build/
 dist/
 *.pyc
 __pycache__/
+*.sqlite
+*.db

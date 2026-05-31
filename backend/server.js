@@ -7,6 +7,7 @@ require('dotenv').config();
 
 const logger = require('./utils/logger');
 const DataLoader = require('./utils/DataLoader');
+const { initializeDatabase } = require('./models');
 
 // Import routes
 const stopsRouter = require('./routes/stops');
@@ -203,15 +204,18 @@ app.use((err, req, res, next) => {
 // Start server
 async function startServer() {
   try {
+    // Initialize database
+    await initializeDatabase();
+
     // Load all GTFS data
     await dataLoader.loadAll();
-    
+
     // Start listening
     app.listen(PORT, () => {
-      logger.info(`🚀 UrbanFlow API server running on port ${PORT}`);
-      logger.info(`📍 Environment: ${process.env.NODE_ENV || 'development'}`);
-      logger.info(`🌍 Health check: http://localhost:${PORT}/health`);
-      logger.info(`📊 API info: http://localhost:${PORT}/api/v1`);
+      logger.info(`UrbanFlow API server running on port ${PORT}`);
+      logger.info(`Environment: ${process.env.NODE_ENV || 'development'}`);
+      logger.info(`Health check: http://localhost:${PORT}/health`);
+      logger.info(`API info: http://localhost:${PORT}/api/v1`);
     });
   } catch (error) {
     logger.error('Failed to start server:', error);
