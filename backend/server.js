@@ -7,7 +7,9 @@ require('dotenv').config();
 
 const logger = require('./utils/logger');
 const DataLoader = require('./utils/DataLoader');
+const cityManager = require('./utils/cityManager');
 const { initializeDatabase } = require('./models');
+const { authenticate } = require('./middleware/auth');
 
 // Import routes
 const stopsRouter = require('./routes/stops');
@@ -35,8 +37,9 @@ const livePredictionsRouter = require('./routes/livePredictions');
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// Initialize data loader
+// Initialize data loader and register with city manager
 const dataLoader = new DataLoader();
+cityManager.setDataLoader(dataLoader);
 
 // Security middleware
 app.use(helmet());
@@ -99,9 +102,9 @@ app.get('/api/stats', (req, res) => {
 
 // Mount routes
 app.use('/api/v1/auth', authRouter);
-app.use('/api/v1/user', userRouter);
-app.use('/api/v1/trips', tripsRouter);
-app.use('/api/v1/notifications', notificationsRouter);
+app.use('/api/v1/user', authenticate, userRouter);
+app.use('/api/v1/trips', authenticate, tripsRouter);
+app.use('/api/v1/notifications', authenticate, notificationsRouter);
 app.use('/api/v1/stops', stopsRouter);
 app.use('/api/v1/routes', routesRouter);
 app.use('/api/v1/schedule', scheduleRouter);
@@ -111,7 +114,7 @@ app.use('/api/v1/plan', planRouter);
 app.use('/api/v1/cities', citiesRouter);
 app.use('/api/v1/environment', environmentRouter);
 app.use('/api/v1/traffic', trafficRouter);
-app.use('/api/v1/ecostats', ecostatsRouter);
+app.use('/api/v1/ecostats', authenticate, ecostatsRouter);
 
 // Mount Phase 4 realtime routes
 app.use('/api/v1/live/vehicles', liveVehiclesRouter);
@@ -201,9 +204,28 @@ app.use((err, req, res, next) => {
   });
 });
 
+// Validate required environment variables
+function validateEnv() {
+  const required = ['JWT_SECRET'];
+  const missing = required.filter(key => !process.env[key]);
+  if (missing.length > 0) {
+    logger.error(`Missing required environment variables: ${missing.join(', ')}`);
+    process.exit(1);
+  }
+
+  const defaultSecret = 'urbanflow-secret-key-change-in-production';
+  if (process.env.JWT_SECRET === defaultSecret) {
+    logger.error('JWT_SECRET is still set to the default value. Generate a strong random secret.');
+    process.exit(1);
+  }
+}
+
 // Start server
 async function startServer() {
   try {
+    // Validate environment
+    validateEnv();
+
     // Initialize database
     await initializeDatabase();
 

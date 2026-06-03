@@ -1,18 +1,42 @@
 import React, { useState } from 'react';
-import { View, StyleSheet, Text, Platform, TouchableOpacity, TextInput, KeyboardAvoidingView, ScrollView, StatusBar } from 'react-native';
+import { View, StyleSheet, Text, Platform, TouchableOpacity, TextInput, KeyboardAvoidingView, ScrollView, StatusBar, Alert, ActivityIndicator } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { MotiView } from 'moti';
 import { LinearGradient } from 'expo-linear-gradient';
+import { useAuth } from '../../utils/hooks/useAPI';
 
 export default function LoginScreen({ navigation }) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [isLogin, setIsLogin] = useState(true);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const { login, register } = useAuth();
 
-  const handleAuth = () => {
-    // Navigate directly to MainTabs for UI development
-    navigation.replace('MainTabs');
+  const handleAuth = async () => {
+    if (!email.trim() || !password.trim()) {
+      Alert.alert('Validation Error', 'Please enter both email and password.');
+      return;
+    }
+
+    try {
+      setIsSubmitting(true);
+
+      if (isLogin) {
+        await login({ email: email.trim(), password });
+      } else {
+        await register({ email: email.trim(), password });
+      }
+
+      navigation.replace('MainTabs');
+    } catch (error) {
+      Alert.alert(
+        isLogin ? 'Login Failed' : 'Registration Failed',
+        error.message || 'Something went wrong. Please try again.'
+      );
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -116,14 +140,19 @@ export default function LoginScreen({ navigation }) {
               <TouchableOpacity
                 onPress={handleAuth}
                 activeOpacity={0.9}
+                disabled={isSubmitting}
               >
                 <LinearGradient
                   colors={['#10B981', '#059669']}
                   start={{ x: 0, y: 0 }}
                   end={{ x: 1, y: 1 }}
-                  style={styles.submitButton}
+                  style={[styles.submitButton, isSubmitting && styles.submitButtonDisabled]}
                 >
-                  <Text style={styles.submitButtonText}>{isLogin ? 'Sign In' : 'Sign Up'}</Text>
+                  {isSubmitting ? (
+                    <ActivityIndicator color="#FFFFFF" size="small" />
+                  ) : (
+                    <Text style={styles.submitButtonText}>{isLogin ? 'Sign In' : 'Sign Up'}</Text>
+                  )}
                 </LinearGradient>
               </TouchableOpacity>
             </MotiView>
@@ -173,13 +202,15 @@ export default function LoginScreen({ navigation }) {
             </TouchableOpacity>
           </MotiView>
           
-          {/* Demo Button (Hidden in plain sight style) */}
-          <TouchableOpacity
-            style={styles.demoLink}
-            onPress={() => navigation.replace('MainTabs')}
-          >
-            <Text style={styles.demoLinkText}>Demo Mode</Text>
-          </TouchableOpacity>
+          {/* Demo Button (Hidden in plain sight style) - dev only */}
+          {__DEV__ && (
+            <TouchableOpacity
+              style={styles.demoLink}
+              onPress={() => navigation.replace('MainTabs')}
+            >
+              <Text style={styles.demoLinkText}>Demo Mode</Text>
+            </TouchableOpacity>
+          )}
 
         </ScrollView>
       </KeyboardAvoidingView>
@@ -288,14 +319,19 @@ const styles = StyleSheet.create({
     padding: 14,
   },
   submitButton: {
-    borderRadius: 9999, // Full rounded
+    borderRadius: 9999,
     paddingVertical: 16,
     alignItems: 'center',
+    justifyContent: 'center',
+    minHeight: 52,
     shadowColor: '#10B981',
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.3,
     shadowRadius: 8,
     elevation: 4,
+  },
+  submitButtonDisabled: {
+    opacity: 0.7,
   },
   submitButtonText: {
     color: '#FFFFFF',

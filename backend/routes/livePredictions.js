@@ -7,6 +7,7 @@
 
 const express = require('express');
 const router = express.Router();
+const logger = require('../utils/logger');
 const disruptionPredictionService = require('../services/disruptionPredictionService');
 const tripUpdateService = require('../services/tripUpdateService');
 

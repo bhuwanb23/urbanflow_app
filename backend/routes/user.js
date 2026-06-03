@@ -1,18 +1,10 @@
 const express = require('express');
 const router = express.Router();
-const jwt = require('jsonwebtoken');
 const { User } = require('../models');
-
-const getUserId = (req) => {
-  try {
-    return jwt.decode(req.headers.authorization?.split(' ')[1])?.id || null;
-  } catch { return null; }
-};
 
 router.get('/profile', async (req, res) => {
   try {
-    const userId = getUserId(req);
-    const user = userId ? await User.findByPk(userId) : null;
+    const user = await User.findByPk(req.user.id);
     if (!user) {
       return res.status(404).json({ success: false, error: 'User not found' });
     }
@@ -26,8 +18,7 @@ router.get('/profile', async (req, res) => {
 
 router.put('/profile', async (req, res) => {
   try {
-    const userId = getUserId(req);
-    const user = userId ? await User.findByPk(userId) : null;
+    const user = await User.findByPk(req.user.id);
     if (!user) {
       return res.status(404).json({ success: false, error: 'User not found' });
     }
@@ -52,8 +43,7 @@ router.put('/profile', async (req, res) => {
 
 router.get('/preferences', async (req, res) => {
   try {
-    const userId = getUserId(req);
-    const user = userId ? await User.findByPk(userId) : null;
+    const user = await User.findByPk(req.user.id);
     if (!user) {
       return res.status(404).json({ success: false, error: 'User not found' });
     }
@@ -66,8 +56,7 @@ router.get('/preferences', async (req, res) => {
 
 router.put('/preferences', async (req, res) => {
   try {
-    const userId = getUserId(req);
-    const user = userId ? await User.findByPk(userId) : null;
+    const user = await User.findByPk(req.user.id);
     if (!user) {
       return res.status(404).json({ success: false, error: 'User not found' });
     }

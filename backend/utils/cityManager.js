@@ -9,6 +9,7 @@ class CityManager {
   constructor() {
     this.cities = new Map();
     this.currentCity = process.env.ACTIVE_CITY || 'delhi';
+    this.dataLoader = null;
     
     // Register default cities
     this.registerCity('delhi', {
@@ -82,6 +83,13 @@ class CityManager {
   }
 
   /**
+   * Register a DataLoader instance for reloading data on city switch
+   */
+  setDataLoader(loader) {
+    this.dataLoader = loader;
+  }
+
+  /**
    * Register a new city configuration
    */
   registerCity(cityId, config) {
@@ -109,15 +117,42 @@ class CityManager {
   }
 
   /**
-   * Set active city
+   * Set active city and reload GTFS data
    */
-  setActiveCity(cityId) {
+  async setActiveCity(cityId) {
     if (!this.cities.has(cityId)) {
       throw new Error(`City '${cityId}' not registered`);
     }
+    const city = this.getCity(cityId);
     this.currentCity = cityId;
-    console.log(`🌆 Switched to city: ${this.getCity(cityId).displayName}`);
-    return this.getCity(cityId);
+
+    // Update env vars so downstream services pick up new paths
+    process.env.ACTIVE_CITY = cityId;
+    process.env.DATA_DIR = path.relative(
+      path.join(__dirname, '..'),
+      city.gtfs.staticDir
+    ).replace(/\\/g, '/');
+    process.env.SCHEDULE_DIR = path.relative(
+      path.join(__dirname, '..'),
+      city.gtfs.shapesDir.replace(/shapes$/, 'schedule')
+    ).replace(/\\/g, '/');
+    process.env.SHAPES_DIR = path.relative(
+      path.join(__dirname, '..'),
+      city.gtfs.shapesDir
+    ).replace(/\\/g, '/');
+
+    // Reload GTFS data if DataLoader is available
+    if (this.dataLoader) {
+      this.dataLoader.dataDir = process.env.DATA_DIR;
+      this.dataLoader.scheduleDir = process.env.SCHEDULE_DIR;
+      this.dataLoader.shapesDir = process.env.SHAPES_DIR;
+      this.dataLoader.scheduleCache = new Map();
+      this.dataLoader.shapeCache = new Map();
+      await this.dataLoader.loadAll();
+    }
+
+    console.log(`🌆 Switched to city: ${city.displayName}`);
+    return city;
   }
 
   /**

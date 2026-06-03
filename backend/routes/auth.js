@@ -4,10 +4,18 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const { User } = require('../models');
 
+const getJwtSecret = () => {
+  const secret = process.env.JWT_SECRET;
+  if (!secret) {
+    throw new Error('JWT_SECRET environment variable is not set');
+  }
+  return secret;
+};
+
 const generateToken = (user) => {
   return jwt.sign(
     { id: user.id, email: user.email },
-    process.env.JWT_SECRET || 'urbanflow-secret-key-change-in-production',
+    getJwtSecret(),
     { expiresIn: process.env.JWT_EXPIRY || '7d' }
   );
 };
@@ -63,7 +71,7 @@ router.post('/verify', async (req, res) => {
       return res.status(401).json({ success: false, error: 'No token provided' });
     }
     const token = authHeader.split(' ')[1];
-    const decoded = jwt.verify(token, process.env.JWT_SECRET || 'urbanflow-secret-key-change-in-production');
+    const decoded = jwt.verify(token, getJwtSecret());
     const user = await User.findByPk(decoded.id);
     if (!user) {
       return res.status(401).json({ success: false, error: 'Invalid token' });
@@ -87,7 +95,7 @@ router.post('/refresh', async (req, res) => {
       return res.status(401).json({ success: false, error: 'No token provided' });
     }
     const token = authHeader.split(' ')[1];
-    const decoded = jwt.verify(token, process.env.JWT_SECRET || 'urbanflow-secret-key-change-in-production');
+    const decoded = jwt.verify(token, getJwtSecret());
     const user = await User.findByPk(decoded.id);
     if (!user) {
       return res.status(401).json({ success: false, error: 'Invalid token' });

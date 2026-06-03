@@ -94,7 +94,7 @@ router.post('/switch', async (req, res) => {
       });
     }
 
-    const city = cityManager.setActiveCity(cityId);
+    const city = await cityManager.setActiveCity(cityId);
 
     res.json({
       success: true,

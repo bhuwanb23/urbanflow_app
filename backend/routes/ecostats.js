@@ -1,14 +1,7 @@
 const express = require('express');
 const router = express.Router();
-const jwt = require('jsonwebtoken');
 const { Op } = require('sequelize');
 const { Trip, EcoStat } = require('../models');
-
-const getUserId = (req) => {
-  try {
-    return jwt.decode(req.headers.authorization?.split(' ')[1])?.id || null;
-  } catch { return null; }
-};
 
 const getPeriodRange = (period) => {
   const now = new Date();
@@ -82,8 +75,7 @@ const achievements = [
 
 router.get('/', async (req, res) => {
   try {
-    const userId = getUserId(req);
-    if (!userId) return res.status(401).json({ success: false, error: 'Unauthorized' });
+    const userId = req.user.id;
     const { period = 'week' } = req.query;
     const stats = await computeStats(userId, period);
     res.json({ success: true, data: stats });
@@ -95,8 +87,7 @@ router.get('/', async (req, res) => {
 
 router.get('/weekly', async (req, res) => {
   try {
-    const userId = getUserId(req);
-    if (!userId) return res.status(401).json({ success: false, error: 'Unauthorized' });
+    const userId = req.user.id;
     const stats = await computeStats(userId, 'week');
     res.json({ success: true, data: stats });
   } catch (error) {
@@ -107,8 +98,7 @@ router.get('/weekly', async (req, res) => {
 
 router.get('/monthly', async (req, res) => {
   try {
-    const userId = getUserId(req);
-    if (!userId) return res.status(401).json({ success: false, error: 'Unauthorized' });
+    const userId = req.user.id;
     const stats = await computeStats(userId, 'month');
     res.json({ success: true, data: stats });
   } catch (error) {
@@ -119,8 +109,7 @@ router.get('/monthly', async (req, res) => {
 
 router.get('/achievements', async (req, res) => {
   try {
-    const userId = getUserId(req);
-    if (!userId) return res.status(401).json({ success: false, error: 'Unauthorized' });
+    const userId = req.user.id;
 
     const { start: weekStart } = getPeriodRange('week');
     const { start: monthStart } = getPeriodRange('month');
@@ -161,8 +150,7 @@ router.get('/achievements', async (req, res) => {
 
 router.get('/summary', async (req, res) => {
   try {
-    const userId = getUserId(req);
-    if (!userId) return res.status(401).json({ success: false, error: 'Unauthorized' });
+    const userId = req.user.id;
     const stats = await computeStats(userId, 'week');
     const { start: weekStart } = getPeriodRange('week');
     const weekTrips = await Trip.count({ where: { userId, date: { [Op.gte]: weekStart } } });

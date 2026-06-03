@@ -1,18 +1,11 @@
 const express = require('express');
 const router = express.Router();
-const jwt = require('jsonwebtoken');
 const { Op } = require('sequelize');
 const { Trip } = require('../models');
 
-const getUserId = (req) => {
-  try {
-    return jwt.decode(req.headers.authorization?.split(' ')[1])?.id || null;
-  } catch { return null; }
-};
-
 router.get('/stats', async (req, res) => {
   try {
-    const userId = getUserId(req);
+    const userId = req.user.id;
     const { period = 'week' } = req.query;
     const now = new Date();
     let periodStart;
@@ -63,7 +56,7 @@ router.get('/stats', async (req, res) => {
 
 router.get('/', async (req, res) => {
   try {
-    const userId = getUserId(req);
+    const userId = req.user.id;
     const { limit = 20, offset = 0, mode, startDate, endDate } = req.query;
     const where = { userId };
     if (mode) where.mode = mode;
@@ -93,7 +86,7 @@ router.get('/:id', async (req, res) => {
 
 router.post('/', async (req, res) => {
   try {
-    const userId = getUserId(req);
+    const userId = req.user.id;
     const { from, to, ...rest } = req.body;
     if (!from || !to) {
       return res.status(400).json({ success: false, error: 'Missing required fields: from, to' });
@@ -115,6 +108,9 @@ router.put('/:id', async (req, res) => {
   try {
     const trip = await Trip.findByPk(req.params.id);
     if (!trip) return res.status(404).json({ success: false, error: 'Trip not found' });
+    if (trip.userId !== req.user.id) {
+      return res.status(403).json({ success: false, error: 'Not authorized to update this trip' });
+    }
     await trip.update(req.body);
     res.json({ success: true, data: trip, message: 'Trip updated successfully' });
   } catch (error) {
@@ -127,6 +123,9 @@ router.delete('/:id', async (req, res) => {
   try {
     const trip = await Trip.findByPk(req.params.id);
     if (!trip) return res.status(404).json({ success: false, error: 'Trip not found' });
+    if (trip.userId !== req.user.id) {
+      return res.status(403).json({ success: false, error: 'Not authorized to delete this trip' });
+    }
     await trip.destroy();
     res.json({ success: true, message: 'Trip deleted successfully' });
   } catch (error) {
