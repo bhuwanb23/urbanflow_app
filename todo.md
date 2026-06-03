@@ -167,10 +167,10 @@ Tasks within a phase should be completed **in order** (earlier tasks are prerequ
 
 ### 2.2 Token blacklisting
 
-- [ ] Add token blacklist (in-memory with TTL or Redis)
-- [ ] Check blacklist in auth middleware
-- [ ] Logout adds token to blacklist
-- [ ] **Verify:** Logged-out token returns 401
+- [x] Add token blacklist (in-memory with TTL)
+- [x] Check blacklist in auth middleware
+- [x] Logout adds token to blacklist
+- [x] **Verify:** Logged-out token returns 401
 
 ### 2.3 Input validation for all endpoints
 

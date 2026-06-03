@@ -1,5 +1,6 @@
 const jwt = require('jsonwebtoken');
 const logger = require('../utils/logger');
+const tokenBlacklist = require('../utils/tokenBlacklist');
 
 const getJwtSecret = () => {
   const secret = process.env.JWT_SECRET;
@@ -17,6 +18,9 @@ const authenticate = (req, res, next) => {
     }
 
     const token = authHeader.split(' ')[1];
+    if (tokenBlacklist.has(token)) {
+      return res.status(401).json({ success: false, error: 'Token has been invalidated' });
+    }
     const decoded = jwt.verify(token, getJwtSecret());
     req.user = decoded;
     next();
@@ -37,8 +41,10 @@ const optionalAuth = (req, res, next) => {
     const authHeader = req.headers.authorization;
     if (authHeader && authHeader.startsWith('Bearer ')) {
       const token = authHeader.split(' ')[1];
-      const decoded = jwt.verify(token, getJwtSecret());
-      req.user = decoded;
+      if (!tokenBlacklist.has(token)) {
+        const decoded = jwt.verify(token, getJwtSecret());
+        req.user = decoded;
+      }
     }
   } catch {
     // Silently continue without user

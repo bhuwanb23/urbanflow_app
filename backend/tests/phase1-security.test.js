@@ -90,24 +90,22 @@ function createTestApp() {
   const app = express();
   app.use(express.json({ limit: '1mb' }));
   const authRouter = require('../routes/auth');
+
+  // Public routes (no auth needed)
   app.use('/api/v1/auth', authRouter);
 
-  // Mock authenticate middleware to attach a fake user
-  app.use('/api/v1', (req, res, next) => {
-    req.user = { id: 'test-user-id', email: 'test@test.com' };
-    next();
-  });
-
+  // Protected routes (use real authenticate middleware)
+  const { authenticate } = require('../middleware/auth');
   const tripsRouter = require('../routes/trips');
   const userRouter = require('../routes/user');
   const notificationsRouter = require('../routes/notifications');
   const ecostatsRouter = require('../routes/ecostats');
   const planRouter = require('../routes/plan');
 
-  app.use('/api/v1/trips', tripsRouter);
-  app.use('/api/v1/user', userRouter);
-  app.use('/api/v1/notifications', notificationsRouter);
-  app.use('/api/v1/ecostats', ecostatsRouter);
+  app.use('/api/v1/trips', authenticate, tripsRouter);
+  app.use('/api/v1/user', authenticate, userRouter);
+  app.use('/api/v1/notifications', authenticate, notificationsRouter);
+  app.use('/api/v1/ecostats', authenticate, ecostatsRouter);
   app.use('/api/v1/plan', planRouter);
 
   return app;
@@ -405,6 +403,40 @@ describe('Phase 2 — Backend Quality & Missing Features', () => {
       expect(res.body.success).toBe(true);
       expect(mockUser.passwordResetToken).toBeNull();
       expect(mockUser.passwordResetExpires).toBeNull();
+    });
+  });
+
+  describe('2.2 — Token blacklisting', () => {
+
+    beforeEach(() => {
+      jest.clearAllMocks();
+    });
+
+    test('logout without token returns success', async () => {
+      const res = await request(app)
+        .post('/api/v1/auth/logout')
+        .send({});
+      expect(res.status).toBe(200);
+      expect(res.body.success).toBe(true);
+    });
+
+    test('logout blacklists the provided token', async () => {
+      // Generate a real JWT
+      const jwt = require('jsonwebtoken');
+      const token = jwt.sign({ id: 'u1', email: 'a@b.com' }, 'test-secret-key-for-jest', { expiresIn: '1h' });
+
+      const res = await request(app)
+        .post('/api/v1/auth/logout')
+        .set('Authorization', `Bearer ${token}`)
+        .send({});
+      expect(res.status).toBe(200);
+
+      // Verify the token is blacklisted by trying to use it on a protected route
+      const tripsRes = await request(app)
+        .get('/api/v1/trips')
+        .set('Authorization', `Bearer ${token}`);
+      expect(tripsRes.status).toBe(401);
+      expect(tripsRes.body.error).toMatch(/invalidated/);
     });
   });
 });

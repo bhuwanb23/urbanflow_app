@@ -6,6 +6,7 @@ const jwt = require('jsonwebtoken');
 const rateLimit = require('express-rate-limit');
 const { Op } = require('sequelize');
 const logger = require('../utils/logger');
+const tokenBlacklist = require('../utils/tokenBlacklist');
 const { User } = require('../models');
 const { registerSchema, loginSchema, validate } = require('../validators/auth');
 
@@ -146,7 +147,18 @@ router.post('/verify', async (req, res) => {
 });
 
 router.post('/logout', async (req, res) => {
-  res.json({ success: true, message: 'Logout successful. Please remove the token from client side.' });
+  try {
+    const authHeader = req.headers.authorization;
+    if (authHeader && authHeader.startsWith('Bearer ')) {
+      const token = authHeader.split(' ')[1];
+      const decoded = jwt.decode(token);
+      tokenBlacklist.add(token, decoded ? decoded.exp * 1000 : undefined);
+    }
+    res.json({ success: true, message: 'Logged out successfully.' });
+  } catch (error) {
+    console.error('Error in logout:', error);
+    res.status(500).json({ success: false, error: error.message });
+  }
 });
 
 router.post('/refresh', async (req, res) => {
