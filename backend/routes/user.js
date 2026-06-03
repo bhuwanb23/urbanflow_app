@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const { User } = require('../models');
+const { updateProfileSchema, validate } = require('../validators/user');
 
 router.get('/profile', async (req, res) => {
   try {
@@ -16,7 +17,7 @@ router.get('/profile', async (req, res) => {
   }
 });
 
-router.put('/profile', async (req, res) => {
+router.put('/profile', validate(updateProfileSchema), async (req, res) => {
   try {
     const user = await User.findByPk(req.user.id);
     if (!user) {

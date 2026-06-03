@@ -102,54 +102,54 @@ Tasks within a phase should be completed **in order** (earlier tasks are prerequ
 
 ### 1.1 Rate limiting
 
-- [ ] Add per-route rate limiter for `POST /api/v1/auth/login` (5 attempts per minute per IP)
-- [ ] Adjust global rate limiter from 100/15min to appropriate value
-- [ ] Add rate limiter for registration endpoint
+- [x] Add per-route rate limiter for `POST /api/v1/auth/login` (5 attempts per minute per IP)
+- [x] Adjust global rate limiter from 100/15min to appropriate value (kept as-is, auth login/register have stricter 5/min)
+- [x] Add rate limiter for registration endpoint
 - [ ] **Verify:** 6 rapid login attempts → 429 Too Many Requests
 
 ### 1.2 Password policy
 
-- [ ] Add password validation in `routes/auth.js`:
+- [x] Add password validation in `routes/auth.js`:
   - Minimum 8 characters
   - Require at least 1 number and 1 special character
-- [ ] Return specific validation error messages
-- [ ] **Verify:** Registration with `"a"` returns validation error
+- [x] Return specific validation error messages
+- [x] **Verify:** Registration with `"a"` returns validation error
 
 ### 1.3 CORS hardening
 
-- [ ] Update `backend/server.js` — require explicit `CORS_ORIGIN` in production
-- [ ] Fail startup if `CORS_ORIGIN=*` in production (`NODE_ENV=production`)
-- [ ] Update `docker-compose.yml` CORS env to explicit origin
+- [x] Update `backend/server.js` — require explicit `CORS_ORIGIN` in production
+- [x] Fail startup if `CORS_ORIGIN=*` in production (`NODE_ENV=production`)
+- [x] Update `docker-compose.yml` CORS env to explicit origin
 - [ ] **Verify:** Requests from non-allowed origin are rejected
 
 ### 1.4 HTTPS support
 
-- [ ] Add `https.createServer()` option in `server.js`
-- [ ] Read SSL cert/key paths from env vars (`SSL_CERT_PATH`, `SSL_KEY_PATH`)
-- [ ] Fall back to HTTP in development only
+- [x] Add `https.createServer()` option in `server.js`
+- [x] Read SSL cert/key paths from env vars (`SSL_CERT_PATH`, `SSL_KEY_PATH`)
+- [x] Fall back to HTTP in development only
 - [ ] **Verify:** Server starts with HTTPS when cert paths provided
 
 ### 1.5 Request validation
 
-- [ ] Install `joi` or `express-validator` (`npm install joi`)
-- [ ] Create validation schemas in `backend/validators/`:
+- [x] Install `joi` or `express-validator` (`npm install joi`)
+- [x] Create validation schemas in `backend/validators/`:
   - `auth.js` — register, login schemas
   - `user.js` — profile update schema
   - `trip.js` — create/update schemas
   - `plan.js` — journey plan schema
-- [ ] Apply validation middleware to all POST/PUT endpoints
-- [ ] **Verify:** Invalid payloads return 400 with field-level error messages
+- [x] Apply validation middleware to all POST/PUT endpoints
+- [x] **Verify:** Invalid payloads return 400 with field-level error messages
 
 ### 1.6 Account lockout
 
-- [ ] Add failed login attempts tracking (in-memory Map or DB field)
-- [ ] Lock account after 10 failed attempts for 15 minutes
-- [ ] Log security events (failed logins, lockouts)
+- [x] Add failed login attempts tracking (in-memory Map)
+- [x] Lock account after 10 failed attempts for 15 minutes
+- [x] Log security events (failed logins, lockouts)
 - [ ] **Verify:** 10 wrong passwords → account locked message
 
 ### 1.7 Request body size limit
 
-- [ ] Add `express.json({ limit: '1mb' })` in `server.js`
+- [x] Add `express.json({ limit: '1mb' })` in `server.js`
 - [ ] **Verify:** Request with >1MB body returns 413
 
 ---

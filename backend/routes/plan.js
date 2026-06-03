@@ -5,12 +5,13 @@ const otpService = require('../services/otpService');
 const carbonCalculator = require('../utils/carbonCalculator');
 const fareCalculator = require('../utils/fareCalculator');
 const modeMapper = require('../utils/modeMapper');
+const { journeyPlanSchema, validate } = require('../validators/plan');
 
 /**
  * POST /api/v1/plan
  * Plan a journey with enriched UrbanFlow data
  */
-router.post('/', async (req, res, next) => {
+router.post('/', validate(journeyPlanSchema), async (req, res, next) => {
   try {
     const {
       fromPlace,

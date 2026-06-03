@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const { Op } = require('sequelize');
 const { Trip } = require('../models');
+const { createTripSchema, updateTripSchema, validate } = require('../validators/trip');
 
 router.get('/stats', async (req, res) => {
   try {
@@ -84,7 +85,7 @@ router.get('/:id', async (req, res) => {
   }
 });
 
-router.post('/', async (req, res) => {
+router.post('/', validate(createTripSchema), async (req, res) => {
   try {
     const userId = req.user.id;
     const { from, to, ...rest } = req.body;

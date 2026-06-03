@@ -1,5 +1,7 @@
 const express = require('express');
 const cors = require('cors');
+const https = require('https');
+const fs = require('fs');
 const helmet = require('helmet');
 const compression = require('compression');
 const rateLimit = require('express-rate-limit');
@@ -64,8 +66,8 @@ const limiter = rateLimit({
 app.use('/api/', limiter);
 
 // Body parsing middleware
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+app.use(express.json({ limit: '1mb' }));
+app.use(express.urlencoded({ extended: true, limit: '1mb' }));
 
 // Compression middleware
 app.use(compression());
@@ -218,6 +220,14 @@ function validateEnv() {
     logger.error('JWT_SECRET is still set to the default value. Generate a strong random secret.');
     process.exit(1);
   }
+
+  if (process.env.NODE_ENV === 'production') {
+    const corsOrigin = process.env.CORS_ORIGIN;
+    if (!corsOrigin || corsOrigin === '*') {
+      logger.error('CORS_ORIGIN must be set to an explicit origin in production (e.g. https://app.urbanflow.com)');
+      process.exit(1);
+    }
+  }
 }
 
 // Start server
@@ -232,13 +242,30 @@ async function startServer() {
     // Load all GTFS data
     await dataLoader.loadAll();
 
-    // Start listening
-    app.listen(PORT, () => {
-      logger.info(`UrbanFlow API server running on port ${PORT}`);
-      logger.info(`Environment: ${process.env.NODE_ENV || 'development'}`);
-      logger.info(`Health check: http://localhost:${PORT}/health`);
-      logger.info(`API info: http://localhost:${PORT}/api/v1`);
-    });
+    // Start listening (HTTPS if certs provided, HTTP otherwise)
+    const sslCertPath = process.env.SSL_CERT_PATH;
+    const sslKeyPath = process.env.SSL_KEY_PATH;
+    let server;
+    if (sslCertPath && sslKeyPath) {
+      const credentials = {
+        cert: fs.readFileSync(sslCertPath),
+        key: fs.readFileSync(sslKeyPath)
+      };
+      server = https.createServer(credentials, app);
+      server.listen(PORT, () => {
+        logger.info(`UrbanFlow API server running on HTTPS on port ${PORT}`);
+        logger.info(`Environment: ${process.env.NODE_ENV || 'development'}`);
+        logger.info(`Health check: https://localhost:${PORT}/health`);
+        logger.info(`API info: https://localhost:${PORT}/api/v1`);
+      });
+    } else {
+      server = app.listen(PORT, () => {
+        logger.info(`UrbanFlow API server running on HTTP on port ${PORT}`);
+        logger.info(`Environment: ${process.env.NODE_ENV || 'development'}`);
+        logger.info(`Health check: http://localhost:${PORT}/health`);
+        logger.info(`API info: http://localhost:${PORT}/api/v1`);
+      });
+    }
   } catch (error) {
     logger.error('Failed to start server:', error);
     process.exit(1);
