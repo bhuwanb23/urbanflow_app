@@ -59,6 +59,14 @@ router.get('/', async (req, res) => {
   try {
     const userId = req.user.id;
     const { limit = 20, offset = 0, mode, startDate, endDate } = req.query;
+    const parsedLimit = parseInt(limit);
+    const parsedOffset = parseInt(offset);
+    if (isNaN(parsedLimit) || parsedLimit < 1) {
+      return res.status(400).json({ success: false, error: 'Limit must be a positive integer' });
+    }
+    if (isNaN(parsedOffset) || parsedOffset < 0) {
+      return res.status(400).json({ success: false, error: 'Offset must be a non-negative integer' });
+    }
     const where = { userId };
     if (mode) where.mode = mode;
     if (startDate || endDate) {
@@ -66,8 +74,8 @@ router.get('/', async (req, res) => {
       if (startDate) where.date[Op.gte] = new Date(startDate);
       if (endDate) where.date[Op.lte] = new Date(endDate);
     }
-    const { count, rows } = await Trip.findAndCountAll({ where, order: [['date', 'DESC']], limit: parseInt(limit), offset: parseInt(offset) });
-    res.json({ success: true, data: { trips: rows, total: count, limit: parseInt(limit), offset: parseInt(offset) } });
+    const { count, rows } = await Trip.findAndCountAll({ where, order: [['date', 'DESC']], limit: Math.min(parsedLimit, 100), offset: parsedOffset });
+    res.json({ success: true, data: { trips: rows, total: count, limit: Math.min(parsedLimit, 100), offset: parsedOffset } });
   } catch (error) {
     console.error('Error getting trips:', error);
     res.status(500).json({ success: false, error: error.message });

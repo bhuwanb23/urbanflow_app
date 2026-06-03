@@ -17,6 +17,29 @@ jest.mock('../utils/logger', () => ({
   debug: jest.fn()
 }));
 
+jest.mock('../utils/carbonCalculator', () => ({
+  compareModes: jest.fn().mockReturnValue([]),
+  calculateCarbonSaved: jest.fn().mockReturnValue(0),
+  getEcoScore: jest.fn().mockReturnValue({}),
+  calculateLegEmissions: jest.fn().mockReturnValue(0)
+}));
+
+jest.mock('../utils/modeMapper', () => ({
+  getAllModes: jest.fn().mockReturnValue([]),
+  getModeInfo: jest.fn().mockReturnValue({}),
+  isEcoFriendly: jest.fn().mockReturnValue(false)
+}));
+
+jest.mock('../utils/fareCalculator', () => ({
+  calculateTotalFare: jest.fn().mockReturnValue({ total: 0, breakdown: [] }),
+  applyTransferDiscount: jest.fn().mockReturnValue({ finalFare: 0, transferDiscount: 0, hasTransfer: false })
+}));
+
+jest.mock('../services/otpService', () => ({
+  planJourney: jest.fn().mockResolvedValue({}),
+  parseOTPResponse: jest.fn().mockReturnValue([])
+}));
+
 jest.mock('../models', () => {
   const mockUser = {
     id: 'user-1',
@@ -67,9 +90,26 @@ function createTestApp() {
   const app = express();
   app.use(express.json({ limit: '1mb' }));
   const authRouter = require('../routes/auth');
-
-  // Mock authenticate middleware
   app.use('/api/v1/auth', authRouter);
+
+  // Mock authenticate middleware to attach a fake user
+  app.use('/api/v1', (req, res, next) => {
+    req.user = { id: 'test-user-id', email: 'test@test.com' };
+    next();
+  });
+
+  const tripsRouter = require('../routes/trips');
+  const userRouter = require('../routes/user');
+  const notificationsRouter = require('../routes/notifications');
+  const ecostatsRouter = require('../routes/ecostats');
+  const planRouter = require('../routes/plan');
+
+  app.use('/api/v1/trips', tripsRouter);
+  app.use('/api/v1/user', userRouter);
+  app.use('/api/v1/notifications', notificationsRouter);
+  app.use('/api/v1/ecostats', ecostatsRouter);
+  app.use('/api/v1/plan', planRouter);
+
   return app;
 }
 
@@ -248,6 +288,35 @@ describe('Phase 1 — Backend Security Overhaul', () => {
         layer => layer.name === 'jsonParser'
       );
       expect(jsonMiddleware).toBeTruthy();
+    });
+  });
+});
+
+// ─── Phase 2 tests ─────────────────────────────────────────
+describe('Phase 2 — Backend Quality & Missing Features', () => {
+
+  describe('2.3 — Input validation', () => {
+
+    test('plan compare — rejects NaN distance', async () => {
+      const res = await request(app)
+        .get('/api/v1/plan/compare?distance=abc');
+      expect(res.status).toBe(400);
+      expect(res.body.error).toMatch(/positive number/);
+    });
+
+    test('plan compare — rejects negative distance', async () => {
+      const res = await request(app)
+        .get('/api/v1/plan/compare?distance=-5');
+      expect(res.status).toBe(400);
+      expect(res.body.error).toMatch(/positive number/);
+    });
+
+    test('plan compare — accepts valid distance', async () => {
+      const res = await request(app)
+        .get('/api/v1/plan/compare?distance=10');
+      // The route will try carbonCalculator.compareModes which may fail
+      // but we just want to verify it passes validation (not 400)
+      expect(res.status).not.toBe(400);
     });
   });
 });

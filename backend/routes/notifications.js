@@ -7,14 +7,15 @@ router.get('/', async (req, res) => {
   try {
     const userId = req.user.id;
     const { limit = 20, unreadOnly = false, type } = req.query;
+    const parsedLimit = Math.min(Math.max(parseInt(limit) || 20, 1), 100);
     const where = { userId };
     if (unreadOnly === 'true') where.read = false;
     if (type) where.category = type;
     const { count, rows } = await Notification.findAndCountAll({
-      where, order: [['createdAt', 'DESC']], limit: parseInt(limit)
+      where, order: [['createdAt', 'DESC']], limit: parsedLimit
     });
     const unreadCount = await Notification.count({ where: { userId, read: false } });
-    res.json({ success: true, data: { notifications: rows, total: count, unreadCount, limit: parseInt(limit) } });
+    res.json({ success: true, data: { notifications: rows, total: count, unreadCount, limit: parsedLimit } });
   } catch (error) {
     console.error('Error getting notifications:', error);
     res.status(500).json({ success: false, error: error.message });

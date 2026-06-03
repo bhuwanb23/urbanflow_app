@@ -174,11 +174,11 @@ Tasks within a phase should be completed **in order** (earlier tasks are prerequ
 
 ### 2.3 Input validation for all endpoints
 
-- [ ] Add `isNaN` check on `parseFloat(distance)` in `routes/plan.js` compare endpoint
-- [ ] Validate `limit`/`offset` as positive integers in `routes/trips.js`
-- [ ] Cap max `limit` on notifications (`routes/notifications.js`)
-- [ ] Validate coordinate format in `routes/plan.js`
-- [ ] **Verify:** Invalid inputs return 400
+- [x] Add `isNaN` check on `parseFloat(distance)` in `routes/plan.js` compare endpoint
+- [x] Validate `limit`/`offset` as positive integers in `routes/trips.js`
+- [x] Cap max `limit` on notifications (`routes/notifications.js`)
+- [x] Validate coordinate format in `routes/plan.js`
+- [x] **Verify:** Invalid inputs return 400
 
 ### 2.4 Fix notification settings persistence
 

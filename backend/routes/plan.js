@@ -196,6 +196,12 @@ router.get('/compare', (req, res, next) => {
     }
 
     const distanceKm = parseFloat(distance);
+    if (isNaN(distanceKm) || distanceKm <= 0) {
+      return res.status(400).json({
+        success: false,
+        error: 'Distance must be a positive number'
+      });
+    }
     const modes = ['bus', 'metro', 'walk', 'bicycle', 'car', 'auto'];
     
     const comparison = carbonCalculator.compareModes(distanceKm, modes);
