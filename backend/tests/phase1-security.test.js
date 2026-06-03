@@ -314,9 +314,97 @@ describe('Phase 2 — Backend Quality & Missing Features', () => {
     test('plan compare — accepts valid distance', async () => {
       const res = await request(app)
         .get('/api/v1/plan/compare?distance=10');
-      // The route will try carbonCalculator.compareModes which may fail
-      // but we just want to verify it passes validation (not 400)
       expect(res.status).not.toBe(400);
+    });
+  });
+
+  describe('2.1 — Password reset flow', () => {
+
+    beforeEach(() => {
+      jest.clearAllMocks();
+    });
+
+    test('forgot-password returns success even for unknown email', async () => {
+      User.findOne.mockResolvedValue(null);
+      const res = await request(app)
+        .post('/api/v1/auth/forgot-password')
+        .send({ email: 'unknown@test.com' });
+      expect(res.status).toBe(200);
+      expect(res.body.success).toBe(true);
+    });
+
+    test('forgot-password generates token for known user', async () => {
+      const mockUser = {
+        id: 'user-1',
+        email: 'known@test.com',
+        password: 'hash',
+        passwordResetToken: null,
+        passwordResetExpires: null,
+        save: jest.fn().mockResolvedValue(this)
+      };
+      User.findOne.mockResolvedValue(mockUser);
+      const res = await request(app)
+        .post('/api/v1/auth/forgot-password')
+        .send({ email: 'known@test.com' });
+      expect(res.status).toBe(200);
+      expect(mockUser.passwordResetToken).toBeTruthy();
+      expect(mockUser.passwordResetExpires).toBeTruthy();
+      expect(mockUser.save).toHaveBeenCalled();
+    });
+
+    test('forgot-password rejects missing email', async () => {
+      const res = await request(app)
+        .post('/api/v1/auth/forgot-password')
+        .send({});
+      expect(res.status).toBe(400);
+    });
+
+    test('reset-password rejects missing fields', async () => {
+      const res = await request(app)
+        .post('/api/v1/auth/reset-password')
+        .send({ email: 'x@x.com' });
+      expect(res.status).toBe(400);
+    });
+
+    test('reset-password rejects weak password', async () => {
+      const res = await request(app)
+        .post('/api/v1/auth/reset-password')
+        .send({ token: 'abc', email: 'x@x.com', password: 'short' });
+      expect(res.status).toBe(400);
+      expect(res.body.error).toMatch(/8 characters/);
+    });
+
+    test('reset-password rejects invalid token', async () => {
+      User.findOne.mockResolvedValue(null);
+      const res = await request(app)
+        .post('/api/v1/auth/reset-password')
+        .send({ token: 'invalid', email: 'x@x.com', password: 'ValidPass1!' });
+      expect(res.status).toBe(400);
+      expect(res.body.error).toMatch(/Invalid or expired/);
+    });
+
+    test('reset-password succeeds with valid token', async () => {
+      const crypto = require('crypto');
+      const realToken = crypto.randomBytes(32).toString('hex');
+      const hashedToken = crypto.createHash('sha256').update(realToken).digest('hex');
+
+      const mockUser = {
+        id: 'user-1',
+        email: 'reset@test.com',
+        password: 'oldhash',
+        passwordResetToken: hashedToken,
+        passwordResetExpires: new Date(Date.now() + 3600000),
+        save: jest.fn().mockResolvedValue(this)
+      };
+      User.findOne.mockResolvedValue(mockUser);
+
+      const res = await request(app)
+        .post('/api/v1/auth/reset-password')
+        .send({ token: realToken, email: 'reset@test.com', password: 'NewValidPass1!' });
+      expect(res.status).toBe(200);
+      expect(res.body.success).toBe(true);
+      expect(mockUser.passwordResetToken).toBeNull();
+      expect(mockUser.passwordResetExpires).toBeNull();
     });
   });
 });

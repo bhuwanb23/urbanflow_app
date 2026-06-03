@@ -1,8 +1,10 @@
 const express = require('express');
 const router = express.Router();
 const bcrypt = require('bcryptjs');
+const crypto = require('crypto');
 const jwt = require('jsonwebtoken');
 const rateLimit = require('express-rate-limit');
+const { Op } = require('sequelize');
 const logger = require('../utils/logger');
 const { User } = require('../models');
 const { registerSchema, loginSchema, validate } = require('../validators/auth');
@@ -164,6 +166,78 @@ router.post('/refresh', async (req, res) => {
   } catch (error) {
     console.error('Error refreshing token:', error);
     res.status(401).json({ success: false, error: 'Invalid or expired token' });
+  }
+});
+
+// Rate limiter for password reset
+const forgotPasswordLimiter = rateLimit({
+  windowMs: 60 * 60 * 1000,
+  max: 3,
+  message: { success: false, error: 'Too many password reset requests. Try again in an hour.' }
+});
+
+router.post('/forgot-password', forgotPasswordLimiter, async (req, res) => {
+  try {
+    const { email } = req.body;
+    if (!email) {
+      return res.status(400).json({ success: false, error: 'Email is required' });
+    }
+
+    const user = await User.findOne({ where: { email } });
+    // Always return success to avoid email enumeration
+    if (!user) {
+      return res.json({ success: true, message: 'If that email is registered, a reset link has been sent.' });
+    }
+
+    const resetToken = crypto.randomBytes(32).toString('hex');
+    const hashedToken = crypto.createHash('sha256').update(resetToken).digest('hex');
+
+    user.passwordResetToken = hashedToken;
+    user.passwordResetExpires = new Date(Date.now() + 60 * 60 * 1000); // 1 hour
+    await user.save();
+
+    const resetUrl = `${req.protocol}://${req.get('host')}/reset-password?token=${resetToken}&email=${email}`;
+    logger.info(`Password reset link for ${email}: ${resetUrl}`);
+
+    res.json({ success: true, message: 'If that email is registered, a reset link has been sent.' });
+  } catch (error) {
+    console.error('Error in forgot-password:', error);
+    res.status(500).json({ success: false, error: error.message });
+  }
+});
+
+router.post('/reset-password', async (req, res) => {
+  try {
+    const { token, email, password } = req.body;
+    if (!token || !email || !password) {
+      return res.status(400).json({ success: false, error: 'Token, email, and password are required' });
+    }
+
+    const passwordError = validatePassword(password);
+    if (passwordError) {
+      return res.status(400).json({ success: false, error: passwordError });
+    }
+
+    const hashedToken = crypto.createHash('sha256').update(token).digest('hex');
+    const user = await User.findOne({
+      where: { email, passwordResetToken: hashedToken, passwordResetExpires: { [Op.gt]: new Date() } }
+    });
+
+    if (!user) {
+      return res.status(400).json({ success: false, error: 'Invalid or expired reset token' });
+    }
+
+    const hashedPassword = await bcrypt.hash(password, 10);
+    user.password = hashedPassword;
+    user.passwordResetToken = null;
+    user.passwordResetExpires = null;
+    await user.save();
+
+    logger.info(`Password reset successful for: ${email}`);
+    res.json({ success: true, message: 'Password reset successful. You can now log in with your new password.' });
+  } catch (error) {
+    console.error('Error in reset-password:', error);
+    res.status(500).json({ success: false, error: error.message });
   }
 });
 

@@ -36,6 +36,14 @@ module.exports = (sequelize) => {
         notificationsEnabled: true
       }
     },
+    passwordResetToken: {
+      type: DataTypes.STRING,
+      allowNull: true
+    },
+    passwordResetExpires: {
+      type: DataTypes.DATE,
+      allowNull: true
+    },
     createdAt: {
       type: DataTypes.DATE,
       defaultValue: DataTypes.NOW

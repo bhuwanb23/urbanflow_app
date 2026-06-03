@@ -160,10 +160,10 @@ Tasks within a phase should be completed **in order** (earlier tasks are prerequ
 
 ### 2.1 Password reset & email verification
 
-- [ ] Add `POST /api/v1/auth/forgot-password` — generate reset token, store in DB (add `passwordResetToken`, `passwordResetExpires` fields to User model)
-- [ ] Add `POST /api/v1/auth/reset-password` — verify token, update password
-- [ ] Add email verification flow (optional — stub if no email service configured)
-- [ ] **Verify:** Reset flow works end-to-end (even if email is logged not sent)
+- [x] Add `POST /api/v1/auth/forgot-password` — generate reset token, store in DB (add `passwordResetToken`, `passwordResetExpires` fields to User model)
+- [x] Add `POST /api/v1/auth/reset-password` — verify token, update password
+- [x] Add email verification flow (optional — stub if no email service configured)
+- [x] **Verify:** Reset flow works end-to-end (even if email is logged not sent)
 
 ### 2.2 Token blacklisting
 
