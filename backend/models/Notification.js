@@ -41,7 +41,10 @@ module.exports = (sequelize) => {
     }
   }, {
     tableName: 'notifications',
-    timestamps: true
+    timestamps: true,
+    indexes: [
+      { fields: ['userId'] }
+    ]
   });
 
   Notification.associate = (models) => {

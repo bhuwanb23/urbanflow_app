@@ -72,7 +72,10 @@ module.exports = (sequelize) => {
     }
   }, {
     tableName: 'trips',
-    timestamps: true
+    timestamps: true,
+    indexes: [
+      { fields: ['userId'] }
+    ]
   });
 
   Trip.associate = (models) => {

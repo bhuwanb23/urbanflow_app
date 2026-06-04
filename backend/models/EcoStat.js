@@ -50,7 +50,10 @@ module.exports = (sequelize) => {
     }
   }, {
     tableName: 'ecostats',
-    timestamps: true
+    timestamps: true,
+    indexes: [
+      { fields: ['userId'] }
+    ]
   });
 
   EcoStat.associate = (models) => {
