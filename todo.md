@@ -224,7 +224,7 @@ Tasks within a phase should be completed **in order** (earlier tasks are prerequ
 ### 2.10 Consistent logging
 
 - [x] Replace all `console.log`/`console.error`/`console.warn` in services and routes with Winston logger
-- [ ] Add HTTP request logging via `morgan` (installed, wired to Winston)
+- [x] Add HTTP request logging via `morgan` (installed, wired to Winston)
 - [x] **Verify:** All log output goes through Winston (check `logs/combined.log`)
 
 ### 2.11 Index foreign keys
