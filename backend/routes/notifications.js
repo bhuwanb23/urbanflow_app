@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const { Op } = require('sequelize');
 const { Notification, User } = require('../models');
+const logger = require('../utils/logger');
 
 router.get('/', async (req, res) => {
   try {
@@ -17,7 +18,7 @@ router.get('/', async (req, res) => {
     const unreadCount = await Notification.count({ where: { userId, read: false } });
     res.json({ success: true, data: { notifications: rows, total: count, unreadCount, limit: parsedLimit } });
   } catch (error) {
-    console.error('Error getting notifications:', error);
+    logger.error('Error getting notifications:', error);
     res.status(500).json({ success: false, error: error.message });
   }
 });
@@ -33,7 +34,7 @@ router.get('/settings', async (req, res) => {
     const settings = user?.notificationSettings || defaults;
     res.json({ success: true, data: settings });
   } catch (error) {
-    console.error('Error getting notification settings:', error);
+    logger.error('Error getting notification settings:', error);
     res.status(500).json({ success: false, error: error.message });
   }
 });
@@ -48,7 +49,7 @@ router.put('/settings', async (req, res) => {
     await user.save();
     res.json({ success: true, data: user.notificationSettings, message: 'Notification settings updated successfully' });
   } catch (error) {
-    console.error('Error updating notification settings:', error);
+    logger.error('Error updating notification settings:', error);
     res.status(500).json({ success: false, error: error.message });
   }
 });
@@ -62,7 +63,7 @@ router.get('/:id', async (req, res) => {
     }
     res.json({ success: true, data: notification });
   } catch (error) {
-    console.error('Error getting notification:', error);
+    logger.error('Error getting notification:', error);
     res.status(500).json({ success: false, error: error.message });
   }
 });
@@ -77,7 +78,7 @@ router.put('/:id/read', async (req, res) => {
     await notification.update({ read: true });
     res.json({ success: true, data: notification, message: 'Notification marked as read' });
   } catch (error) {
-    console.error('Error marking notification as read:', error);
+    logger.error('Error marking notification as read:', error);
     res.status(500).json({ success: false, error: error.message });
   }
 });
@@ -88,7 +89,7 @@ router.put('/read-all', async (req, res) => {
     await Notification.update({ read: true }, { where: { userId, read: false } });
     res.json({ success: true, message: 'All notifications marked as read' });
   } catch (error) {
-    console.error('Error marking all notifications as read:', error);
+    logger.error('Error marking all notifications as read:', error);
     res.status(500).json({ success: false, error: error.message });
   }
 });
@@ -103,7 +104,7 @@ router.delete('/:id', async (req, res) => {
     await notification.destroy();
     res.json({ success: true, message: 'Notification deleted successfully' });
   } catch (error) {
-    console.error('Error deleting notification:', error);
+    logger.error('Error deleting notification:', error);
     res.status(500).json({ success: false, error: error.message });
   }
 });

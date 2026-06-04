@@ -5,6 +5,7 @@
 
 const express = require('express');
 const router = express.Router();
+const logger = require('../utils/logger');
 
 /**
  * @route   GET /api/v1/traffic
@@ -112,7 +113,7 @@ router.get('/', (req, res) => {
       data: trafficData
     });
   } catch (error) {
-    console.error('Error getting traffic data:', error);
+    logger.error('Error getting traffic data:', error);
     res.status(500).json({
       success: false,
       error: error.message

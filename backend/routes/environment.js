@@ -5,6 +5,7 @@
 
 const express = require('express');
 const router = express.Router();
+const logger = require('../utils/logger');
 
 /**
  * @route   GET /api/v1/environment/aqi
@@ -71,7 +72,7 @@ router.get('/aqi', (req, res) => {
       data: aqiData
     });
   } catch (error) {
-    console.error('Error getting AQI:', error);
+    logger.error('Error getting AQI:', error);
     res.status(500).json({
       success: false,
       error: error.message

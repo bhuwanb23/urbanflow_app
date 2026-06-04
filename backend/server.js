@@ -4,6 +4,7 @@ const https = require('https');
 const fs = require('fs');
 const helmet = require('helmet');
 const compression = require('compression');
+const morgan = require('morgan');
 const rateLimit = require('express-rate-limit');
 require('dotenv').config();
 
@@ -56,6 +57,14 @@ app.use(cors({
   origin: process.env.CORS_ORIGIN || '*',
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
   allowedHeaders: ['Content-Type', 'Authorization']
+}));
+
+// HTTP request logging via morgan (stream to Winston)
+app.use(morgan('combined', {
+  stream: {
+    write: (message) => logger.info(message.trim())
+  },
+  skip: () => process.env.NODE_ENV === 'test'
 }));
 
 // Rate limiting

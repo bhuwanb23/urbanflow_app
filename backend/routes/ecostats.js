@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const { Op } = require('sequelize');
 const { Trip, EcoStat } = require('../models');
+const logger = require('../utils/logger');
 
 const getPeriodRange = (period) => {
   const now = new Date();
@@ -80,7 +81,7 @@ router.get('/', async (req, res) => {
     const stats = await computeStats(userId, period);
     res.json({ success: true, data: stats });
   } catch (error) {
-    console.error('Error getting eco stats:', error);
+    logger.error('Error getting eco stats:', error);
     res.status(500).json({ success: false, error: error.message });
   }
 });
@@ -91,7 +92,7 @@ router.get('/weekly', async (req, res) => {
     const stats = await computeStats(userId, 'week');
     res.json({ success: true, data: stats });
   } catch (error) {
-    console.error('Error getting weekly eco stats:', error);
+    logger.error('Error getting weekly eco stats:', error);
     res.status(500).json({ success: false, error: error.message });
   }
 });
@@ -102,7 +103,7 @@ router.get('/monthly', async (req, res) => {
     const stats = await computeStats(userId, 'month');
     res.json({ success: true, data: stats });
   } catch (error) {
-    console.error('Error getting monthly eco stats:', error);
+    logger.error('Error getting monthly eco stats:', error);
     res.status(500).json({ success: false, error: error.message });
   }
 });
@@ -143,7 +144,7 @@ router.get('/achievements', async (req, res) => {
       data: { achievements: computed, summary: { total: computed.length, unlocked: unlocked.length, locked: computed.length - unlocked.length, completionRate: Math.round((unlocked.length / computed.length) * 100) } }
     });
   } catch (error) {
-    console.error('Error getting achievements:', error);
+    logger.error('Error getting achievements:', error);
     res.status(500).json({ success: false, error: error.message });
   }
 });
@@ -164,7 +165,7 @@ router.get('/summary', async (req, res) => {
       }
     });
   } catch (error) {
-    console.error('Error getting summary:', error);
+    logger.error('Error getting summary:', error);
     res.status(500).json({ success: false, error: error.message });
   }
 });

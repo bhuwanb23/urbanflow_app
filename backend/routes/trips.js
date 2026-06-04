@@ -3,6 +3,7 @@ const router = express.Router();
 const { Op } = require('sequelize');
 const { Trip } = require('../models');
 const { createTripSchema, updateTripSchema, validate } = require('../validators/trip');
+const logger = require('../utils/logger');
 
 router.get('/stats', async (req, res) => {
   try {
@@ -50,7 +51,7 @@ router.get('/stats', async (req, res) => {
 
     res.json({ success: true, data: stats });
   } catch (error) {
-    console.error('Error getting trip stats:', error);
+    logger.error('Error getting trip stats:', error);
     res.status(500).json({ success: false, error: error.message });
   }
 });
@@ -77,7 +78,7 @@ router.get('/', async (req, res) => {
     const { count, rows } = await Trip.findAndCountAll({ where, order: [['date', 'DESC']], limit: Math.min(parsedLimit, 100), offset: parsedOffset });
     res.json({ success: true, data: { trips: rows, total: count, limit: Math.min(parsedLimit, 100), offset: parsedOffset } });
   } catch (error) {
-    console.error('Error getting trips:', error);
+    logger.error('Error getting trips:', error);
     res.status(500).json({ success: false, error: error.message });
   }
 });
@@ -88,7 +89,7 @@ router.get('/:id', async (req, res) => {
     if (!trip) return res.status(404).json({ success: false, error: 'Trip not found' });
     res.json({ success: true, data: trip });
   } catch (error) {
-    console.error('Error getting trip:', error);
+    logger.error('Error getting trip:', error);
     res.status(500).json({ success: false, error: error.message });
   }
 });
@@ -108,7 +109,7 @@ router.post('/', validate(createTripSchema), async (req, res) => {
     });
     res.status(201).json({ success: true, data: trip, message: 'Trip created successfully' });
   } catch (error) {
-    console.error('Error creating trip:', error);
+    logger.error('Error creating trip:', error);
     res.status(500).json({ success: false, error: error.message });
   }
 });
@@ -123,7 +124,7 @@ router.put('/:id', async (req, res) => {
     await trip.update(req.body);
     res.json({ success: true, data: trip, message: 'Trip updated successfully' });
   } catch (error) {
-    console.error('Error updating trip:', error);
+    logger.error('Error updating trip:', error);
     res.status(500).json({ success: false, error: error.message });
   }
 });
@@ -138,7 +139,7 @@ router.delete('/:id', async (req, res) => {
     await trip.destroy();
     res.json({ success: true, message: 'Trip deleted successfully' });
   } catch (error) {
-    console.error('Error deleting trip:', error);
+    logger.error('Error deleting trip:', error);
     res.status(500).json({ success: false, error: error.message });
   }
 });

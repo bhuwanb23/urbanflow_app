@@ -4,6 +4,7 @@
  */
 
 const path = require('path');
+const logger = require('./logger');
 
 class CityManager {
   constructor() {
@@ -99,7 +100,7 @@ class CityManager {
       active: true,
       registeredAt: Date.now()
     });
-    console.log(`✅ Registered city: ${config.displayName} (${cityId})`);
+    logger.info(`✅ Registered city: ${config.displayName} (${cityId})`);
   }
 
   /**
@@ -151,7 +152,7 @@ class CityManager {
       await this.dataLoader.loadAll();
     }
 
-    console.log(`🌆 Switched to city: ${city.displayName}`);
+    logger.info(`🌆 Switched to city: ${city.displayName}`);
     return city;
   }
 

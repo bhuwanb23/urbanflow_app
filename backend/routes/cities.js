@@ -8,6 +8,7 @@
 const express = require('express');
 const router = express.Router();
 const cityManager = require('../utils/cityManager');
+const logger = require('../utils/logger');
 
 /**
  * @route   GET /api/v1/cities
@@ -37,7 +38,7 @@ router.get('/', async (req, res) => {
       }
     });
   } catch (error) {
-    console.error('Error getting cities:', error);
+    logger.error('Error getting cities:', error);
     res.status(500).json({
       success: false,
       error: error.message
@@ -71,7 +72,7 @@ router.get('/:cityId', async (req, res) => {
       }
     });
   } catch (error) {
-    console.error(`Error getting city ${req.params.cityId}:`, error);
+    logger.error(`Error getting city ${req.params.cityId}:`, error);
     res.status(500).json({
       success: false,
       error: error.message
@@ -104,7 +105,7 @@ router.post('/switch', async (req, res) => {
       }
     });
   } catch (error) {
-    console.error('Error switching city:', error);
+    logger.error('Error switching city:', error);
     res.status(400).json({
       success: false,
       error: error.message
@@ -132,7 +133,7 @@ router.get('/current/info', (req, res) => {
       data: currentCity
     });
   } catch (error) {
-    console.error('Error getting current city:', error);
+    logger.error('Error getting current city:', error);
     res.status(500).json({
       success: false,
       error: error.message

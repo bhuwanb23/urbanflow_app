@@ -202,17 +202,17 @@ Tasks within a phase should be completed **in order** (earlier tasks are prerequ
 
 ### 2.7 Fix search performance
 
-- [ ] Move Fuse.js instantiation to module level (not per request) in `routes/search.js`
-- [ ] Rebuild index only when data changes (not on every request)
-- [ ] **Verify:** Search response time drops from ~200ms to <10ms
+- [x] Move Fuse.js instantiation to module level (not per request) in `routes/search.js`
+- [x] Rebuild index only when data changes (not on every request)
+- [x] **Verify:** Search response time drops from ~200ms to <10ms
 
 ### 2.8 Add graceful shutdown
 
-- [ ] Add `process.on('SIGTERM')` and `SIGINT` handlers in `server.js`
-- [ ] Close Sequelize connection
-- [ ] Stop auto-refresh intervals in all services
-- [ ] Log shutdown event
-- [ ] **Verify:** `CTRL+C` logs clean shutdown messages
+- [x] Add `process.on('SIGTERM')` and `SIGINT` handlers in `server.js`
+- [x] Close Sequelize connection
+- [x] Stop auto-refresh intervals in all services
+- [x] Log shutdown event
+- [x] **Verify:** `CTRL+C` logs clean shutdown messages
 
 ### 2.9 Fix service interval leaks
 
@@ -223,14 +223,14 @@ Tasks within a phase should be completed **in order** (earlier tasks are prerequ
 
 ### 2.10 Consistent logging
 
-- [ ] Replace all `console.log`/`console.error`/`console.warn` in services and routes with Winston logger
+- [x] Replace all `console.log`/`console.error`/`console.warn` in services and routes with Winston logger
 - [ ] Add HTTP request logging via `morgan` (installed, wired to Winston)
-- [ ] **Verify:** All log output goes through Winston (check `logs/combined.log`)
+- [x] **Verify:** All log output goes through Winston (check `logs/combined.log`)
 
 ### 2.11 Index foreign keys
 
-- [ ] Add Sequelize index definitions on `userId` in Trip, Notification, EcoStat models
-- [ ] **Verify:** No performance regression on user-scoped queries
+- [x] Add Sequelize index definitions on `userId` in Trip, Notification, EcoStat models
+- [x] **Verify:** No performance regression on user-scoped queries
 
 ---
 

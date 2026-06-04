@@ -77,7 +77,7 @@ router.post('/register', registerLimiter, validate(registerSchema), async (req, 
     const { password: _, ...userData } = user.toJSON();
     res.status(201).json({ success: true, data: { token, user: userData }, message: 'User registered successfully' });
   } catch (error) {
-    console.error('Error registering user:', error);
+    logger.error('Error registering user:', error);
     res.status(500).json({ success: false, error: error.message });
   }
 });
@@ -121,7 +121,7 @@ router.post('/login', loginLimiter, validate(loginSchema), async (req, res) => {
     const { password: _, ...userData } = user.toJSON();
     res.json({ success: true, data: { token, user: userData }, message: 'Login successful' });
   } catch (error) {
-    console.error('Error logging in user:', error);
+    logger.error('Error logging in user:', error);
     res.status(500).json({ success: false, error: error.message });
   }
 });
@@ -141,7 +141,7 @@ router.post('/verify', async (req, res) => {
     const { password: _, ...userData } = user.toJSON();
     res.json({ success: true, data: userData });
   } catch (error) {
-    console.error('Error verifying token:', error);
+    logger.error('Error verifying token:', error);
     res.status(401).json({ success: false, error: 'Invalid or expired token' });
   }
 });
@@ -156,7 +156,7 @@ router.post('/logout', async (req, res) => {
     }
     res.json({ success: true, message: 'Logged out successfully.' });
   } catch (error) {
-    console.error('Error in logout:', error);
+    logger.error('Error in logout:', error);
     res.status(500).json({ success: false, error: error.message });
   }
 });
@@ -176,7 +176,7 @@ router.post('/refresh', async (req, res) => {
     const newToken = generateToken(user);
     res.json({ success: true, data: { token: newToken } });
   } catch (error) {
-    console.error('Error refreshing token:', error);
+    logger.error('Error refreshing token:', error);
     res.status(401).json({ success: false, error: 'Invalid or expired token' });
   }
 });
@@ -213,7 +213,7 @@ router.post('/forgot-password', forgotPasswordLimiter, async (req, res) => {
 
     res.json({ success: true, message: 'If that email is registered, a reset link has been sent.' });
   } catch (error) {
-    console.error('Error in forgot-password:', error);
+    logger.error('Error in forgot-password:', error);
     res.status(500).json({ success: false, error: error.message });
   }
 });
@@ -248,7 +248,7 @@ router.post('/reset-password', async (req, res) => {
     logger.info(`Password reset successful for: ${email}`);
     res.json({ success: true, message: 'Password reset successful. You can now log in with your new password.' });
   } catch (error) {
-    console.error('Error in reset-password:', error);
+    logger.error('Error in reset-password:', error);
     res.status(500).json({ success: false, error: error.message });
   }
 });

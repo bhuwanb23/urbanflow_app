@@ -11,6 +11,7 @@
 const fs = require('fs');
 const path = require('path');
 const gtfsRealtimeBindings = require('gtfs-realtime-bindings');
+const logger = require('../utils/logger');
 
 class GtfsRealtimeParser {
   constructor() {
@@ -27,7 +28,7 @@ class GtfsRealtimeParser {
       const feed = gtfsRealtimeBindings.transit_realtime.FeedMessage.decode(protobufBuffer);
       
       if (!feed.entity || !Array.isArray(feed.entity)) {
-        console.warn('Invalid VehiclePositions feed structure');
+        logger.warn('Invalid VehiclePositions feed structure');
         return [];
       }
 
@@ -54,10 +55,10 @@ class GtfsRealtimeParser {
         })
         .filter(v => v.latitude !== null && v.longitude !== null); // Only valid positions
 
-      console.log(`Parsed ${vehicles.length} vehicle positions`);
+      logger.info(`Parsed ${vehicles.length} vehicle positions`);
       return vehicles;
     } catch (error) {
-      console.error('Error parsing VehiclePositions:', error.message);
+      logger.error('Error parsing VehiclePositions:', error.message);
       return [];
     }
   }
@@ -72,7 +73,7 @@ class GtfsRealtimeParser {
       const feed = gtfsRealtimeBindings.transit_realtime.FeedMessage.decode(protobufBuffer);
       
       if (!feed.entity || !Array.isArray(feed.entity)) {
-        console.warn('Invalid TripUpdates feed structure');
+        logger.warn('Invalid TripUpdates feed structure');
         return [];
       }
 
@@ -110,10 +111,10 @@ class GtfsRealtimeParser {
           });
         });
 
-      console.log(`Parsed ${updates.length} trip updates`);
+      logger.info(`Parsed ${updates.length} trip updates`);
       return updates;
     } catch (error) {
-      console.error('Error parsing TripUpdates:', error.message);
+      logger.error('Error parsing TripUpdates:', error.message);
       return [];
     }
   }
@@ -128,7 +129,7 @@ class GtfsRealtimeParser {
       const feed = gtfsRealtimeBindings.transit_realtime.FeedMessage.decode(protobufBuffer);
       
       if (!feed.entity || !Array.isArray(feed.entity)) {
-        console.warn('Invalid Alerts feed structure');
+        logger.warn('Invalid Alerts feed structure');
         return [];
       }
 
@@ -171,10 +172,10 @@ class GtfsRealtimeParser {
           };
         });
 
-      console.log(`Parsed ${alerts.length} service alerts`);
+      logger.info(`Parsed ${alerts.length} service alerts`);
       return alerts;
     } catch (error) {
-      console.error('Error parsing Alerts:', error.message);
+      logger.error('Error parsing Alerts:', error.message);
       return [];
     }
   }
@@ -197,11 +198,11 @@ class GtfsRealtimeParser {
         case 'alert':
           return this.parseAlerts(buffer);
         default:
-          console.error('Unknown feed type:', feedType);
+          logger.error('Unknown feed type:', feedType);
           return [];
       }
     } catch (error) {
-      console.error('Error loading feed from file:', error.message);
+      logger.error('Error loading feed from file:', error.message);
       return [];
     }
   }
