@@ -196,9 +196,9 @@ Tasks within a phase should be completed **in order** (earlier tasks are prerequ
 
 ### 2.6 Add missing transport modes
 
-- [ ] Update `utils/carbonCalculator.js`: add `electric_car`, `e_rickshaw`, `scooter`, `electric_scooter`, `shared_bicycle`, `cable_car`
-- [ ] Update `utils/modeMapper.js`: add same modes with appropriate Material Community Icons and colors
-- [ ] **Verify:** All new modes appear in `GET /api/v1/plan/modes`
+- [x] Update `utils/carbonCalculator.js`: add `electric_car`, `e_rickshaw`, `scooter`, `electric_scooter`, `shared_bicycle`, `cable_car`
+- [x] Update `utils/modeMapper.js`: add same modes with appropriate Material Community Icons and colors
+- [x] **Verify:** All new modes appear in `GET /api/v1/plan/modes`
 
 ### 2.7 Fix search performance
 

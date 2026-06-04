@@ -16,9 +16,15 @@ const EMISSION_FACTORS = {
   bicycle: 0.0,    // Zero emissions
   bike: 0.0,       // Zero emissions
   car: 0.192,      // Private car baseline (petrol)
+  electric_car: 0.050, // Electric car (grid avg)
   auto: 0.115,     // Auto-rickshaw (2-stroke)
+  e_rickshaw: 0.030, // E-rickshaw (electric 3-wheeler)
   taxi: 0.165,     // Taxi/ride-share
-  motorcycle: 0.103 // Motorcycle
+  motorcycle: 0.103, // Motorcycle
+  scooter: 0.070,  // Petrol scooter
+  electric_scooter: 0.020, // Electric scooter
+  shared_bicycle: 0.0, // Shared bicycle (zero)
+  cable_car: 0.020  // Cable car / gondola
 };
 
 /**

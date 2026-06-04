@@ -79,6 +79,50 @@ const MODE_MAPPING = {
     bgColor: '#FFECD5',    // orange-100
     label: 'Auto',
     category: 'commercial'
+  },
+
+  // New transport modes
+  'ELECTRIC_CAR': {
+    icon: 'car-electric',
+    color: '#22c55e',      // green-500
+    bgColor: '#DCFCE7',    // green-100
+    label: 'Electric Car',
+    category: 'private'
+  },
+  'E_RICKSHAW': {
+    icon: 'auto-rickshaw',
+    color: '#14b8a6',      // teal-500
+    bgColor: '#CCFBF1',    // teal-100
+    label: 'E-Rickshaw',
+    category: 'commercial'
+  },
+  'SCOOTER': {
+    icon: 'motorbike',
+    color: '#a855f7',      // purple-500
+    bgColor: '#F3E8FF',    // purple-100
+    label: 'Scooter',
+    category: 'private'
+  },
+  'ELECTRIC_SCOOTER': {
+    icon: 'motorbike-electric',
+    color: '#10b981',      // emerald-500
+    bgColor: '#D1FAE5',    // emerald-100
+    label: 'E-Scooter',
+    category: 'private'
+  },
+  'SHARED_BICYCLE': {
+    icon: 'bicycle',
+    color: '#0ea5e9',      // sky-500
+    bgColor: '#E0F2FE',    // sky-100
+    label: 'Shared Cycle',
+    category: 'active'
+  },
+  'CABLE_CAR': {
+    icon: 'cable-car',
+    color: '#eab308',      // yellow-500
+    bgColor: '#FEF9C3',    // yellow-100
+    label: 'Cable Car',
+    category: 'transit'
   }
 };
 
