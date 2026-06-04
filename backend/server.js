@@ -35,6 +35,11 @@ const liveDelaysRouter = require('./routes/liveDelays');
 const liveAlertsRouter = require('./routes/liveAlerts');
 const livePredictionsRouter = require('./routes/livePredictions');
 
+// Import Phase 4 services (for cleanup)
+const vehiclePositionService = require('./services/vehiclePositionService');
+const tripUpdateService = require('./services/tripUpdateService');
+const alertsService = require('./services/alertsService');
+
 // Initialize Express app
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -235,6 +240,10 @@ let server;
 async function shutdown(signal) {
   logger.info(`${signal} received — starting graceful shutdown...`);
   try {
+    vehiclePositionService.stopAutoRefresh();
+    tripUpdateService.stopAutoRefresh();
+    alertsService.stopAutoRefresh();
+
     if (server) {
       await new Promise((resolve) => server.close(resolve));
       logger.info('HTTP/HTTPS server closed');

@@ -13,6 +13,7 @@ class TripUpdateService {
     this.lastUpdated = null;
     this.nextUpdate = null;
     this.updateInterval = 30000; // 30 seconds
+    this._refreshIntervalId = null;
     
     // Support multiple GTFS-RT sources
     this.apiSource = process.env.GTFS_RT_SOURCE || 'delhi';
@@ -170,7 +171,7 @@ class TripUpdateService {
    * Start automatic refresh of trip updates
    */
   startAutoRefresh() {
-    setInterval(async () => {
+    this._refreshIntervalId = setInterval(async () => {
       try {
         await this.fetchTripUpdates();
       } catch (error) {
@@ -179,6 +180,14 @@ class TripUpdateService {
     }, this.updateInterval);
 
     logger.info('Trip update auto-refresh started');
+  }
+
+  stopAutoRefresh() {
+    if (this._refreshIntervalId) {
+      clearInterval(this._refreshIntervalId);
+      this._refreshIntervalId = null;
+      logger.info('Trip update auto-refresh stopped');
+    }
   }
 
   /**

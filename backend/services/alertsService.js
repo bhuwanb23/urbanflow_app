@@ -13,6 +13,7 @@ class AlertsService {
     this.lastUpdated = null;
     this.nextUpdate = null;
     this.updateInterval = 60000; // 1 minute (alerts change less frequently)
+    this._refreshIntervalId = null;
     this.dultApiUrl = process.env.DULT_ALERTS_URL || '';
     this.dultApiKey = process.env.DULT_API_KEY || '';
     
@@ -166,7 +167,7 @@ class AlertsService {
    * Start automatic refresh of alerts
    */
   startAutoRefresh() {
-    setInterval(async () => {
+    this._refreshIntervalId = setInterval(async () => {
       try {
         await this.fetchAlerts();
       } catch (error) {
@@ -175,6 +176,14 @@ class AlertsService {
     }, this.updateInterval);
 
     logger.info('Alerts auto-refresh started');
+  }
+
+  stopAutoRefresh() {
+    if (this._refreshIntervalId) {
+      clearInterval(this._refreshIntervalId);
+      this._refreshIntervalId = null;
+      logger.info('Alerts auto-refresh stopped');
+    }
   }
 
   /**

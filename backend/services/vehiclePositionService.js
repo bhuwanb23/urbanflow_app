@@ -13,6 +13,7 @@ class VehiclePositionService {
     this.lastUpdated = null;
     this.nextUpdate = null;
     this.updateInterval = 30000; // 30 seconds
+    this._refreshIntervalId = null;
     
     // Support multiple GTFS-RT sources
     this.apiSource = process.env.GTFS_RT_SOURCE || 'delhi';
@@ -159,7 +160,7 @@ class VehiclePositionService {
    * Start automatic refresh of vehicle positions
    */
   startAutoRefresh() {
-    setInterval(async () => {
+    this._refreshIntervalId = setInterval(async () => {
       try {
         await this.fetchVehiclePositions();
       } catch (error) {
@@ -168,6 +169,14 @@ class VehiclePositionService {
     }, this.updateInterval);
 
     logger.info('Vehicle position auto-refresh started');
+  }
+
+  stopAutoRefresh() {
+    if (this._refreshIntervalId) {
+      clearInterval(this._refreshIntervalId);
+      this._refreshIntervalId = null;
+      logger.info('Vehicle position auto-refresh stopped');
+    }
   }
 
   /**
