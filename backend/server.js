@@ -10,7 +10,7 @@ require('dotenv').config();
 const logger = require('./utils/logger');
 const DataLoader = require('./utils/DataLoader');
 const cityManager = require('./utils/cityManager');
-const { initializeDatabase } = require('./models');
+const { initializeDatabase, sequelize } = require('./models');
 const { authenticate } = require('./middleware/auth');
 
 // Import routes
@@ -230,6 +230,25 @@ function validateEnv() {
   }
 }
 
+let server;
+
+async function shutdown(signal) {
+  logger.info(`${signal} received — starting graceful shutdown...`);
+  try {
+    if (server) {
+      await new Promise((resolve) => server.close(resolve));
+      logger.info('HTTP/HTTPS server closed');
+    }
+    await sequelize.close();
+    logger.info('Database connection closed');
+    logger.info('Graceful shutdown complete');
+    process.exit(0);
+  } catch (error) {
+    logger.error('Error during shutdown:', error);
+    process.exit(1);
+  }
+}
+
 // Start server
 async function startServer() {
   try {
@@ -245,7 +264,6 @@ async function startServer() {
     // Start listening (HTTPS if certs provided, HTTP otherwise)
     const sslCertPath = process.env.SSL_CERT_PATH;
     const sslKeyPath = process.env.SSL_KEY_PATH;
-    let server;
     if (sslCertPath && sslKeyPath) {
       const credentials = {
         cert: fs.readFileSync(sslCertPath),
@@ -266,6 +284,9 @@ async function startServer() {
         logger.info(`API info: http://localhost:${PORT}/api/v1`);
       });
     }
+
+    process.on('SIGTERM', () => shutdown('SIGTERM'));
+    process.on('SIGINT', () => shutdown('SIGINT'));
   } catch (error) {
     logger.error('Failed to start server:', error);
     process.exit(1);
