@@ -44,6 +44,15 @@ module.exports = (sequelize) => {
       type: DataTypes.DATE,
       allowNull: true
     },
+    notificationSettings: {
+      type: DataTypes.JSON,
+      defaultValue: {
+        enabled: true,
+        categories: { alerts: true, disruptions: true, achievements: true, reminders: true, weather: true, promotions: false },
+        pushEnabled: true, emailEnabled: false, smsEnabled: false,
+        quietHours: { enabled: true, start: '22:00', end: '07:00' }
+      }
+    },
     createdAt: {
       type: DataTypes.DATE,
       defaultValue: DataTypes.NOW

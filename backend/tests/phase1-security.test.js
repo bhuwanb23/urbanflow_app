@@ -439,4 +439,49 @@ describe('Phase 2 — Backend Quality & Missing Features', () => {
       expect(tripsRes.body.error).toMatch(/invalidated/);
     });
   });
+
+  describe('2.4 — Notification settings persistence', () => {
+
+    beforeEach(() => {
+      jest.clearAllMocks();
+    });
+
+    test('GET /settings returns defaults for user without settings', async () => {
+      User.findByPk.mockResolvedValue({ notificationSettings: null });
+      const token = require('jsonwebtoken').sign({ id: 'u1' }, 'test-secret-key-for-jest');
+      const res = await request(app)
+        .get('/api/v1/notifications/settings')
+        .set('Authorization', `Bearer ${token}`);
+      expect(res.status).toBe(200);
+      expect(res.body.data.enabled).toBe(true);
+    });
+
+    test('GET /settings returns saved settings', async () => {
+      User.findByPk.mockResolvedValue({
+        notificationSettings: { enabled: false, pushEnabled: false }
+      });
+      const token = require('jsonwebtoken').sign({ id: 'u1' }, 'test-secret-key-for-jest');
+      const res = await request(app)
+        .get('/api/v1/notifications/settings')
+        .set('Authorization', `Bearer ${token}`);
+      expect(res.status).toBe(200);
+      expect(res.body.data.enabled).toBe(false);
+    });
+
+    test('PUT /settings persists to database', async () => {
+      const mockUser = {
+        notificationSettings: { enabled: true, pushEnabled: true },
+        save: jest.fn().mockResolvedValue()
+      };
+      User.findByPk.mockResolvedValue(mockUser);
+      const token = require('jsonwebtoken').sign({ id: 'u1' }, 'test-secret-key-for-jest');
+      const res = await request(app)
+        .put('/api/v1/notifications/settings')
+        .set('Authorization', `Bearer ${token}`)
+        .send({ enabled: false });
+      expect(res.status).toBe(200);
+      expect(mockUser.notificationSettings.enabled).toBe(false);
+      expect(mockUser.save).toHaveBeenCalled();
+    });
+  });
 });

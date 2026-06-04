@@ -182,10 +182,10 @@ Tasks within a phase should be completed **in order** (earlier tasks are prerequ
 
 ### 2.4 Fix notification settings persistence
 
-- [ ] Add `NotificationSettings` model or add `notificationSettings` JSON field to User model
-- [ ] `GET /settings` reads from database
-- [ ] `PUT /settings` persists to database
-- [ ] **Verify:** Settings survive server restart
+- [x] Add `notificationSettings` JSON field to User model
+- [x] `GET /settings` reads from database
+- [x] `PUT /settings` persists to database
+- [x] **Verify:** Settings survive server restart
 
 ### 2.5 Fix multi-city fare calculator
 

@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const { Op } = require('sequelize');
-const { Notification } = require('../models');
+const { Notification, User } = require('../models');
 
 router.get('/', async (req, res) => {
   try {
@@ -24,13 +24,14 @@ router.get('/', async (req, res) => {
 
 router.get('/settings', async (req, res) => {
   try {
-    const userId = req.user.id;
+    const user = await User.findByPk(req.user.id);
     const defaults = {
       enabled: true, categories: { alerts: true, disruptions: true, achievements: true, reminders: true, weather: true, promotions: false },
       pushEnabled: true, emailEnabled: false, smsEnabled: false,
       quietHours: { enabled: true, start: '22:00', end: '07:00' }
     };
-    res.json({ success: true, data: defaults });
+    const settings = user?.notificationSettings || defaults;
+    res.json({ success: true, data: settings });
   } catch (error) {
     console.error('Error getting notification settings:', error);
     res.status(500).json({ success: false, error: error.message });
@@ -39,8 +40,13 @@ router.get('/settings', async (req, res) => {
 
 router.put('/settings', async (req, res) => {
   try {
-    const userId = req.user.id;
-    res.json({ success: true, data: req.body, message: 'Notification settings updated successfully' });
+    const user = await User.findByPk(req.user.id);
+    if (!user) {
+      return res.status(404).json({ success: false, error: 'User not found' });
+    }
+    user.notificationSettings = { ...user.notificationSettings, ...req.body };
+    await user.save();
+    res.json({ success: true, data: user.notificationSettings, message: 'Notification settings updated successfully' });
   } catch (error) {
     console.error('Error updating notification settings:', error);
     res.status(500).json({ success: false, error: error.message });
