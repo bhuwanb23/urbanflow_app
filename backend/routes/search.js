@@ -3,6 +3,26 @@ const router = express.Router();
 const Fuse = require('fuse.js');
 const logger = require('../utils/logger');
 
+const FUSE_OPTIONS = {
+  keys: ['name'],
+  threshold: 0.3,
+  includeScore: true,
+  minMatchCharLength: 2,
+  shouldSort: true
+};
+
+let fuseInstance = null;
+let cachedSearchIndex = null;
+
+function getFuseInstance(searchIndex) {
+  if (fuseInstance && cachedSearchIndex === searchIndex) {
+    return fuseInstance;
+  }
+  cachedSearchIndex = searchIndex;
+  fuseInstance = new Fuse(searchIndex, FUSE_OPTIONS);
+  return fuseInstance;
+}
+
 /**
  * GET /api/v1/search
  * Fuzzy search across stops and routes
@@ -21,15 +41,7 @@ router.get('/', (req, res, next) => {
     
     const searchLimit = limit ? parseInt(limit) : 10;
     const searchIndex = req.dataLoader.getSearchIndex();
-    
-    // Initialize Fuse.js for fuzzy search
-    const fuse = new Fuse(searchIndex, {
-      keys: ['name'],
-      threshold: 0.3,
-      includeScore: true,
-      minMatchCharLength: 2,
-      shouldSort: true
-    });
+    const fuse = getFuseInstance(searchIndex);
     
     const results = fuse.search(q);
     const topResults = results.slice(0, searchLimit).map(result => result.item);
