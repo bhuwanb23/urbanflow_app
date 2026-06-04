@@ -5,8 +5,9 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import axios from 'axios';
+import { API_CONFIG } from '../utils/api';
 
-const API_BASE_URL = process.env.EXPO_PUBLIC_API_URL || 'http://localhost:3000/api/v1';
+const API_BASE_URL = `${API_CONFIG.BASE_URL}/api/${API_CONFIG.VERSION}`;
 
 export function useLiveAlerts(options = {}) {
   const {

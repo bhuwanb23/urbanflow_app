@@ -20,7 +20,7 @@ import EcoStatsScreen from './pages/ecostats/EcoStatsScreen';
 import TripsScreen from './pages/trips/TripsScreen';
 import NotificationsScreen from './pages/notifications/NotificationsScreen';
 import RouteDetailsScreen from './pages/route/RouteDetailsScreen';
-import { tokenManager } from './utils/auth';
+import { tokenManager } from './utils/api';
 
 
 

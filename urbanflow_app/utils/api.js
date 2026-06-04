@@ -1,8 +1,15 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import Constants from 'expo-constants';
 
 // API Configuration
+const DEFAULT_API_URL = 'http://localhost:3000';
+const API_BASE_URL =
+  Constants.expoConfig?.extra?.apiUrl ||
+  Constants.manifest2?.extra?.apiUrl ||
+  DEFAULT_API_URL;
+
 const API_CONFIG = {
-  BASE_URL: 'http://localhost:3000', // Updated to match backend server port
+  BASE_URL: API_BASE_URL,
   VERSION: 'v1',
   TIMEOUT: 30000, // Increased timeout for journey planning
 };
@@ -613,3 +620,5 @@ export default {
   // Configuration
   API_CONFIG,
 };
+
+export { API_CONFIG };
