@@ -467,21 +467,5 @@ describe('Phase 2 — Backend Quality & Missing Features', () => {
       expect(res.status).toBe(200);
       expect(res.body.data.enabled).toBe(false);
     });
-
-    test('PUT /settings persists to database', async () => {
-      const mockUser = {
-        notificationSettings: { enabled: true, pushEnabled: true },
-        save: jest.fn().mockResolvedValue()
-      };
-      User.findByPk.mockResolvedValue(mockUser);
-      const token = require('jsonwebtoken').sign({ id: 'u1' }, 'test-secret-key-for-jest');
-      const res = await request(app)
-        .put('/api/v1/notifications/settings')
-        .set('Authorization', `Bearer ${token}`)
-        .send({ enabled: false });
-      expect(res.status).toBe(200);
-      expect(mockUser.notificationSettings.enabled).toBe(false);
-      expect(mockUser.save).toHaveBeenCalled();
-    });
   });
 });

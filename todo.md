@@ -189,10 +189,10 @@ Tasks within a phase should be completed **in order** (earlier tasks are prerequ
 
 ### 2.5 Fix multi-city fare calculator
 
-- [ ] Refactor `utils/fareCalculator.js`:
+- [x] Refactor `utils/fareCalculator.js`:
   - Add `CITY_FARE_STRUCTURES` with Delhi (DTC bus, Delhi Metro) and Chennai (MTC bus) fares
   - Accept `city` parameter in fare calculation functions
-- [ ] **Verify:** Different cities return different fare amounts
+- [x] **Verify:** Different cities return different fare amounts
 
 ### 2.6 Add missing transport modes
 
