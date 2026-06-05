@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, TextInput, FlatList, TouchableOpacity, StyleSheet, ActivityIndicator } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import api from '../../../utils/api';
+import { routesAPI } from '../../../utils/api';
 
 /**
  * SearchAutocomplete Component
- * Real-time search with debounce and dropdown results
+ * Real-time search with debounce and dropdown results.
+ * Calls /routes/search on the backend; falls back to the demo
+ * suggestions endpoint if the search API is not yet wired.
  */
 export default function SearchAutocomplete({ onLocationSelect, placeholder = "Search stops, routes..." }) {
   const [query, setQuery] = useState('');
@@ -30,17 +32,33 @@ export default function SearchAutocomplete({ onLocationSelect, placeholder = "Se
   const performSearch = async (searchQuery) => {
     try {
       setLoading(true);
-      const response = await api.demoAPI.getRouteSuggestions(); // Fallback for now
-      
-      // Mock results until backend search is fully integrated
-      const mockResults = [
-        { id: '1', name: `Koramangala - ${searchQuery}`, type: 'area' },
-        { id: '2', name: `Silk Board - ${searchQuery}`, type: 'area' },
-        { id: '3', name: 'Route 500A', type: 'route' },
-        { id: '4', name: 'Route 201B', type: 'route' },
-      ].filter(item => item.name.toLowerCase().includes(searchQuery.toLowerCase()));
-      
-      setResults(mockResults);
+
+      const normalize = (raw) => {
+        const list = Array.isArray(raw) ? raw : raw?.data || raw?.results || [];
+        return list.map((item, idx) => {
+          const name = item.name || item.title || item.stopName || item.routeName || `Result ${idx + 1}`;
+          const type = item.type || (item.routeId ? 'route' : item.stopId ? 'stop' : 'area');
+          return { id: item.id || item.stopId || item.routeId || `r-${idx}`, name, type };
+        });
+      };
+
+      let items = [];
+      try {
+        const response = await routesAPI.searchRoutes({ q: searchQuery });
+        items = normalize(response);
+      } catch (primaryErr) {
+        const fallback = await fetch(
+          `${require('../../../utils/api').API_CONFIG.BASE_URL}/api/demo/routes`
+        )
+          .then((r) => (r.ok ? r.json() : null))
+          .catch(() => null);
+        items = normalize(fallback);
+      }
+
+      const filtered = items.filter((item) =>
+        item.name.toLowerCase().includes(searchQuery.toLowerCase())
+      );
+      setResults(filtered);
       setShowDropdown(true);
     } catch (error) {
       console.error('Search error:', error);

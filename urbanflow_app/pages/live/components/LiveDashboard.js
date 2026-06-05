@@ -6,6 +6,10 @@ import { MotiView } from 'moti';
 // Import real-time widgets
 import TrafficWidget from './TrafficWidget';
 import AQIWidget from './AQIWidget';
+import TransitStatus from './TransitStatus';
+import TrafficConditions from './TrafficConditions';
+import RecentUpdates from './RecentUpdates';
+import PopularRoutes from './PopularRoutes';
 
 // Import Phase 4 hooks
 import { useLiveAlerts } from '../../../hooks/useLiveAlerts';
@@ -298,103 +302,30 @@ const LiveDashboard = () => {
               </MotiView>
             ))
           ) : (
-            // Fallback to hardcoded mock data if no API data
-            <>
-          {/* Item 1 */}
-          <MotiView
-            from={{ opacity: 0, translateX: -30 }}
-            animate={{ opacity: 1, translateX: 0 }}
-            transition={{ type: 'spring', damping: 12, delay: 600 }}
-            style={{ width: '100%' }}
-          >
+            // Empty state when no real alerts and no fallback data
             <View style={styles.feedItem}>
               <View style={styles.feedItemLeft}>
-                <MotiView
-                  from={{ scale: 0.5, opacity: 0 }}
-                  animate={{ scale: 1, opacity: 1 }}
-                  transition={{ type: 'spring', damping: 15, delay: 700 }}
-                >
-                  <View style={[styles.feedItemIcon, { backgroundColor: '#b4f0c9' }]}>
-                    <Icon name="train" size={24} color="#31694b" />
-                  </View>
-                </MotiView>
+                <View style={[styles.feedItemIcon, { backgroundColor: '#e1e3e4' }]}>
+                  <Icon name="check-circle" size={24} color="#006b2c" />
+                </View>
                 <View>
-                  <Text style={styles.feedItemTitle}>Line 4 Expansion</Text>
-                  <Text style={styles.feedItemDesc}>North Station to Riverside Route Active</Text>
+                  <Text style={styles.feedItemTitle}>All clear</Text>
+                  <Text style={styles.feedItemDesc}>No active alerts right now</Text>
                 </View>
               </View>
               <View style={styles.feedItemRight}>
-                <MotiView
-                  from={{ scale: 0.8, opacity: 0 }}
-                  animate={{ scale: 1, opacity: 1 }}
-                  transition={{ type: 'spring', damping: 12, delay: 800 }}
-                >
-                  <View style={[styles.feedBadge, { backgroundColor: '#7ffc97' }]}>
-                    <Text style={[styles.feedBadgeText, { color: '#006b2c' }]}>NEW</Text>
-                  </View>
-                </MotiView>
-                <Text style={styles.feedTime}>2 MIN AGO</Text>
+                <Text style={styles.feedTime}>—</Text>
               </View>
             </View>
-          </MotiView>
-
-          {/* Item 2 */}
-          <View style={styles.feedItem}>
-            <View style={styles.feedItemLeft}>
-              <View style={[styles.feedItemIcon, { backgroundColor: '#ffd9de' }]}>
-                <Icon name="traffic-cone" size={24} color="#a72d51" />
-              </View>
-              <View>
-                <Text style={styles.feedItemTitle}>Main St. Maintenance</Text>
-                <Text style={styles.feedItemDesc}>Surface repairs between 5th & 8th Avenue</Text>
-              </View>
-            </View>
-            <View style={styles.feedItemRight}>
-              <View style={[styles.feedBadge, { backgroundColor: '#ffb2bf' }]}>
-                <Text style={[styles.feedBadgeText, { color: '#a72d51' }]}>DELAY</Text>
-              </View>
-              <Text style={styles.feedTime}>15 MIN AGO</Text>
-            </View>
-          </View>
-
-          {/* Item 3 */}
-          <View style={styles.feedItem}>
-            <View style={styles.feedItemLeft}>
-              <View style={[styles.feedItemIcon, { backgroundColor: '#7ffc97' }]}>
-                <Icon name="lightning-bolt" size={24} color="#006b2c" />
-              </View>
-              <View>
-                <Text style={styles.feedItemTitle}>EV Hub Deployment</Text>
-                <Text style={styles.feedItemDesc}>3 new charging clusters online in Zone B</Text>
-              </View>
-            </View>
-            <View style={styles.feedItemRight}>
-              <View style={[styles.feedBadge, { backgroundColor: '#62df7d' }]}>
-                <Text style={[styles.feedBadgeText, { color: '#006b2c' }]}>IMPACT</Text>
-              </View>
-              <Text style={styles.feedTime}>44 MIN AGO</Text>
-            </View>
-          </View>
-
-          {/* Item 4 */}
-          <View style={styles.feedItem}>
-            <View style={styles.feedItemLeft}>
-              <View style={[styles.feedItemIcon, { backgroundColor: '#e1e3e4' }]}>
-                <Icon name="chart-bar" size={24} color="#3e4a3d" />
-              </View>
-              <View>
-                <Text style={styles.feedItemTitle}>Weekly Report Generated</Text>
-                <Text style={styles.feedItemDesc}>Efficiency trends for Q3 Week 12</Text>
-              </View>
-            </View>
-            <View style={styles.feedItemRight}>
-              <Text style={styles.feedTime}>1 HOUR AGO</Text>
-            </View>
-          </View>
-            </>
           )}
         </View>
       </View>
+
+      {/* Phase 3.2 — Real data widgets re-integrated */}
+      <TransitStatus limit={3} />
+      <TrafficConditions area="bengaluru" />
+      <RecentUpdates limit={3} />
+      <PopularRoutes limit={3} />
 
     </ScrollView>
   );
