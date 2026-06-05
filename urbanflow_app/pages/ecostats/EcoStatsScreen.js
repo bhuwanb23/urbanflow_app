@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, ScrollView, SafeAreaView, ActivityIndicator, Alert, Platform } from 'react-native';
+import FeedSkeleton from '../live/components/FeedSkeleton';
+import ErrorState from '../../components/ErrorState';
 
 // Import API hooks
 import { useEcoStats } from '../../utils/hooks/useAPI';
@@ -76,8 +78,18 @@ export default function EcoStatsScreen() {
     if (loading && !ecoStats) {
         return (
             <SafeAreaView style={styles.loadingContainer}>
-                <ActivityIndicator size="large" color="#10B981" />
-                <Text style={styles.loadingText}>Loading stats...</Text>
+                <FeedSkeleton itemCount={4} />
+            </SafeAreaView>
+        );
+    }
+
+    if (error && !ecoStats) {
+        return (
+            <SafeAreaView style={styles.loadingContainer}>
+                <ErrorState
+                    message={typeof error === 'string' ? error : 'Couldn’t load your eco stats.'}
+                    onRetry={loadEcoStats}
+                />
             </SafeAreaView>
         );
     }

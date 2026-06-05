@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { SafeAreaView, ActivityIndicator, ScrollView, Text, StyleSheet, Dimensions, Alert, RefreshControl } from 'react-native';
+import { SafeAreaView, ActivityIndicator, ScrollView, Text, StyleSheet, Dimensions, Alert, RefreshControl, View } from 'react-native';
 
 // Import components
 import {
@@ -9,6 +9,10 @@ import {
   QuickActions,
   PopularRoutes
 } from './components';
+import FeedSkeleton from '../live/components/FeedSkeleton';
+import MapSkeleton from '../live/components/MapSkeleton';
+import EmptyState from '../../components/EmptyState';
+import ErrorState from '../../components/ErrorState';
 
 // Import styles
 import { plannerStyles } from './styles/plannerStyles';
@@ -149,9 +153,12 @@ export default function PlannerScreen({ navigation }) {
         }
       >
         {loading && routes.length === 0 ? (
-          <ActivityIndicator size="large" color="#34D399" style={{ marginTop: 50 }} />
+          <View>
+            <MapSkeleton />
+            <FeedSkeleton itemCount={4} />
+          </View>
         ) : error ? (
-          <Text style={{ textAlign: 'center', color: '#666', marginTop: 20 }}>{error}</Text>
+          <ErrorState message={error} onRetry={onRefresh} />
         ) : (
           <>
             {/* Search Bar Component */}

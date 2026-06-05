@@ -5,6 +5,9 @@ import { MotiView, AnimatePresence } from 'moti';
 
 // Import API hooks
 import { useTrips, useRoutes } from '../../utils/hooks/useAPI';
+import FeedSkeleton from '../live/components/FeedSkeleton';
+import EmptyState from '../../components/EmptyState';
+import ErrorState from '../../components/ErrorState';
 
 const { width, height } = Dimensions.get('window');
 
@@ -81,9 +84,43 @@ export default function TripsScreen({ navigation }) {
   // Show loading state
   if (tripsLoading && !trips) {
     return (
-      <SafeAreaView style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-        <ActivityIndicator size="large" color="#10B981" />
-        <Text style={{ marginTop: 16, color: '#64748B' }}>Loading your trips...</Text>
+      <SafeAreaView style={{ flex: 1, backgroundColor: '#FFFFFF' }}>
+        <FeedSkeleton itemCount={5} />
+      </SafeAreaView>
+    );
+  }
+
+  if (tripsError && !trips) {
+    return (
+      <SafeAreaView style={{ flex: 1, backgroundColor: '#FFFFFF' }}>
+        <ErrorState
+          message={tripsError?.message || tripsError || 'Couldn’t load your trips.'}
+          onRetry={handleRefresh}
+        />
+      </SafeAreaView>
+    );
+  }
+
+  if (!tripsLoading && (!trips || trips.length === 0)) {
+    return (
+      <SafeAreaView style={{ flex: 1, backgroundColor: '#FFFFFF' }}>
+        {/* Header */}
+        <View style={styles.headerContainer}>
+          <View style={styles.headerRow}>
+            <View style={styles.headerLeft}>
+              <Text style={styles.headerTitle}>
+                Your Trips <Text style={{ fontSize: 24 }}>🗺️</Text>
+              </Text>
+              <Text style={styles.headerSubtitle}>Track your journey history</Text>
+            </View>
+          </View>
+        </View>
+        <EmptyState
+          icon="map-marker-path"
+          title="No trips yet"
+          message="Plan a route to start building your journey history."
+          onRefresh={handleRefresh}
+        />
       </SafeAreaView>
     );
   }

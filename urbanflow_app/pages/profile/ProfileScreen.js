@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useMemo } from 'react';
 import { View, StyleSheet, ScrollView, SafeAreaView, ActivityIndicator, Alert } from 'react-native';
 
 // Import Theme
@@ -43,7 +43,6 @@ export default function ProfileScreen({ navigation }) {
   // Use real API data instead of mock
   const { user, loading: userLoading } = useAuth();
   const { trips } = useTrips();
-  const [loading, setLoading] = useState(false);
 
   // Calculate sustainability data from real trips
   const sustainabilityData = useMemo(() => {
@@ -80,13 +79,8 @@ export default function ProfileScreen({ navigation }) {
   ], []);
 
   // In a real app, fetch data here
-  useEffect(() => {
-    // Simulate data loading
-    setLoading(true);
-    setTimeout(() => {
-      setLoading(false);
-    }, 500);
-  }, []);
+  // useEffect removed — the previous setTimeout(500) fake delay was masking
+  // the fact that useAuth/useTrips already manage loading state on their own.
 
   const handleSettingPress = (setting) => {
     if (setting.route) {
@@ -110,7 +104,7 @@ export default function ProfileScreen({ navigation }) {
     // Trigger image picker
   };
 
-  if (loading || userLoading) {
+  if (userLoading) {
     return (
       <SafeAreaView style={styles.loadingContainer}>
         <ActivityIndicator size="large" color={profileTheme.colors.primary} />

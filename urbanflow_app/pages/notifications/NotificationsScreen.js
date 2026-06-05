@@ -17,6 +17,8 @@ import { useNotifications } from '../../utils/hooks/useAPI';
 import NotificationHeader from './components/NotificationHeader';
 import NotificationSection from './components/NotificationSection';
 import EmptyState from './components/EmptyState';
+import FeedSkeleton from '../live/components/FeedSkeleton';
+import ErrorState from '../../components/ErrorState';
 
 const NotificationsScreen = ({ navigation }) => {
   const [refreshing, setRefreshing] = useState(false);
@@ -220,12 +222,18 @@ const NotificationsScreen = ({ navigation }) => {
   if (loading && !notifications) {
     return (
       <SafeAreaView style={styles.container}>
-        <View style={styles.emptyContainer}>
-          <ActivityIndicator size="large" color={notificationTheme.colors.primary} />
-          <Text style={{ marginTop: 16, color: notificationTheme.colors.textSecondary }}>
-            Loading notifications...
-          </Text>
-        </View>
+        <FeedSkeleton itemCount={5} />
+      </SafeAreaView>
+    );
+  }
+
+  if (error && !notifications) {
+    return (
+      <SafeAreaView style={styles.container}>
+        <ErrorState
+          message={typeof error === 'string' ? error : 'Couldn’t load your notifications.'}
+          onRetry={handleRefresh}
+        />
       </SafeAreaView>
     );
   }
