@@ -1,5 +1,5 @@
 import React, { useState, useCallback, useMemo } from 'react';
-import { View, StyleSheet, ScrollView, SafeAreaView, Linking, Alert } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, SafeAreaView, Linking, Alert, TouchableOpacity } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 // Import Components
@@ -26,7 +26,7 @@ import { routeTheme } from './theme/routeTheme';
  * Main Route Details Screen Content
  */
 function RouteDetailsContent({ navigation, route }) {
-  const { currentRoute, isLoading, error, updateRoute } = useRoute();
+  const { currentRoute, isLoading, error, refetch } = useRoute();
   const { triggerHapticFeedback } = useAccessibility();
   const { startTracking, stopTracking } = useLiveTracking();
   const insets = useSafeAreaInsets();
@@ -34,12 +34,13 @@ function RouteDetailsContent({ navigation, route }) {
   // State for itinerary sorting
   const [sortBy, setSortBy] = useState('recommended');
 
-  // Use route data from params or mock data
-  React.useEffect(() => {
-    if (route?.params?.route) {
-      updateRoute(route.params.route);
-    }
-  }, [route?.params?.route]);
+  // Resolve the params: routeId takes precedence (drives a real
+  // network fetch inside the provider), but a fully formed
+  // `route` object in params is used as `initialRoute` for
+  // offline / preview flows.
+  const incomingRoute = route?.params?.route;
+  const incomingRouteId = route?.params?.routeId || (incomingRoute && incomingRoute.id) || null;
+  const hasRealRouteId = Boolean(route?.params?.routeId);
 
   const handleBack = useCallback(() => {
     triggerHapticFeedback('impact-light');
@@ -114,6 +115,30 @@ function RouteDetailsContent({ navigation, route }) {
     return <RouteSkeleton segmentCount={4} />;
   }
 
+  if (error && !currentRoute) {
+    return (
+      <RouteLayout>
+        <TopAppBar onBack={() => navigation.goBack()} onStartJourney={() => {}} />
+        <View style={styles.errorState}>
+          <Text style={styles.errorTitle}>Couldn’t load this route</Text>
+          <Text style={styles.errorBody}>{error}</Text>
+          <TouchableOpacity
+            accessibilityRole="button"
+            accessibilityLabel="Retry loading route"
+            onPress={() => refetch && refetch()}
+            style={styles.retryButton}
+          >
+            <Text style={styles.retryText}>Try again</Text>
+          </TouchableOpacity>
+        </View>
+      </RouteLayout>
+    );
+  }
+
+  if (!currentRoute) {
+    return null;
+  }
+
   return (
     <RouteLayout>
       {/* Itinerary Tabs */}
@@ -151,8 +176,15 @@ function RouteDetailsContent({ navigation, route }) {
  * RouteDetailsScreen with Error Boundary and Context Provider
  */
 export default function RouteDetailsScreen(props) {
+  const { route } = props;
+  const incomingRoute = route?.params?.route;
+  const incomingRouteId = route?.params?.routeId || (incomingRoute && incomingRoute.id) || null;
+
   return (
-    <RouteProvider>
+    <RouteProvider
+      routeId={incomingRouteId}
+      initialRoute={incomingRoute || undefined}
+    >
       <RouteErrorBoundary
         onError={(error) => console.error('Route screen error:', error)}
         onRetry={() => console.log('Retrying route screen...')}
@@ -171,5 +203,35 @@ const styles = StyleSheet.create({
   scrollContent: {
     paddingHorizontal: 24,
     paddingTop: routeTheme.spacing.xl,
+  },
+  errorState: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: 32,
+  },
+  errorTitle: {
+    fontSize: 20,
+    fontWeight: '700',
+    color: routeTheme.colors.text,
+    marginBottom: 8,
+    textAlign: 'center',
+  },
+  errorBody: {
+    fontSize: 14,
+    color: routeTheme.colors.textMuted || '#64748b',
+    textAlign: 'center',
+    marginBottom: 24,
+  },
+  retryButton: {
+    backgroundColor: routeTheme.colors.primary,
+    paddingHorizontal: 24,
+    paddingVertical: 12,
+    borderRadius: 12,
+  },
+  retryText: {
+    color: '#fff',
+    fontSize: 14,
+    fontWeight: '600',
   },
 });
