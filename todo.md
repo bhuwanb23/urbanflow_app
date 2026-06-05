@@ -240,52 +240,57 @@ Tasks within a phase should be completed **in order** (earlier tasks are prerequ
 
 ### 3.1 Fix API base URL
 
-- [ ] Create `urbanflow_app/app.config.js` with `extra.apiUrl` from environment
-- [ ] Update `app.json` to reference config
-- [ ] In `utils/api.js`: read `BASE_URL` from `Constants.expoConfig.extra.apiUrl` instead of hardcoded `localhost:3000`
-- [ ] In `utils/auth.js`: remove hardcoded IP `192.168.31.67:3000`, import from same config
-- [ ] Remove `utils/auth.js` duplication — consolidate into `utils/api.js`
-- [ ] **Verify:** App connects to configurable backend URL
+- [x] Create `urbanflow_app/app.config.js` with `extra.apiUrl` from environment
+- [x] Update `app.json` to reference config
+- [x] In `utils/api.js`: read `BASE_URL` from `Constants.expoConfig.extra.apiUrl` instead of hardcoded `localhost:3000`
+- [x] In `utils/auth.js`: remove hardcoded IP `192.168.31.67:3000`, import from same config
+- [x] Remove `utils/auth.js` duplication — consolidate into `utils/api.js`
+- [x] **Verify:** App connects to configurable backend URL
 
 ### 3.2 Wire up Live screen widgets
 
-- [ ] **`TransitStatus.js`**: Replace mock `upcomingDepartures` with `useLiveVehicles().vehicles` filtered to relevant route
-- [ ] **`TrafficConditions.js`**: Replace mock `trafficData` with `useTraffic().getTrafficConditions()`
-- [ ] **`RecentUpdates.js`**: Replace mock `recentUpdates` with `useNotifications().fetchNotifications()`
-- [ ] **`PopularRoutes.js`**: Replace mock `popularRoutes` with `useRoutes().getPopularRoutes()`
-- [ ] **`SearchAutocomplete.js`**: Replace mock `recentSearches`/`popularDestinations` with `useRoutes().searchRoutes()`
-- [ ] **Verify:** Live screen shows real data when backend is running
+- [x] **`TransitStatus.js`**: Replace mock `upcomingDepartures` with `useLiveAlerts()` and map to transit lines
+- [x] **`TrafficConditions.js`**: Replace mock `trafficData` with `trafficAPI.getTrafficConditions(area)`
+- [x] **`RecentUpdates.js`**: Replace mock `recentUpdates` with `useLiveAlerts().alerts`
+- [x] **`PopularRoutes.js`**: Replace mock `popularRoutes` with `routesAPI.getPopularRoutes()`
+- [x] **`SearchAutocomplete.js`**: Replace mock `recentSearches` with `routesAPI.searchRoutes()` (fallback to /api/demo/routes)
+- [x] **Verify:** Live screen shows real data when backend is running
 
 ### 3.3 Fix RouteContext to fetch real data
 
-- [ ] In `pages/route/context/RouteContext.js`:
-  - Remove `MOCK_ROUTE_DATA` as default state
-  - Add `useEffect` on mount to fetch route by ID from route params
-  - Call `useRoutes().getRoute(routeId)` via context provider
-  - Show loading state while fetching
-  - Show error state if fetch fails
-- [ ] **Verify:** Route detail screen shows real route data from API
+- [x] In `pages/route/context/RouteContext.js`:
+  - [x] Remove `MOCK_ROUTE_DATA` as default state
+  - [x] Add `useEffect(routeId)` to fetch via `routesAPI.getRoute(routeId)`
+  - [x] Add cancellation guard for stale routeId changes
+  - [x] Show loading state while fetching (skeleton via RouteDetailsScreen)
+  - [x] Show error state if fetch fails (with Try Again button)
+  - [x] Optional `initialRoute` prop for offline / preview flows
+- [x] In `RouteDetailsScreen.js`: pass `routeId` from `route.params.routeId` (fallback to `route.params.route.id`)
+- [x] **Verify:** Route detail screen shows real route data from API
 
 ### 3.4 Add app-level ErrorBoundary
 
-- [ ] Install `react-error-boundary` or create custom error boundary component
-- [ ] Wrap `NavigationContainer` in `App.js` with `ErrorBoundary`
-- [ ] Create fallback UI component with "Something went wrong" + "Retry" button
-- [ ] Log errors to console (future: Sentry)
-- [ ] **Verify:** Crashed screen shows fallback UI, not white screen
+- [x] Create custom class-based `components/ErrorBoundary.js` (no extra install)
+- [x] Wrap `NavigationContainer` in `App.js` with `ErrorBoundary`
+- [x] Fallback UI with "Something went wrong" + "Try again" button
+- [x] Support `onError(error, info)` and custom `fallback({ error, info, reset })` props
+- [x] Log errors to console (future: Sentry)
+- [x] **Verify:** Crashed screen shows fallback UI, not white screen
 
 ### 3.5 Add loading states to all screens
 
-- [ ] Audit every screen for missing loading/empty/error states:
-  - [ ] PlannerScreen
-  - [ ] LiveDashboard
-  - [ ] EcoStatsScreen
-  - [ ] TripsScreen
-  - [ ] NotificationsScreen
-  - [ ] ProfileScreen
-  - [ ] RouteDetailsScreen
-- [ ] Use existing skeleton components (MapSkeleton, FeedSkeleton, RouteSkeleton) where applicable
-- [ ] **Verify:** Each screen shows loading indicator during API calls
+- [x] Create shared `components/EmptyState.js` (title + message + optional refresh)
+- [x] Create shared `components/ErrorState.js` (default card + compact inline variant, optional retry)
+- [x] Audit every screen for missing loading/empty/error states:
+  - [x] PlannerScreen — MapSkeleton + FeedSkeleton; ErrorState on failure
+  - [x] LiveDashboard — per-widget loading (TransitStatus/TrafficConditions/RecentUpdates/PopularRoutes)
+  - [x] EcoStatsScreen — FeedSkeleton; ErrorState on failure
+  - [x] TripsScreen — FeedSkeleton; ErrorState; EmptyState when no trips
+  - [x] NotificationsScreen — FeedSkeleton; ErrorState; existing EmptyState when empty
+  - [x] ProfileScreen — dropped the `setTimeout(500)` fake delay; loader now driven by `useAuth().loading`
+  - [x] RouteDetailsScreen — RouteSkeleton while loading; ErrorState with Try Again on fetch failure
+- [x] Use existing skeleton components (MapSkeleton, FeedSkeleton, RouteSkeleton) where applicable
+- [x] **Verify:** Each screen shows loading indicator during API calls
 
 ---
 
