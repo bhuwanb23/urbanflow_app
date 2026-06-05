@@ -21,6 +21,7 @@ import TripsScreen from './pages/trips/TripsScreen';
 import NotificationsScreen from './pages/notifications/NotificationsScreen';
 import RouteDetailsScreen from './pages/route/RouteDetailsScreen';
 import { tokenManager } from './utils/api';
+import ErrorBoundary from './components/ErrorBoundary';
 
 
 
@@ -285,32 +286,36 @@ export default function App() {
   return (
     <SafeAreaProvider>
       <PaperProvider theme={theme}>
-        <NavigationContainer>
-          <StatusBar barStyle="dark-content" backgroundColor="#FFFFFF" translucent={false} />
-          <Stack.Navigator 
-            initialRouteName={isLoggedIn ? "MainTabs" : "Intro"} 
-            screenOptions={{ headerShown: false }}
-          >
-            <Stack.Screen name="Intro" component={IntroScreen} />
-            <Stack.Screen name="Login" component={LoginScreen} />
-            <Stack.Screen name="MainTabs" component={MainTabs} />
-            <Stack.Screen 
-              name="NotificationsScreen" 
-              component={NotificationsScreen}
-              options={{
-                headerShown: false,
-                presentation: 'modal',
-              }}
-            />
-            <Stack.Screen 
-              name="RouteDetailsScreen" 
-              component={RouteDetailsScreen}
-              options={{
-                headerShown: false,
-              }}
-            />
-          </Stack.Navigator>
-        </NavigationContainer>
+        <ErrorBoundary
+          onError={(error, info) => console.error('App-level error caught:', error, info)}
+        >
+          <NavigationContainer>
+            <StatusBar barStyle="dark-content" backgroundColor="#FFFFFF" translucent={false} />
+            <Stack.Navigator
+              initialRouteName={isLoggedIn ? "MainTabs" : "Intro"}
+              screenOptions={{ headerShown: false }}
+            >
+              <Stack.Screen name="Intro" component={IntroScreen} />
+              <Stack.Screen name="Login" component={LoginScreen} />
+              <Stack.Screen name="MainTabs" component={MainTabs} />
+              <Stack.Screen
+                name="NotificationsScreen"
+                component={NotificationsScreen}
+                options={{
+                  headerShown: false,
+                  presentation: 'modal',
+                }}
+              />
+              <Stack.Screen
+                name="RouteDetailsScreen"
+                component={RouteDetailsScreen}
+                options={{
+                  headerShown: false,
+                }}
+              />
+            </Stack.Navigator>
+          </NavigationContainer>
+        </ErrorBoundary>
       </PaperProvider>
     </SafeAreaProvider>
   );
