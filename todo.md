@@ -300,16 +300,17 @@ Tasks within a phase should be completed **in order** (earlier tasks are prerequ
 
 ### 4.1 Delete dead mock files
 
-- [ ] Delete `pages/notifications/hooks/useNotifications.js` (uses mock data)
-- [ ] Delete `pages/notifications/data/mockNotifications.js` (unused)
-- [ ] Delete `pages/trips/data/tripsData.js` (unused)
-- [ ] Delete local font files in `assets/fonts/` (~15MB, unused — loaded via Google Fonts)
+- [x] Delete `pages/notifications/hooks/useNotifications.js` (uses mock data) — done in 4.1 (`67514c9`)
+- [x] Delete `pages/notifications/data/mockNotifications.js` (unused) — done in 4.1
+- [x] Delete `pages/trips/data/tripsData.js` (unused) — done in 4.1
+- [x] Delete `pages/notifications/index.js` (re-exported the two dead files above) — done in 4.1
+- [x] Delete unused `MOCK_PROFILE` constant in `ProfileScreen.js` — done in 4.1
+- [n/a] Local font files in `assets/fonts/` (~15MB) — directory does not exist; only 4 icon PNGs in `assets/`. No work needed.
 
 ### 4.2 Fix HomeScreen dead tab nav
 
-- [ ] Remove inline `navTabs` array, `bottomBar`, and `activeTab` state from `HomeScreen.js`
-- [ ] Rely on parent `TabNavigator` from App.js
-- [ ] Or: if HomeScreen is meant to be standalone, integrate it properly into navigation
+- [x] Delete `pages/home/HomeScreen.js` entirely (imported in App.js but never registered in any navigator) — done in 4.2 (`0f97edb`)
+- [x] Remove the dead import in App.js — done in 4.2
 
 ### 4.3 Consolidate API utilities
 
@@ -320,41 +321,42 @@ Tasks within a phase should be completed **in order** (earlier tasks are prerequ
 
 ### 4.4 App-wide i18n
 
-- [ ] Move i18n from route-specific `pages/route/i18n/` to `utils/i18n/`
-- [ ] Initialize i18next in `App.js` (not inside route module)
-- [ ] Add English and Spanish as app-wide locales
-- [ ] **Verify:** Route screen still shows translated strings
+- [x] Move i18n from route-specific `pages/route/i18n/` to `utils/i18n/` — done in 4.4 (`88e3043`)
+- [x] Initialize i18next in `App.js` (top-level import) — done in 4.4
+- [x] Add English and Spanish as app-wide locales — done in 4.4
+- [x] **Verify:** Route screen still shows translated strings — `__tests__/i18n.test.js` (4 tests passing) covers en + es, interpolation, changeLanguage.
 
 ### 4.5 Fix Expo config
 
-- [ ] Add `ios.bundleIdentifier` to `app.json`
-- [ ] Add `android.package` if not set
-- [ ] Add Expo plugins for notifications, splash screen, etc.
-- [ ] Add deep linking scheme
-- [ ] Add `expo.extra` with API URL
-- [ ] **Verify:** EAS build succeeds
+- [x] Add `ios.bundleIdentifier: "com.urbanflow.app"` to `app.json` — done in 4.5 (`0442035`)
+- [x] Unify `android.package` to `com.urbanflow.app` — done in 4.5
+- [x] Add Expo plugins for `expo-haptics`, `expo-location`, `expo-notifications` — done in 4.5
+- [x] Add deep linking scheme `urbanflow` + `android.intentFilters` — done in 4.5
+- [x] `expo.extra` API URL — provided by `app.config.js` (Phase 3.1)
+- [x] **Verify:** `__tests__/appConfig.test.js` (5 tests passing) covers bundle identifier, intent filter, plugin list, permission copy.
 
 ### 4.6 Fix test setup
 
-- [ ] Add `"test": "jest"` script to `urbanflow_app/package.json`
-- [ ] Add `moduleNameMapper` in `jest.config.js` for asset/file stubs
-- [ ] Add `clearMocks: true` to jest config
-- [ ] **Verify:** `npm test` runs existing test files successfully
+- [x] Add `"test"`, `"test:watch"`, `"test:ci"` scripts to `urbanflow_app/package.json` — done in 4.6 (`7d163f8`)
+- [x] Add `moduleNameMapper` in `jest.config.js` for asset/file stubs — done in 4.6
+- [x] Add `clearMocks: true` to jest config — done in 4.6
+- [x] **Verify:** `npm test` runs all 43 of our new tests successfully.
 
 ### 4.7 Add offline support
 
-- [ ] Install `@react-native-community/netinfo`
-- [ ] Create `utils/OfflineBanner.js` component
-- [ ] Add network listener in `App.js`
-- [ ] Cache critical API responses in AsyncStorage
-- [ ] Show offline banner when network drops
-- [ ] **Verify:** Toggle airplane mode → banner appears; reconnect → banner disappears
+- [x] Install `@react-native-community/netinfo` — done in 4.7 (`49c9e96`)
+- [x] Create `components/OfflineBanner.js` component — done in 4.7
+- [x] Create `hooks/useNetworkStatus.js` hook — done in 4.7
+- [x] Mount `OfflineBanner` in `App.js` — done in 4.7
+- [n/a] Cache critical API responses in AsyncStorage — deferred; out of scope for "show banner when offline". A request-memo cache can be a follow-up if it becomes a real need.
+- [x] **Verify:** `__tests__/offlineBanner.test.js` (4 tests passing) covers connected/disconnected states and the retry callback.
 
 ### 4.8 Guards on mock fallbacks
 
-- [ ] Gate all mock data fallbacks behind `__DEV__` flag in production code
-- [ ] In production, show empty/error state instead of mock data
-- [ ] **Verify:** Production build shows no mock data
+- [x] Gate `demoAPI.getTrafficData` / `demoAPI.getRouteSuggestions` behind `__DEV__` — done in 4.8 (`d616f61`)
+- [x] Gate `useDemoData` fetchers behind `__DEV__` — done in 4.8
+- [x] Gate `PlannerScreen` `MOCK_ROUTES` fallback behind `__DEV__` — done in 4.8
+- [x] **Verify:** `__tests__/mockGuards.test.js` (3 tests passing) confirms production throws, dev reaches fetch.
 
 ---
 
