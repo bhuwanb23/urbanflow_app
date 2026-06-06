@@ -1,7 +1,8 @@
 {
   "expo": {
-    "name": "urbanflow_app",
+    "name": "UrbanFlow",
     "slug": "urbanflow_app",
+    "scheme": "urbanflow",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -13,6 +14,7 @@
       "backgroundColor": "#ffffff"
     },
     "ios": {
+      "bundleIdentifier": "com.urbanflow.app",
       "supportsTablet": true
     },
     "android": {
@@ -21,13 +23,36 @@
         "backgroundColor": "#ffffff"
       },
       "edgeToEdgeEnabled": true,
-      "package": "com.expoacc1.urbanflow_app"
+      "package": "com.urbanflow.app",
+      "intentFilters": [
+        {
+          "action": "VIEW",
+          "autoVerify": false,
+          "data": [
+            { "scheme": "urbanflow" }
+          ],
+          "category": ["BROWSABLE", "DEFAULT"]
+        }
+      ]
     },
     "web": {
       "favicon": "./assets/favicon.png"
     },
     "plugins": [
-      "expo-font"
+      "expo-font",
+      "expo-haptics",
+      [
+        "expo-location",
+        {
+          "locationAlwaysAndWhenInUsePermission": "Allow UrbanFlow to use your location for live route tracking."
+        }
+      ],
+      [
+        "expo-notifications",
+        {
+          "color": "#16a34a"
+        }
+      ]
     ]
   }
 }
