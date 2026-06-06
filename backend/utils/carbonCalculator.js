@@ -35,8 +35,8 @@ const EMISSION_FACTORS = {
  */
 function calculateLegEmissions(distanceKm, mode) {
   const normalizedMode = mode.toLowerCase();
-  const factor = EMISSION_FACTORS[normalizedMode] || EMISSION_FACTORS.car;
-  
+  const factor = EMISSION_FACTORS[normalizedMode] ?? EMISSION_FACTORS.car;
+
   return distanceKm * factor;
 }
 
@@ -124,7 +124,7 @@ function getEcoScore(carbonSavedKg, totalDistanceKm) {
  * @returns {number} Emission factor (kg CO2/km)
  */
 function getEmissionFactor(mode) {
-  return EMISSION_FACTORS[mode.toLowerCase()] || EMISSION_FACTORS.car;
+  return EMISSION_FACTORS[mode.toLowerCase()] ?? EMISSION_FACTORS.car;
 }
 
 /**

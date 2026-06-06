@@ -19,6 +19,43 @@ test('metro fare differs by city', () => {
   expect(chennaiFare).toBeGreaterThan(bengaluruFare);
 });
 
+test('bus fare respects city minimum', () => {
+  const bengaluruFare = fc.calculateBusFare({ mode: 'bus', distance: 100 }, null, 'bengaluru');
+  expect(bengaluruFare).toBe(10);  // min fare
+});
+
+test('bus fare scales with distance', () => {
+  const short = fc.calculateBusFare({ mode: 'bus', distance: 1000 }, null, 'bengaluru');
+  const long = fc.calculateBusFare({ mode: 'bus', distance: 20000 }, null, 'bengaluru');
+  expect(long).toBeGreaterThan(short);
+});
+
+test('metro fare uses stage brackets', () => {
+  expect(fc.calculateMetroFare(1000, 'bengaluru')).toBe(10);   // 0-2km
+  expect(fc.calculateMetroFare(5000, 'bengaluru')).toBe(20);   // 2-5km
+  expect(fc.calculateMetroFare(8000, 'bengaluru')).toBe(30);   // 5-10km
+});
+
+test('applyTransferDiscount applies a discount when transferring', () => {
+  const legs = [
+    { mode: 'bus', distance: 5000 },
+    { mode: 'metro', distance: 5000 }
+  ];
+  const result = fc.applyTransferDiscount(legs, 100);
+  expect(result.hasTransfer).toBe(true);
+  expect(result.finalFare).toBeLessThan(100);
+});
+
+test('calculateTotalFare sums all legs', () => {
+  const legs = [
+    { mode: 'bus', distance: 5000, route: '1', from: { name: 'A' }, to: { name: 'B' } },
+    { mode: 'metro', distance: 5000, route: 'M1', from: { name: 'B' }, to: { name: 'C' } }
+  ];
+  const result = fc.calculateTotalFare(legs, 'bengaluru');
+  expect(result.total).toBeGreaterThan(0);
+  expect(result.breakdown.length).toBe(2);
+});
+
 // ---------- 2.6 — Missing transport modes ----------
 
 const cc = require('../utils/carbonCalculator');
