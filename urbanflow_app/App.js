@@ -6,7 +6,6 @@ import { MD3LightTheme as DefaultTheme, Provider as PaperProvider } from 'react-
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import IntroScreen from './pages/home/IntroScreen';
 import LoginScreen from './pages/auth/LoginScreen';
-import HomeScreen from './pages/home/HomeScreen';
 import PlannerScreen from './pages/planner/PlannerScreen';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { useFonts as useUrbanist, Urbanist_400Regular, Urbanist_700Bold } from '@expo-google-fonts/urbanist';
