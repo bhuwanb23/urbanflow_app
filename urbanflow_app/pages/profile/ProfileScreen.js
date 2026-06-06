@@ -14,13 +14,6 @@ import SettingsCard from './components/SettingsCard';
 import SustainabilityCard from './components/SustainabilityCard';
 import LogoutButton from './components/LogoutButton';
 
-// Mock Data (Assuming hooks might not be fully wired up yet based on your existing pattern)
-const MOCK_PROFILE = {
-  name: 'Bhuwan Chandra',
-  email: 'bhuwan@urbanflow.eco',
-  joinDate: 'Jan 2024',
-};
-
 const ACCOUNT_SETTINGS = [
   { icon: 'account-edit', label: 'Edit Profile', route: 'EditProfileScreen', bg: '#F8FAFC', color: ['#0F172A'] },
   { icon: 'bell-outline', label: 'Notifications', route: 'NotificationsScreen', bg: '#F8FAFC', color: ['#0F172A'] },
