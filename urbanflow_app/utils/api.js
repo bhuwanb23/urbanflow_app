@@ -413,10 +413,13 @@ export const journeyAPI = {
 export const demoAPI = {
   // Get demo traffic data
   getTrafficData: async () => {
+    if (!__DEV__) {
+      throw new Error('demoAPI is dev-only and cannot be used in production');
+    }
     try {
       const response = await fetch(`${API_CONFIG.BASE_URL}/api/demo/traffic`);
       const data = await response.json();
-      
+
       if (!response.ok) {
         throw new Error(data.message || 'Failed to fetch traffic data');
       }
@@ -429,10 +432,13 @@ export const demoAPI = {
 
   // Get demo route suggestions
   getRouteSuggestions: async () => {
+    if (!__DEV__) {
+      throw new Error('demoAPI is dev-only and cannot be used in production');
+    }
     try {
       const response = await fetch(`${API_CONFIG.BASE_URL}/api/demo/routes`);
       const data = await response.json();
-      
+
       if (!response.ok) {
         throw new Error(data.message || 'Failed to fetch route suggestions');
       }

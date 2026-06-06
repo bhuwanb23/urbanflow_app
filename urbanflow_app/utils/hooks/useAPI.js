@@ -680,10 +680,15 @@ export const useDemoData = () => {
   const [error, setError] = useState(null);
 
   const fetchTrafficData = useCallback(async () => {
+    if (!__DEV__) {
+      const err = new Error('useDemoData is dev-only');
+      setError(err.message);
+      throw err;
+    }
     try {
       setLoading(true);
       setError(null);
-      
+
       const data = await demoAPI.getTrafficData();
       setDemoData(prev => ({ ...prev, traffic: data }));
       return data;
@@ -696,10 +701,15 @@ export const useDemoData = () => {
   }, []);
 
   const fetchRouteSuggestions = useCallback(async () => {
+    if (!__DEV__) {
+      const err = new Error('useDemoData is dev-only');
+      setError(err.message);
+      throw err;
+    }
     try {
       setLoading(true);
       setError(null);
-      
+
       const data = await demoAPI.getRouteSuggestions();
       setDemoData(prev => ({ ...prev, routes: data }));
       return data;

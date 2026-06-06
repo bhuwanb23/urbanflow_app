@@ -70,20 +70,26 @@ export default function PlannerScreen({ navigation }) {
     try {
       setLoading(true);
       setError(null);
-      
+
       // Try to fetch from backend
       const response = await api.routesAPI.getPopularRoutes();
       if (response.success && response.data) {
         setRoutes(response.data);
-      } else {
-        // Fallback to mock data if API fails
+      } else if (__DEV__) {
+        // Dev-only fallback: empty / mock data so the screen stays usable
         setRoutes(MOCK_ROUTES);
+      } else {
+        setRoutes([]);
+        setError('No popular routes available right now.');
       }
     } catch (err) {
       console.error('Error loading popular routes:', err);
-      // Use mock data as fallback
-      setRoutes(MOCK_ROUTES);
-      setError('Unable to load routes. Using offline data.');
+      if (__DEV__) {
+        setRoutes(MOCK_ROUTES);
+      } else {
+        setRoutes([]);
+        setError('Couldn’t reach the routing service.');
+      }
     } finally {
       setLoading(false);
       setRefreshing(false);
