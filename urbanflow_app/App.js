@@ -21,6 +21,7 @@ import NotificationsScreen from './pages/notifications/NotificationsScreen';
 import RouteDetailsScreen from './pages/route/RouteDetailsScreen';
 import { tokenManager } from './utils/api';
 import ErrorBoundary from './components/ErrorBoundary';
+import './utils/i18n';
 
 
 

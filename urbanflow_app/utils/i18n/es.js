@@ -1,33 +1,43 @@
 /**
- * Internationalization (i18n) Configuration
- * Spanish translations for route details screen
+ * Spanish translations (app-wide)
+ * Mirrors the legacy pages/route/i18n/es.js content and adds
+ * generic namespaces (common, errors, nav) for the rest of the
+ * app.
  */
 
 export const es = {
-  // Common
   common: {
     loading: 'Cargando...',
     error: 'Error',
     retry: 'Intentar de nuevo',
     cancel: 'Cancelar',
     confirm: 'Confirmar',
+    ok: 'OK',
+    close: 'Cerrar',
+    refresh: 'Actualizar',
+    save: 'Guardar',
   },
 
-  // Route Details
+  nav: {
+    planner: 'Planificador',
+    live: 'En vivo',
+    costats: 'Estadísticas',
+    trips: 'Viajes',
+    profile: 'Perfil',
+  },
+
   route: {
     title: 'UrbanFlow',
     startJourney: 'Iniciar Viaje',
     goBack: 'Regresar',
   },
 
-  // Journey Overview
   journey: {
     duration: '{duration} • Llegando {arrivalTime}',
     from: 'Desde',
     to: 'Hasta',
   },
 
-  // Transport Modes
   transport: {
     walk: 'Caminando',
     bus: 'Autobús',
@@ -38,7 +48,6 @@ export const es = {
     scooter: 'Patinete',
   },
 
-  // Status
   status: {
     onTime: 'A Tiempo',
     delayed: 'Retrasado',
@@ -47,7 +56,6 @@ export const es = {
     delayInfo: '{minutes}m de retraso',
   },
 
-  // Segment Details
   segment: {
     distance: '{distance}',
     stops: '{stops} paradas',
@@ -57,7 +65,6 @@ export const es = {
     lane: 'CARRIL {number}',
   },
 
-  // Occupancy
   occupancy: {
     low: 'Baja ocupación',
     medium: 'Ocupación media',
@@ -65,30 +72,27 @@ export const es = {
     full: 'Capacidad completa',
   },
 
-  // Features
   features: {
-    accessible: '♿ Accesible',
+    accessible: 'Accesible',
     free: 'Gratis',
-    electric: '🌱 Eléctrico',
-    busy: '🔥 Lleno',
+    electric: 'Eléctrico',
+    busy: 'Lleno',
   },
 
-  // Map Preview
   map: {
     label: 'Vista de Ruta',
     location: 'Mapa de {location}',
   },
 
-  // Error States
   errors: {
     generic: '¡Ups! Algo salió mal',
     routeNotFound: 'No pudimos cargar los detalles de la ruta',
     retryMessage: 'Por favor, inténtalo de nuevo',
     networkError: 'Error de red. Por favor, verifica tu conexión.',
     locationPermission: 'Se requiere permiso de ubicación para el seguimiento en vivo.',
+    offline: 'Estás sin conexión',
   },
 
-  // Accessibility Labels
   accessibility: {
     back: 'Regresar',
     startJourney: 'Iniciar viaje',
@@ -99,7 +103,6 @@ export const es = {
     liveTracking: 'Seguimiento en vivo activo',
   },
 
-  // Announcements
   announcements: {
     journeyStarted: 'Viaje iniciado. El seguimiento en vivo está ahora activo.',
     segmentComplete: 'Segmento completado. Pasando al siguiente segmento.',

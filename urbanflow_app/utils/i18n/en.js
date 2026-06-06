@@ -1,33 +1,43 @@
 /**
- * Internationalization (i18n) Configuration
- * English translations for route details screen
+ * English translations (app-wide)
+ * Mirrors the legacy pages/route/i18n/en.js content and adds
+ * generic namespaces (common, errors, nav) for the rest of the
+ * app.
  */
 
 export const en = {
-  // Common
   common: {
     loading: 'Loading...',
     error: 'Error',
     retry: 'Try Again',
     cancel: 'Cancel',
     confirm: 'Confirm',
+    ok: 'OK',
+    close: 'Close',
+    refresh: 'Refresh',
+    save: 'Save',
   },
 
-  // Route Details
+  nav: {
+    planner: 'Planner',
+    live: 'Live',
+    costats: 'Eco Stats',
+    trips: 'Trips',
+    profile: 'Profile',
+  },
+
   route: {
     title: 'UrbanFlow',
     startJourney: 'Start Journey',
     goBack: 'Go Back',
   },
 
-  // Journey Overview
   journey: {
     duration: '{duration} • Arriving {arrivalTime}',
     from: 'From',
     to: 'To',
   },
 
-  // Transport Modes
   transport: {
     walk: 'Walking',
     bus: 'Bus',
@@ -38,7 +48,6 @@ export const en = {
     scooter: 'Scooter',
   },
 
-  // Status
   status: {
     onTime: 'On Time',
     delayed: 'Delayed',
@@ -47,7 +56,6 @@ export const en = {
     delayInfo: '{minutes}m delay',
   },
 
-  // Segment Details
   segment: {
     distance: '{distance}',
     stops: '{stops} stops',
@@ -57,7 +65,6 @@ export const en = {
     lane: 'LANE {number}',
   },
 
-  // Occupancy
   occupancy: {
     low: 'Low occupancy',
     medium: 'Medium occupancy',
@@ -65,30 +72,27 @@ export const en = {
     full: 'Full capacity',
   },
 
-  // Features
   features: {
-    accessible: '♿ Accessible',
+    accessible: 'Accessible',
     free: 'Free',
-    electric: '🌱 Electric',
-    busy: '🔥 Busy',
+    electric: 'Electric',
+    busy: 'Busy',
   },
 
-  // Map Preview
   map: {
     label: 'Mid-Route View',
     location: 'Map view of {location}',
   },
 
-  // Error States
   errors: {
     generic: 'Oops! Something went wrong',
     routeNotFound: 'We couldn\'t load the route details',
     retryMessage: 'Please try again',
     networkError: 'Network error. Please check your connection.',
     locationPermission: 'Location permission is required for live tracking.',
+    offline: 'You are offline',
   },
 
-  // Accessibility Labels
   accessibility: {
     back: 'Go back',
     startJourney: 'Start journey',
@@ -99,7 +103,6 @@ export const en = {
     liveTracking: 'Live tracking active',
   },
 
-  // Announcements
   announcements: {
     journeyStarted: 'Journey started. Live tracking is now active.',
     segmentComplete: 'Segment completed. Moving to next segment.',
