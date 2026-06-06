@@ -21,6 +21,7 @@ import NotificationsScreen from './pages/notifications/NotificationsScreen';
 import RouteDetailsScreen from './pages/route/RouteDetailsScreen';
 import { tokenManager } from './utils/api';
 import ErrorBoundary from './components/ErrorBoundary';
+import OfflineBanner from './components/OfflineBanner';
 import './utils/i18n';
 
 
@@ -286,6 +287,7 @@ export default function App() {
   return (
     <SafeAreaProvider>
       <PaperProvider theme={theme}>
+        <OfflineBanner onRetry={() => checkAuthStatus()} />
         <ErrorBoundary
           onError={(error, info) => console.error('App-level error caught:', error, info)}
         >
