@@ -313,11 +313,10 @@ Tasks within a phase should be completed **in order** (earlier tasks are prerequ
 
 ### 4.3 Consolidate API utilities
 
-- [ ] Merge `utils/auth.js` functionality into `utils/api.js`:
-  - Port `tokenManager` (AsyncStorage wrapper) to `api.js`
-  - Port `authFlow` (login/register/logout orchestration)
-  - Delete `utils/auth.js` after migration
-  - Update all imports across the app to use `utils/api.js`
+- [x] Merge `utils/auth.js` functionality into `utils/api.js` (completed in Phase 3.1, commit `beb6d9c`):
+  - [x] Port `tokenManager` (AsyncStorage wrapper) to `api.js`
+  - [x] Delete `utils/auth.js` after migration
+  - [x] Update all imports across the app to use `utils/api.js`
 
 ### 4.4 App-wide i18n
 
