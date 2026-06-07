@@ -6,208 +6,280 @@ on:
   pull_request:
     branches: [ main, develop ]
 
+# Cancels previous runs on same ref
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  REGISTRY_IMAGE_BACKEND: urbanflow-backend
+  REGISTRY_IMAGE_FRONTEND: urbanflow-frontend
+
 jobs:
-  # Backend Tests and Linting
+  # ----------------------------------------------------------------------
+  # Backend: lint, test, coverage
+  # ----------------------------------------------------------------------
   backend-test:
+    name: Backend — Lint, Test, Coverage
     runs-on: ubuntu-latest
-    
+    timeout-minutes: 15
     strategy:
       matrix:
-        node-version: [18.x]
-    
+        node-version: [20.x]
     steps:
-    - uses: actions/checkout@v3
-    
-    - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v3
-      with:
-        node-version: ${{ matrix.node-version }}
-        cache: 'npm'
-        cache-dependency-path: backend/package-lock.json
-    
-    - name: Install dependencies
-      working-directory: ./backend
-      run: npm ci
-    
-    - name: Initialize database (optional)
-      working-directory: ./backend
-      run: |
-        echo "📦 Database initialization skipped - using existing SQLite DB"
-        # npm run init script doesn't exist yet
-      continue-on-error: true
-    
-    - name: Seed database (optional)
-      working-directory: ./backend
-      run: |
-        echo "🌱 Seeding database..."
-        npm run seed || echo "⚠️ Database seeding skipped - not configured"
-    
-    - name: Start backend server
-      working-directory: ./backend
-      run: |
-        npm run dev > /dev/null 2>&1 &
-        sleep 15
-        echo "Server started"
-    
-    - name: Test Phase 4 endpoints
-      working-directory: ./backend
-      run: node tests/test-phase4.js
-      continue-on-error: true
-    
-    - name: Stop server
-      run: pkill -f "node server.js" || true
-      continue-on-error: true
-  
-  # Frontend Tests and Build
+      - name: Checkout
+        uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v3.6.0
+
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@0a44ba7841725637a19e28fa30b79a866c81b0a6 # v4.0.0
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'npm'
+          cache-dependency-path: backend/package-lock.json
+
+      - name: Install dependencies
+        working-directory: ./backend
+        run: npm ci --no-audit --no-fund
+
+      - name: Lint
+        working-directory: ./backend
+        run: npm run lint
+
+      - name: Audit dependencies
+        working-directory: ./backend
+        run: npm audit --audit-level=high
+        continue-on-error: false
+
+      - name: Run tests
+        working-directory: ./backend
+        run: npm test
+
+      - name: Generate coverage
+        working-directory: ./backend
+        run: npm run test:coverage
+
+      - name: Upload coverage artifact
+        if: always()
+        uses: actions/upload-artifact@65462800fd760344b1a7b4382951275a0abb4808 # v4.4.3
+        with:
+          name: backend-coverage
+          path: backend/coverage/
+          retention-days: 14
+          if-no-files-found: warn
+
+  # ----------------------------------------------------------------------
+  # Frontend: lint, test, coverage
+  # ----------------------------------------------------------------------
   frontend-test:
+    name: Frontend — Lint, Test, Coverage
     runs-on: ubuntu-latest
-    
+    timeout-minutes: 20
     strategy:
       matrix:
-        node-version: [18.x]
-    
+        node-version: [20.x]
     env:
       EXPO_NO_TELEMETRY: "true"
-    
+      CI: "true"
     steps:
-    - uses: actions/checkout@v3
-    
-    - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v3
-      with:
-        node-version: ${{ matrix.node-version }}
-        cache: 'npm'
-        cache-dependency-path: urbanflow_app/package-lock.json
-    
-    - name: Install dependencies
-      working-directory: ./urbanflow_app
-      run: npm ci --legacy-peer-deps
-    
-    - name: Check JavaScript syntax (optional)
-      working-directory: ./urbanflow_app
-      run: npx eslint . --ext .js,.jsx || echo "⚠️ ESLint check skipped - not configured"
-      continue-on-error: true
-    
-    - name: Run basic syntax validation
-      working-directory: ./urbanflow_app
-      run: |
-        echo "Validating JavaScript files..."
-        find . -name "*.js" -not -path "*/node_modules/*" | head -20 | while read file; do
-          node --check "$file" 2>/dev/null || echo "Syntax OK: $file"
-        done
-        echo "✓ Basic syntax validation complete"
-    
-    - name: Build check (web) - Optional
-      working-directory: ./urbanflow_app
-      run: |
-        echo "Attempting web build..."
-        npx expo export:web --non-interactive || echo "⚠️ Web build skipped - Expo web not fully configured"
-      continue-on-error: true
-      timeout-minutes: 10
-  
-  # Docker Build and Test
+      - name: Checkout
+        uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v3.6.0
+
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@0a44ba7841725637a19e28fa30b79a866c81b0a6 # v4.0.0
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'npm'
+          cache-dependency-path: urbanflow_app/package-lock.json
+
+      - name: Install dependencies
+        working-directory: ./urbanflow_app
+        run: npm ci --legacy-peer-deps --no-audit --no-fund
+
+      - name: Lint
+        working-directory: ./urbanflow_app
+        run: npm run lint
+
+      - name: Audit dependencies
+        working-directory: ./urbanflow_app
+        run: npm audit --audit-level=high
+        continue-on-error: false
+
+      - name: Run tests (CI mode)
+        working-directory: ./urbanflow_app
+        run: npm run test:ci
+
+      - name: Generate coverage
+        working-directory: ./urbanflow_app
+        run: npm run test:coverage
+
+      - name: Upload coverage artifact
+        if: always()
+        uses: actions/upload-artifact@65462800fd760344b1a7b4382951275a0abb4808 # v4.4.3
+        with:
+          name: frontend-coverage
+          path: urbanflow_app/coverage/
+          retention-days: 14
+          if-no-files-found: warn
+
+  # ----------------------------------------------------------------------
+  # Docker: build both images and verify compose
+  # ----------------------------------------------------------------------
   docker-build:
+    name: Docker — Build & Compose Verify
     runs-on: ubuntu-latest
     needs: [backend-test, frontend-test]
-    
+    timeout-minutes: 30
     steps:
-    - uses: actions/checkout@v3
-    
-    - name: Set up Docker Buildx
-      uses: docker/setup-buildx-action@v2
-    
-    - name: Build backend Docker image
-      uses: docker/build-push-action@v4
-      with:
-        context: ./backend
-        push: false
-        tags: urbanflow-backend:${{ github.sha }}
-        cache-from: type=registry,ref=urbanflow-backend:buildcache
-        cache-to: type=inline
-        no-cache: true
-    
-    - name: Build frontend Docker image
-      uses: docker/build-push-action@v4
-      with:
-        context: ./urbanflow_app
-        push: false
-        tags: urbanflow-frontend:${{ github.sha }}
-        cache-from: type=registry,ref=urbanflow-frontend:buildcache
-        cache-to: type=inline
-    
-    - name: Test Docker Compose
-      run: |
-        echo "🐳 Starting Docker Compose services..."
-        docker compose up -d
-        
-        echo "⏳ Waiting for backend to be ready (30s) ..."
-        sleep 30
-        
-        echo "🏥 Running health check..."
-        curl -v http://localhost:3000/health || {
-          echo "❌ Health check failed. Showing logs:"
-          docker compose logs backend
-          exit 1
-        }
-        
-        echo "✅ Backend health check passed!"
-        
-        echo "📱 Checking frontend..."
-        curl -v http://localhost:8081 || {
-          echo "⚠️ Frontend not responding (may be OK for dev mode)"
-        }
-        
-        echo "✅ All services running!"
-        docker compose ps
-        
-        echo "🧹 Cleaning up..."
-        docker compose down
-  
-  # Code Quality Checks
+      - name: Checkout
+        uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v3.6.0
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@988b5a0280414f521da01fcc63a27aeeb4b104db # v2.10.0
+
+      - name: Build backend Docker image
+        uses: docker/build-push-action@ca0f9bc819276a6625a4d654f5d4362967b89619 # v5.1.0
+        with:
+          context: ./backend
+          push: false
+          tags: ${{ env.REGISTRY_IMAGE_BACKEND }}:${{ github.sha }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      - name: Build frontend Docker image
+        uses: docker/build-push-action@ca0f9bc819276a6625a4d654f5d4362967b89619 # v5.1.0
+        with:
+          context: ./urbanflow_app
+          push: false
+          tags: ${{ env.REGISTRY_IMAGE_FRONTEND }}:${{ github.sha }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      - name: Validate docker-compose.yml
+        run: node scripts/validate-compose.js
+
+      - name: Start stack and wait for backend health
+        run: |
+          echo "Starting Docker Compose..."
+          docker compose up -d
+          # Wait for backend /health to respond 200 (up to 2 minutes)
+          for i in $(seq 1 60); do
+            if curl --silent --show-error --max-time 2 http://localhost:3000/health > /dev/null; then
+              echo "Backend healthy after ${i} attempts"
+              break
+            fi
+            if [ $i -eq 60 ]; then
+              echo "Backend failed to become healthy in 2 min"
+              docker compose logs backend
+              docker compose down
+              exit 1
+            fi
+            sleep 2
+          done
+
+          echo "Final health probe:"
+          curl --silent --show-error http://localhost:3000/health | jq . || curl -v http://localhost:3000/health
+          echo "Stack status:"
+          docker compose ps
+          echo "Cleaning up..."
+          docker compose down -v
+
+  # ----------------------------------------------------------------------
+  # Code quality gates
+  # ----------------------------------------------------------------------
   code-quality:
+    name: Code Quality
     runs-on: ubuntu-latest
-    
+    timeout-minutes: 5
     steps:
-    - uses: actions/checkout@v3
-    
-    - name: Check file sizes
-      run: |
-        find . -type f -size +1M ! -path "*/node_modules/*" ! -path "*/.git/*" || echo "No large files found"
-    
-    - name: Validate JSON files
-      run: |
-        find . -name "*.json" ! -path "*/node_modules/*" -exec jq empty {} \; || echo "JSON validation not available"
-    
-    - name: Check for secrets in code
-      run: |
-        grep -r "API_KEY\|SECRET\|PASSWORD" --include="*.js" --include="*.jsx" . || echo "No obvious secrets found"
-  
-  # Deploy to Staging (on develop branch)
+      - name: Checkout
+        uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v3.6.0
+
+      - name: Check for oversized files
+        run: |
+          set -e
+          large=$(find . -type f -size +1M \
+            -not -path "*/node_modules/*" \
+            -not -path "*/.git/*" \
+            -not -path "*/coverage/*" 2>/dev/null)
+          if [ -n "$large" ]; then
+            echo "::error::Large files found (>1MB):"
+            echo "$large"
+            exit 1
+          fi
+          echo "No oversized files"
+
+      - name: Validate JSON files
+        run: |
+          set -e
+          bad=$(find . -name "*.json" \
+            -not -path "*/node_modules/*" \
+            -not -path "*/coverage/*" \
+            -not -path "*/.git/*" \
+            -exec jq empty {} \; 2>&1)
+          if [ -n "$bad" ]; then
+            echo "::error::Invalid JSON files:"
+            echo "$bad"
+            exit 1
+          fi
+          echo "All JSON files valid"
+
+      - name: Scan for accidental secrets in code
+        run: |
+          # Only flag if high-entropy-looking assignment to obvious secret keys
+          hits=$(grep -rEn "(JWT_SECRET|API_KEY|PASSWORD|TOKEN)\s*=\s*['\"][A-Za-z0-9_\-]{20,}" \
+            --include="*.js" --include="*.jsx" \
+            --exclude-dir=node_modules --exclude-dir=coverage . 2>/dev/null || true)
+          if [ -n "$hits" ]; then
+            echo "::error::Possible hardcoded secret found:"
+            echo "$hits"
+            exit 1
+          fi
+          echo "No hardcoded secrets detected"
+
+  # ----------------------------------------------------------------------
+  # Deploy jobs (placeholders; configure per environment in Phase 6.3)
+  # ----------------------------------------------------------------------
   deploy-staging:
+    name: Deploy — Staging
     runs-on: ubuntu-latest
-    needs: [backend-test, frontend-test, docker-build]
-    if: github.ref == 'refs/heads/develop'
-    
+    needs: [backend-test, frontend-test, docker-build, code-quality]
+    if: github.ref == 'refs/heads/develop' && github.event_name == 'push'
+    environment:
+      name: staging
+      url: ${{ steps.deploy.outputs.url }}
     steps:
-    - uses: actions/checkout@v3
-    
-    - name: Deploy to staging
-      run: |
-        echo "🚀 Deploying to staging environment..."
-        echo "This would trigger deployment scripts"
-        # Add actual deployment commands here
-  
-  # Deploy to Production (on main branch)
+      - name: Checkout
+        uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v3.6.0
+      - name: Deploy to staging
+        id: deploy
+        run: |
+          echo "::warning::deploy-staging is a placeholder. Configure platform in docs/DEPLOYMENT.md"
+          echo "DEPLOY_PLATFORM_PLACEHOLDER" >> "$GITHUB_OUTPUT"
+          # Real implementation: SSH to VPS / `railway up` / `flyctl deploy`
+      - name: Notify
+        if: always()
+        run: |
+          echo "Staging deploy status: ${{ job.status }}"
+          echo "See docs/DEPLOYMENT.md to wire up real deploy steps"
+
   deploy-production:
+    name: Deploy — Production
     runs-on: ubuntu-latest
-    needs: [backend-test, frontend-test, docker-build]
-    if: github.ref == 'refs/heads/main'
-    
+    needs: [backend-test, frontend-test, docker-build, code-quality]
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    environment:
+      name: production
+      url: ${{ steps.deploy.outputs.url }}
     steps:
-    - uses: actions/checkout@v3
-    
-    - name: Deploy to production
-      run: |
-        echo "🚀 Deploying to production environment..."
-        echo "This would trigger deployment scripts"
-        # Add actual deployment commands here
+      - name: Checkout
+        uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v3.6.0
+      - name: Deploy to production
+        id: deploy
+        run: |
+          echo "::warning::deploy-production is a placeholder. Configure platform in docs/DEPLOYMENT.md"
+          # Real implementation requires manual approval via GH Environment protection rules
+      - name: Notify
+        if: always()
+        run: |
+          echo "Production deploy status: ${{ job.status }}"
+          echo "See docs/DEPLOYMENT.md to wire up real deploy steps"
