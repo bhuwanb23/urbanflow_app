@@ -15,7 +15,7 @@ module.exports = {
     '!**/node_modules/**'
   ],
   coverageDirectory: 'coverage',
-  coverageReporters: ['text', 'lcov'],
+  coverageReporters: ['text', 'lcov', 'json-summary'],
   coveragePathIgnorePatterns: [
     '/node_modules/',
     '/tests/',

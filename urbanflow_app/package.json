@@ -9,7 +9,8 @@
     "web": "expo start --web",
     "test": "jest --forceExit",
     "test:watch": "jest --watch",
-    "test:ci": "jest --ci --forceExit"
+    "test:ci": "jest --ci --forceExit",
+    "test:coverage": "node scripts/coverage-runner.js"
   },
   "dependencies": {
     "@expo-google-fonts/inter": "^0.4.1",

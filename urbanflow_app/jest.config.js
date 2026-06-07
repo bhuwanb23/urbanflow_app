@@ -10,4 +10,13 @@ module.exports = {
   ],
   setupFiles: ['<rootDir>/jest.setup.js'],
   setupFilesAfterEnv: ['@testing-library/jest-native/extend-expect'],
+  collectCoverageFrom: [
+    'utils/**/*.js',
+    'pages/**/*.js',
+    'components/**/*.js',
+    '!**/node_modules/**',
+    '!**/__tests__/**'
+  ],
+  coverageDirectory: 'coverage',
+  coverageReporters: ['text', 'lcov', 'json-summary']
 };
