@@ -7,6 +7,7 @@ const registerSchema = Joi.object({
   }),
   password: Joi.string().min(8).required()
     .pattern(/\d/, '1 number')
+    // eslint-disable-next-line no-useless-escape
     .pattern(/[!@#$%^&*(),.?":{}|<>_\-~`+=\[\]\\';\/]/, '1 special character')
     .messages({
       'string.min': 'Password must be at least 8 characters',

@@ -11,7 +11,7 @@ const { sequelize } = require('../../models');
 
 let app;
 let token;
-let userId;
+let _userId;
 
 const validTrip = (overrides = {}) => ({
   from: { name: 'A', lat: 12.9, lon: 77.6 },
@@ -35,7 +35,7 @@ beforeEach(async () => {
     .post('/api/v1/auth/register')
     .send({ email: 'eco@example.com', password: 'Password1!', name: 'Eco' });
   token = res.body.data.token;
-  userId = res.body.data.user.id;
+  _userId = res.body.data.user.id;
 });
 
 afterEach(async () => {

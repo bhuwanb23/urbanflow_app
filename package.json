@@ -1,4 +1,11 @@
 {
+  "name": "urbanflow-monorepo",
+  "version": "1.0.0",
+  "private": true,
+  "description": "UrbanFlow monorepo root — workspace dev tooling only",
+  "scripts": {
+    "validate:compose": "node scripts/validate-compose.js"
+  },
   "devDependencies": {
     "js-yaml": "^4.2.0"
   }

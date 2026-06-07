@@ -9,7 +9,6 @@
  */
 
 const fs = require('fs');
-const path = require('path');
 const gtfsRealtimeBindings = require('gtfs-realtime-bindings');
 const logger = require('../utils/logger');
 

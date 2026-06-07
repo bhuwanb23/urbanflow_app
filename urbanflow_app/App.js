@@ -11,7 +11,7 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { useFonts as useUrbanist, Urbanist_400Regular, Urbanist_700Bold } from '@expo-google-fonts/urbanist';
 import { useFonts as usePoppins, Poppins_400Regular, Poppins_700Bold } from '@expo-google-fonts/poppins';
 import { useFonts as useMontserrat, Montserrat_400Regular, Montserrat_700Bold } from '@expo-google-fonts/montserrat';
-import { View, ActivityIndicator, Platform, StatusBar } from 'react-native';
+import { View, ActivityIndicator, StatusBar } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import LiveScreen from './pages/live/LiveScreen';
 import ProfileScreen from './pages/profile/ProfileScreen';
@@ -158,7 +158,7 @@ function MainTabs() {
           paddingHorizontal: 0,
           marginHorizontal: 0,
         },
-        tabBarIcon: ({ color, size, focused }) => {
+        tabBarIcon: ({ _color, _size, focused }) => {
           let iconName;
           if (route.name === 'Planner') iconName = 'compass';
           else if (route.name === 'Live') iconName = 'traffic-light';
@@ -213,15 +213,15 @@ export default function App() {
   const [isLoading, setIsLoading] = React.useState(true);
   const [isLoggedIn, setIsLoggedIn] = React.useState(false);
 
-  let [urbanistLoaded] = useUrbanist({
+  const [urbanistLoaded] = useUrbanist({
     Urbanist_400Regular,
     Urbanist_700Bold,
   });
-  let [poppinsLoaded] = usePoppins({
+  const [poppinsLoaded] = usePoppins({
     Poppins_400Regular,
     Poppins_700Bold,
   });
-  let [montserratLoaded] = useMontserrat({
+  const [montserratLoaded] = useMontserrat({
     Montserrat_400Regular,
     Montserrat_700Bold,
   });

@@ -4,8 +4,8 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 const NotificationHeader = ({ 
   navigation, 
-  onFilterPress, 
-  stats,
+  _onFilterPress, 
+  _stats,
   showStats = true,
   activeFilter,
   onFilterSelect

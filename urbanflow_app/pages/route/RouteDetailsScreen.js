@@ -1,5 +1,5 @@
 import React, { useState, useCallback, useMemo } from 'react';
-import { View, Text, StyleSheet, ScrollView, SafeAreaView, Linking, Alert, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, Linking, Alert, TouchableOpacity } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 // Import Components
@@ -19,7 +19,7 @@ import { useAccessibility } from './hooks/useAccessibility';
 import { useLiveTracking } from './hooks/useLiveTracking';
 
 // Import constants
-import { MOCK_ROUTE_DATA } from './constants/routeConstants';
+
 import { routeTheme } from './theme/routeTheme';
 
 /**
@@ -28,7 +28,7 @@ import { routeTheme } from './theme/routeTheme';
 function RouteDetailsContent({ navigation, route }) {
   const { currentRoute, isLoading, error, refetch } = useRoute();
   const { triggerHapticFeedback } = useAccessibility();
-  const { startTracking, stopTracking } = useLiveTracking();
+  const { startTracking, _stopTracking } = useLiveTracking();
   const insets = useSafeAreaInsets();
 
   // State for itinerary sorting
@@ -182,7 +182,7 @@ export default function RouteDetailsScreen(props) {
 
   return (
     <RouteProvider
-      routeId={incomingRouteId}
+      routeId={_incomingRouteId}
       initialRoute={incomingRoute || undefined}
     >
       <RouteErrorBoundary

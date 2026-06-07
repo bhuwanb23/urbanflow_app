@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { _useEffect } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { MotiView } from 'moti';

@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, Image, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { MotiView } from 'moti';
 import profileTheme from '../theme/profileTheme';

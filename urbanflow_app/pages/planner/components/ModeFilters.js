@@ -1,9 +1,9 @@
 import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, ScrollView, Dimensions } from 'react-native';
+import { Text, StyleSheet, TouchableOpacity, ScrollView, Dimensions } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { MODES } from '../constants/plannerConstants';
 
-const { width } = Dimensions.get('window');
+const { _width } = Dimensions.get('window');
 
 export default function ModeFilters({ selectedMode, setSelectedMode }) {
   return (

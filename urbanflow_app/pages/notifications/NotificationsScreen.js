@@ -1,13 +1,5 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import { 
-  View, 
-  ScrollView, 
-  SafeAreaView, 
-  StyleSheet, 
-  RefreshControl,
-  ActivityIndicator,
-  Text
-} from 'react-native';
+import { View, ScrollView, SafeAreaView, StyleSheet, RefreshControl } from 'react-native';
 import notificationTheme from './theme/notificationTheme';
 
 // Import API hook

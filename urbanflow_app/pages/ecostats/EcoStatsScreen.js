@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, ScrollView, SafeAreaView, ActivityIndicator, Alert, Platform } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, SafeAreaView, Alert } from 'react-native';
 import FeedSkeleton from '../live/components/FeedSkeleton';
 import ErrorState from '../../components/ErrorState';
 

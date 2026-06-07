@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { SafeAreaView, ActivityIndicator, ScrollView, Text, StyleSheet, Dimensions, Alert, RefreshControl, View } from 'react-native';
+import { SafeAreaView, ScrollView, Dimensions, Alert, RefreshControl, View } from 'react-native';
 
 // Import components
 import {
@@ -51,7 +51,7 @@ const MOCK_ROUTES = [
   },
 ];
 
-const { width } = Dimensions.get('window');
+const { _width } = Dimensions.get('window');
 
 export default function PlannerScreen({ navigation }) {
   const [selectedMode, setSelectedMode] = useState('all');

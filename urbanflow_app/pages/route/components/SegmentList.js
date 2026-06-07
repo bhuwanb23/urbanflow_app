@@ -2,7 +2,7 @@ import React from 'react';
 import { View, StyleSheet } from 'react-native';
 import SegmentItem from './SegmentItem';
 import MapPreview from './MapPreview';
-import { routeTheme } from '../theme/routeTheme';
+
 
 /**
  * SegmentList Component

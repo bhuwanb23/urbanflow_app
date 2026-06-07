@@ -2,7 +2,7 @@ import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Dimensions, Platform } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
-const { width, height } = Dimensions.get('window');
+const { _width, _height } = Dimensions.get('window');
 
 export default function PlannerHeader({ navigation }) {
   return (

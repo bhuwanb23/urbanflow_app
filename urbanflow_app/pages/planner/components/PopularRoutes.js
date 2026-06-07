@@ -4,7 +4,7 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { MotiView } from 'moti';
 import { ROUTES } from '../constants/plannerConstants';
 
-const { width } = Dimensions.get('window');
+const { _width } = Dimensions.get('window');
 
 export default function PopularRoutes({ navigation }) {
   const handleRoutePress = (route) => {

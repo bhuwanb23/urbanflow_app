@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const { Op } = require('sequelize');
 const { Trip } = require('../models');
-const { createTripSchema, updateTripSchema, validate } = require('../validators/trip');
+const { createTripSchema, validate } = require('../validators/trip');
 const logger = require('../utils/logger');
 
 router.get('/stats', async (req, res) => {

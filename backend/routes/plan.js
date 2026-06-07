@@ -159,7 +159,7 @@ router.post('/', validate(journeyPlanSchema), async (req, res, next) => {
  * GET /api/v1/plan/modes
  * Get available transport modes with icons and colors
  */
-router.get('/modes', (req, res) => {
+router.get('/modes', (req, res, next) => {
   try {
     const allModes = modeMapper.getAllModes().map(mode => ({
       key: mode,

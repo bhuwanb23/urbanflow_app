@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, ScrollView, Image, TouchableOpacity, Dimensions, ActivityIndicator } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, Image, TouchableOpacity, Dimensions } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { MotiView } from 'moti';
 
@@ -76,8 +76,8 @@ const formatFeedTime = (timestamp) => {
 };
 
 const LiveDashboard = () => {
-  const [lastUpdated, setLastUpdated] = useState(new Date());
-  const [refreshing, setRefreshing] = useState(false);
+  const [_lastUpdated, setLastUpdated] = useState(new Date());
+  const [_refreshing, setRefreshing] = useState(false);
 
   // Phase 4: Fetch real alerts from backend
   const { feedItems, loading: alertsLoading, hasData } = useLiveAlerts({

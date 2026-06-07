@@ -1,5 +1,5 @@
-import React, { useState, useMemo } from 'react';
-import { View, StyleSheet, ScrollView, SafeAreaView, ActivityIndicator, Alert } from 'react-native';
+import React, { _useState, useMemo } from 'react';
+import { StyleSheet, ScrollView, SafeAreaView, ActivityIndicator } from 'react-native';
 
 // Import Theme
 import profileTheme from './theme/profileTheme';

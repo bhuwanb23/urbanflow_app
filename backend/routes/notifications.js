@@ -1,6 +1,5 @@
 const express = require('express');
 const router = express.Router();
-const { Op } = require('sequelize');
 const { Notification, User } = require('../models');
 const logger = require('../utils/logger');
 

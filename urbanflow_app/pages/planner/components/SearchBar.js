@@ -3,7 +3,7 @@ import { View, TextInput, StyleSheet, Dimensions } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { MotiView } from 'moti';
 
-const { width } = Dimensions.get('window');
+const { _width } = Dimensions.get('window');
 
 export default function SearchBar() {
   return (

@@ -108,7 +108,7 @@ async function main() {
   
   // Try downloading bus data
   console.log('\n1. Downloading DTC/DIMTS Bus Data...');
-  let busSize = await downloadWithSession(
+  const busSize = await downloadWithSession(
     baseUrl,
     { ...commonFormData, dataDownloaded: 'all' },
     BUS_ZIP,
@@ -131,7 +131,7 @@ async function main() {
   
   // Try downloading DMRC metro data
   console.log('\n2. Downloading DMRC Metro Data...');
-  let metroSize = await downloadWithSession(
+  const metroSize = await downloadWithSession(
     dmrcUrl,
     { ...commonFormData, dataDownloaded: 'all' },
     METRO_ZIP,

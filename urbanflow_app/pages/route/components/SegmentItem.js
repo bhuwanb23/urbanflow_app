@@ -20,15 +20,15 @@ export default function SegmentItem({ segment, isLast = false, onPress }) {
     distance,
     duration,
     carbonSaved,
-    emissions,
+    _emissions,
     fare,
     formattedFare,
     isEcoFriendly,
     iconName,
     color,
     routeColor,
-    agencyName,
-    headsign
+    _agencyName,
+    _headsign
   } = segment;
 
   // Format values with fallbacks

@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const { Op } = require('sequelize');
-const { Trip, EcoStat } = require('../models');
+const { Trip } = require('../models');
 const logger = require('../utils/logger');
 
 const getPeriodRange = (period) => {
@@ -154,7 +154,7 @@ router.get('/summary', async (req, res) => {
     const userId = req.user.id;
     const stats = await computeStats(userId, 'week');
     const { start: weekStart } = getPeriodRange('week');
-    const weekTrips = await Trip.count({ where: { userId, date: { [Op.gte]: weekStart } } });
+    await Trip.count({ where: { userId, date: { [Op.gte]: weekStart } } });
     res.json({
       success: true,
       data: {

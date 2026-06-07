@@ -7,7 +7,7 @@ jest.mock('express-rate-limit', () => () => (req, res, next) => next());
 
 const request = require('supertest');
 const { createTestApp, setupDatabase, truncateAll } = require('./helpers/db');
-const { sequelize, User } = require('../../models');
+const { sequelize } = require('../../models');
 
 let app;
 let userToken;

@@ -5,7 +5,6 @@
 
 const fs = require('fs').promises;
 const path = require('path');
-const axios = require('axios');
 
 const CHENNAI_DATA_DIR = path.join(__dirname, '../../data/chennai');
 const GTFS_DIR = path.join(CHENNAI_DATA_DIR, 'gtfs');
@@ -66,7 +65,7 @@ async function createTripsFile() {
   const trips = [];
   
   // Create sample trips for each route
-  sampleRoutes.forEach((route, idx) => {
+  sampleRoutes.forEach((route) => {
     trips.push(`${route.route_id},WEEKDAY,${route.route_id}_T1,"${route.route_long_name}",0,,${route.route_id}_S1`);
     trips.push(`${route.route_id},WEEKDAY,${route.route_id}_T2,"${route.route_long_name}",1,,${route.route_id}_S1`);
   });

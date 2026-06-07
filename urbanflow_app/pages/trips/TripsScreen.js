@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import { View, Text, StyleSheet, FlatList, ScrollView, TouchableOpacity, ActivityIndicator, SafeAreaView, Dimensions, Alert, Platform, RefreshControl } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, SafeAreaView, Dimensions, Platform, RefreshControl } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import { MotiView, AnimatePresence } from 'moti';
+import { MotiView } from 'moti';
 
 // Import API hooks
 import { useTrips, useRoutes } from '../../utils/hooks/useAPI';
@@ -9,14 +9,14 @@ import FeedSkeleton from '../live/components/FeedSkeleton';
 import EmptyState from '../../components/EmptyState';
 import ErrorState from '../../components/ErrorState';
 
-const { width, height } = Dimensions.get('window');
+const { _width, _height } = Dimensions.get('window');
 
 const FILTERS = ['All Trips', 'This Week', 'This Month', 'Eco-Friendly'];
 const SORTS = ['Date', 'Mode', 'Eco-Impact'];
 
 export default function TripsScreen({ navigation }) {
   const [selectedFilter, setSelectedFilter] = useState('All Trips');
-  const [selectedSort, setSelectedSort] = useState('Date');
+  const [_selectedSort, setSelectedSort] = useState('Date');
   const [filterIdx, setFilterIdx] = useState(0);
   const [sortIdx, setSortIdx] = useState(0);
   const [isRefreshing, setIsRefreshing] = useState(false);

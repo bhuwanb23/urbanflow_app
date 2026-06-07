@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Animated } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { useNetworkStatus } from '../hooks/useNetworkStatus';
 

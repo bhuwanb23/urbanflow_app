@@ -51,7 +51,8 @@ const validatePassword = (password) => {
   if (!/\d/.test(password)) {
     return 'Password must contain at least 1 number';
   }
-  if (!/[!@#$%^&*(),.?":{}|<>_\-~`+=\[\]\\';\/]/.test(password)) {
+  // eslint-disable-next-line no-useless-escape
+  if (!/[!@#$%^&*(),.?":{}|<>_\-~`+=\[\]\\';|/]/.test(password)) {
     return 'Password must contain at least 1 special character';
   }
   return null;

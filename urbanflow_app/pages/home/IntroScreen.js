@@ -1,10 +1,10 @@
-import React, { useEffect, useState } from 'react';
+import React, { _useEffect, _useState } from 'react';
 import { View, StyleSheet, Text, Dimensions, Platform, TouchableOpacity, StatusBar } from 'react-native';
-import { LinearGradient } from 'expo-linear-gradient';
+
 import { MotiView } from 'moti';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
-const { width, height } = Dimensions.get('window');
+const { _width, _height } = Dimensions.get('window');
 
 export default function IntroScreen({ navigation }) {
 

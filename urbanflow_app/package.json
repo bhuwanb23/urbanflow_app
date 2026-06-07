@@ -10,7 +10,9 @@
     "test": "jest --forceExit",
     "test:watch": "jest --watch",
     "test:ci": "jest --ci --forceExit",
-    "test:coverage": "node scripts/coverage-runner.js"
+    "test:coverage": "node scripts/coverage-runner.js",
+    "lint": "eslint . --ext .js,.jsx --max-warnings 0",
+    "lint:fix": "eslint . --ext .js,.jsx --fix"
   },
   "dependencies": {
     "@expo-google-fonts/inter": "^0.4.1",
@@ -60,6 +62,9 @@
     "@react-native/babel-preset": "^0.84.1",
     "@testing-library/jest-native": "^5.4.3",
     "@testing-library/react-native": "^13.3.3",
+    "eslint": "^8.57.0",
+    "eslint-plugin-react": "^7.34.0",
+    "eslint-plugin-react-native": "^4.1.0",
     "jest": "^30.3.0",
     "metro-react-native-babel-preset": "^0.77.0",
     "react-test-renderer": "^19.0.0"

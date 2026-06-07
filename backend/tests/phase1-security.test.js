@@ -41,14 +41,14 @@ jest.mock('../services/otpService', () => ({
 }));
 
 jest.mock('../models', () => {
-  const mockUser = {
+  const _mockUser = {
     id: 'user-1',
     email: 'test@test.com',
     password: '$2a$10$mockhash', // bcrypt hash of "Password1!"
     name: 'Test',
     phone: '',
     preferences: {},
-    toJSON: function () { const { password, ...rest } = this; return rest; },
+    toJSON: function () { const { password: _pw, ...rest } = this; return rest; },
     save: jest.fn().mockResolvedValue(this)
   };
 
@@ -117,13 +117,6 @@ const app = createTestApp();
 function mockUserFind(email, userData = null) {
   User.findOne.mockImplementation(async ({ where }) => {
     if (where.email === email) return userData;
-    return null;
-  });
-}
-
-function mockUserFindByPk(id, userData = null) {
-  User.findByPk.mockImplementation(async (pk) => {
-    if (pk === id) return userData;
     return null;
   });
 }

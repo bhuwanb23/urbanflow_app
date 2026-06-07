@@ -10,7 +10,7 @@ router.get('/profile', async (req, res) => {
     if (!user) {
       return res.status(404).json({ success: false, error: 'User not found' });
     }
-    const { password, ...userData } = user.toJSON();
+    const { password: _pw, ...userData } = user.toJSON();
     res.json({ success: true, data: userData });
   } catch (error) {
     logger.error('Error getting user profile:', error);
@@ -35,7 +35,7 @@ router.put('/profile', validate(updateProfileSchema), async (req, res) => {
       }
     });
     await user.save();
-    const { password, ...userData } = user.toJSON();
+    const { password: _pw, ...userData } = user.toJSON();
     res.json({ success: true, data: userData, message: 'Profile updated successfully' });
   } catch (error) {
     logger.error('Error updating user profile:', error);

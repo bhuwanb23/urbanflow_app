@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, StyleSheet, Dimensions } from 'react-native';
+import { Text, StyleSheet, Dimensions } from 'react-native';
 import { Card } from 'react-native-paper';
 import { BarChart } from 'react-native-chart-kit';
 import { MotiView } from 'moti';
@@ -35,7 +35,7 @@ export default function EcoChart() {
                         fillShadowGradient: '#10B981',
                         fillShadowGradientOpacity: 1,
                         decimalPlaces: 1,
-                        color: (opacity = 1) => `rgba(16, 185, 129, ${opacity})`,
+                        color: (opacity = 1) => `rgba(16, 185, 129, ${_opacity})`,
                         labelColor: (opacity = 1) => `#6B7280`,
                         barPercentage: 0.6,
                         propsForBackgroundLines: {

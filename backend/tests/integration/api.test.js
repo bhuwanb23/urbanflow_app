@@ -65,6 +65,7 @@ describe('Auth flow integration', () => {
 
 describe('Protected endpoint access', () => {
   let token;
+  // eslint-disable-next-line no-unused-vars
   let tripId;
 
   beforeEach(async () => {

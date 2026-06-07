@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity, SafeAreaView, ActivityIndicator, Dimensions, Alert, Platform } from 'react-native';
+import React, { useState, _useEffect } from 'react';
+import { View, Text, StyleSheet, TouchableOpacity, SafeAreaView, Platform } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import { MotiView } from 'moti';
+
 
 // Import LiveDashboard component
 import LiveDashboard from './components/LiveDashboard';

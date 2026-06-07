@@ -91,7 +91,7 @@ class DisruptionPredictionService {
     // Apply prediction rules
     let prediction = 'on-time';
     let confidence = 0.50;
-    let reasons = [];
+    const reasons = [];
 
     // Rule 1: High average delay
     if (avgDelay > 5) {

@@ -3,7 +3,7 @@ import { View, Text, StyleSheet } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { MotiView } from 'moti';
 
-export default function TransportCard({ publicTransportTrips, averageEcoScore }) {
+export default function TransportCard({ publicTransportTrips, _averageEcoScore }) {
     return (
         <MotiView 
             from={{ opacity: 0, translateY: 30 }} 

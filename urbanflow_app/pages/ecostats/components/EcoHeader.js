@@ -3,7 +3,7 @@ import { View, Text, StyleSheet, Dimensions, TouchableOpacity, Platform } from '
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { MotiView } from 'moti';
 
-const { width, height } = Dimensions.get('window');
+const { _width, _height } = Dimensions.get('window');
 
 export default function EcoHeader({ onPeriodChange, selectedPeriod }) {
     const [animating, setAnimating] = useState(false);

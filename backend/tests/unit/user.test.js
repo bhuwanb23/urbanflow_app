@@ -7,11 +7,11 @@ jest.mock('express-rate-limit', () => () => (req, res, next) => next());
 
 const request = require('supertest');
 const { createTestApp, setupDatabase, truncateAll } = require('./helpers/db');
-const { sequelize, User } = require('../../models');
+const { sequelize } = require('../../models');
 
 let app;
 let token;
-let userId;
+let _userId;
 
 beforeAll(async () => {
   app = createTestApp(true, true);
@@ -24,7 +24,7 @@ beforeEach(async () => {
     .post('/api/v1/auth/register')
     .send({ email: 'user@example.com', password: 'Password1!', name: 'User' });
   token = res.body.data.token;
-  userId = res.body.data.user.id;
+  _userId = res.body.data.user.id;
 });
 
 afterEach(async () => {
