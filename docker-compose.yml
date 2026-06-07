@@ -15,7 +15,7 @@ services:
       - ./data:/app/data
       - backend_logs:/app/logs
     environment:
-      - NODE_ENV=development
+      - NODE_ENV=production
       - PORT=3000
       - CORS_ORIGIN=http://localhost:8081
       - LOG_LEVEL=info
@@ -46,10 +46,19 @@ services:
       - /app/node_modules
     environment:
       - EXPO_PUBLIC_API_URL=http://localhost:3000/api/v1
+      - EXPO_NO_TELEMETRY=1
+      - CI=true
     depends_on:
-      - backend
+      backend:
+        condition: service_healthy
     networks:
       - urbanflow-network
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:8081"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
     # Note: For mobile testing, run Expo locally instead of in Docker
     # This is mainly for web preview or API testing
 
