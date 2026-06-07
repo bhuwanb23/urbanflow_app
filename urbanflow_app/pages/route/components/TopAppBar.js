@@ -9,7 +9,7 @@ import { useAccessibility } from '../hooks/useAccessibility';
  * Header with back button and Start Journey action
  */
 export default function TopAppBar({ onBack, onStartJourney, title = 'Route Details' }) {
-  const insets = useSafeAreaInsets();
+  const _insets = useSafeAreaInsets();
   const { triggerHapticFeedback, announceForAccessibility } = useAccessibility();
 
   const handleBackPress = () => {

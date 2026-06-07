@@ -2,11 +2,11 @@ import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, Platform, Modal } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
-const NotificationHeader = ({ 
-  navigation, 
-  _onFilterPress, 
-  _stats,
-  showStats = true,
+const NotificationHeader = ({
+  navigation,
+  onFilterPress: _onFilterPress,
+  stats: _stats,
+  showStats: _showStats = true,
   activeFilter,
   onFilterSelect
 }) => {

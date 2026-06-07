@@ -84,13 +84,8 @@ export function useAccessibility() {
    * Check if reduce motion is enabled
    */
   const shouldReduceMotion = useCallback(async () => {
-    try {
-      // Would use AccessibilityInfo.isReduceMotionEnabled in production
-      return false;
-    } catch (error) {
-      console.error('Error checking reduce motion:', error);
-      return false;
-    }
+    // Would use AccessibilityInfo.isReduceMotionEnabled in production
+    return false;
   }, []);
 
   /**

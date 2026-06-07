@@ -45,7 +45,7 @@ export class RouteErrorBoundary extends Component {
           <Text style={styles.title}>Oops! Something went wrong</Text>
           
           <Text style={styles.subtitle}>
-            We couldn't load the route details. Please try again.
+            We couldn&apos;t load the route details. Please try again.
           </Text>
           
           {__DEV__ && this.state.error && (

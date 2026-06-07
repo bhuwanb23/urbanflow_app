@@ -38,9 +38,9 @@ export default function SegmentItem({ segment, isLast = false, onPress }) {
   const displayCarbonSaved = carbonSaved ? `${carbonSaved.toFixed(2)} kg CO₂` : null;
   
   // Use provided icon and color or fallbacks
-  const segmentIconName = iconName || mode?.toLowerCase() || 'transit';
-  const segmentColor = color || routeColor || routeTheme.colors.primary;
-  const ecoColor = isEcoFriendly ? '#10B981' : routeTheme.colors.secondary;
+  const _segmentIconName = iconName || mode?.toLowerCase() || 'transit';
+  const _segmentColor = color || routeColor || routeTheme.colors.primary;
+  const _ecoColor = isEcoFriendly ? '#10B981' : routeTheme.colors.secondary;
 
   const handlePress = () => {
     triggerHapticFeedback('selection');

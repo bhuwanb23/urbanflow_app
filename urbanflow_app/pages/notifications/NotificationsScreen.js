@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import { View, ScrollView, SafeAreaView, StyleSheet, RefreshControl } from 'react-native';
+import { View, ScrollView, SafeAreaView, StyleSheet, RefreshControl, Alert } from 'react-native';
 import notificationTheme from './theme/notificationTheme';
 
 // Import API hook
@@ -81,7 +81,7 @@ const NotificationsScreen = ({ navigation }) => {
     }
   };
 
-  const handleMarkAllAsRead = async () => {
+  const _handleMarkAllAsRead = async () => {
     try {
       await markAllAsRead();
     } catch (err) {
@@ -104,11 +104,13 @@ const NotificationsScreen = ({ navigation }) => {
       case 'important':
         return notificationsArray.filter(n => n.severity === 'warning' || n.priority === 'high');
       case 'today':
-        const today = new Date();
-        return notificationsArray.filter(n => {
-          const notifDate = new Date(n.createdAt || n.timestamp);
-          return notifDate.toDateString() === today.toDateString();
-        });
+        {
+          const today = new Date();
+          return notificationsArray.filter(n => {
+            const notifDate = new Date(n.createdAt || n.timestamp);
+            return notifDate.toDateString() === today.toDateString();
+          });
+        }
       default:
         return notificationsArray;
     }

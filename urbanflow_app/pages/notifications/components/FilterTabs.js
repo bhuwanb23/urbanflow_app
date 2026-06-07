@@ -1,7 +1,6 @@
 import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { MotiView } from 'moti';
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import notificationTheme from '../theme/notificationTheme';
 
 const FilterTabs = ({ 
@@ -17,7 +16,7 @@ const FilterTabs = ({
       style={styles.tabsContainer}
     >
       <View style={styles.tabsWrapper}>
-        {filters.map((filter, index) => {
+        {filters.map((filter) => {
           const isActive = activeFilter === filter.toLowerCase();
           return (
             <MotiView

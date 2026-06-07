@@ -14,24 +14,6 @@ import SettingsCard from './components/SettingsCard';
 import SustainabilityCard from './components/SustainabilityCard';
 import LogoutButton from './components/LogoutButton';
 
-const ACCOUNT_SETTINGS = [
-  { icon: 'account-edit', label: 'Edit Profile', route: 'EditProfileScreen', bg: '#F8FAFC', color: ['#0F172A'] },
-  { icon: 'bell-outline', label: 'Notifications', route: 'NotificationsScreen', bg: '#F8FAFC', color: ['#0F172A'] },
-  { icon: 'shield-account', label: 'Privacy & Security', route: 'PrivacyScreen', bg: '#F8FAFC', color: ['#0F172A'] },
-];
-
-const PREFERENCES_SETTINGS = [
-  { icon: 'bus', label: 'Preferred Transport', route: 'PreferredTransportScreen', bg: '#F8FAFC', color: ['#0F172A'] },
-  { icon: 'target', label: 'Mobility Goals', route: 'MobilityGoalsScreen', bg: '#F8FAFC', color: ['#0F172A'] },
-  { icon: 'earth', label: 'Language & Region', route: 'LanguageRegionScreen', bg: '#F8FAFC', color: ['#0F172A'] },
-];
-
-const SUSTAINABILITY_DATA = [
-  { icon: 'leaf', label: 'CO2 Saved', value: '45.2 kg', percent: '+12%', percentColor: '#10B981', bg: '#ECFDF5', color: ['#10B981'] },
-  { icon: 'tree', label: 'Trees Equivalent', value: '2.5', percent: '+1', percentColor: '#10B981', bg: '#ECFDF5', color: ['#10B981'] },
-  { icon: 'star-circle', label: 'Eco Score', value: '850', percent: 'Top 5%', percentColor: '#F59E0B', bg: '#FFFBEB', color: ['#F59E0B'] },
-];
-
 export default function ProfileScreen({ navigation }) {
   // Use real API data instead of mock
   const { user, loading: userLoading } = useAuth();

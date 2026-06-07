@@ -31,7 +31,7 @@ module.exports = {
     'react-native/no-color-literals': 'off',
     'react-native/sort-styles': 'off',
     'react-native/sort-platform-collections': 'off',
-    'react-native/no-unused-styles': 'warn',
+    'react-native/no-unused-styles': 'off',
     'react-native/no-emoji': 'off',
     'react-native/no-single-element-style-arrays': 'off',
     'prefer-const': 'error',

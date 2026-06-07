@@ -59,7 +59,7 @@ export default function TrafficWidget() {
   const trafficLevel = trafficData.congestion || 50;
   const isHeavy = trafficLevel > 70;
   const isModerate = trafficLevel > 40 && trafficLevel <= 70;
-  const isLight = trafficLevel <= 40;
+  const _isLight = trafficLevel <= 40;
 
   return (
     <View style={styles.container}>

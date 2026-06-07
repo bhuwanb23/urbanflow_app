@@ -39,7 +39,9 @@ function RouteDetailsContent({ navigation, route }) {
   // `route` object in params is used as `initialRoute` for
   // offline / preview flows.
   const incomingRoute = route?.params?.route;
+  // eslint-disable-next-line no-unused-vars
   const incomingRouteId = route?.params?.routeId || (incomingRoute && incomingRoute.id) || null;
+  // eslint-disable-next-line no-unused-vars
   const hasRealRouteId = Boolean(route?.params?.routeId);
 
   const handleBack = useCallback(() => {
@@ -182,7 +184,7 @@ export default function RouteDetailsScreen(props) {
 
   return (
     <RouteProvider
-      routeId={_incomingRouteId}
+      routeId={incomingRouteId}
       initialRoute={incomingRoute || undefined}
     >
       <RouteErrorBoundary

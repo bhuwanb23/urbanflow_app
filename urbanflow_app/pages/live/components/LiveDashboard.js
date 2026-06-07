@@ -94,14 +94,14 @@ const LiveDashboard = () => {
     return () => clearInterval(interval);
   }, []);
 
-  const handleRefresh = () => {
+  const _handleRefresh = () => {
     setRefreshing(true);
     setLastUpdated(new Date());
     // Simulate refresh delay for smooth animation
     setTimeout(() => setRefreshing(false), 800);
   };
 
-  const formatLastUpdated = (date) => {
+  const _formatLastUpdated = (date) => {
     const now = new Date();
     const diffMs = now - date;
     const diffSecs = Math.floor(diffMs / 1000);

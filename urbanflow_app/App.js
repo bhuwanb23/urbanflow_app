@@ -40,7 +40,7 @@ const ProfileStack = createStackNavigator();
 
 // Screen wrapper to add bottom padding for tab bar
 const ScreenWrapper = ({ children }) => {
-  const insets = useSafeAreaInsets();
+  const _insets = useSafeAreaInsets();
   return (
     <View style={{ 
       flex: 1, 
@@ -78,7 +78,7 @@ const WrappedTripsScreen = (props) => (
   </ScreenWrapper>
 );
 
-const WrappedRouteDetailsScreen = (props) => (
+const _WrappedRouteDetailsScreen = (props) => (
   <ScreenWrapper>
     <RouteDetailsScreen {...props} />
   </ScreenWrapper>

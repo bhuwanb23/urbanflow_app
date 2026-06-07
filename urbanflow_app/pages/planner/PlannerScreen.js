@@ -11,7 +11,6 @@ import {
 } from './components';
 import FeedSkeleton from '../live/components/FeedSkeleton';
 import MapSkeleton from '../live/components/MapSkeleton';
-import EmptyState from '../../components/EmptyState';
 import ErrorState from '../../components/ErrorState';
 
 // Import styles

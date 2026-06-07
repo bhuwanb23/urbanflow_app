@@ -35,7 +35,8 @@ export default function EcoChart() {
                         fillShadowGradient: '#10B981',
                         fillShadowGradientOpacity: 1,
                         decimalPlaces: 1,
-                        color: (opacity = 1) => `rgba(16, 185, 129, ${_opacity})`,
+                        color: (opacity = 1) => `rgba(16, 185, 129, ${opacity})`,
+                        // eslint-disable-next-line no-unused-vars
                         labelColor: (opacity = 1) => `#6B7280`,
                         barPercentage: 0.6,
                         propsForBackgroundLines: {

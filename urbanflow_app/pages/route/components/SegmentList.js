@@ -8,7 +8,7 @@ import MapPreview from './MapPreview';
  * SegmentList Component
  * Renders all journey segments with optional map preview
  */
-export default function SegmentList({ segments, showConnectors = true }) {
+export default function SegmentList({ segments, showConnectors: _showConnectors = true }) {
   if (!segments || segments.length === 0) {
     return null;
   }

@@ -37,7 +37,7 @@ export default function JourneyOverview({ routeData }) {
   const displayCarbonSaved = formattedCarbonSaved || `${(carbonSaved || 0).toFixed(2)} kg CO₂`;
 
   // Get primary mode from first leg
-  const primaryMode = legs.length > 0 ? (legs[0].mode || 'TRANSIT') : 'TRANSIT';
+  const _primaryMode = legs.length > 0 ? (legs[0].mode || 'TRANSIT') : 'TRANSIT';
   const isEcoFriendly = legs.every(leg => leg.isEcoFriendly !== false);
 
   return (

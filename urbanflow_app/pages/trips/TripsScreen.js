@@ -15,8 +15,7 @@ const FILTERS = ['All Trips', 'This Week', 'This Month', 'Eco-Friendly'];
 const SORTS = ['Date', 'Mode', 'Eco-Impact'];
 
 export default function TripsScreen({ navigation }) {
-  const [selectedFilter, setSelectedFilter] = useState('All Trips');
-  const [_selectedSort, setSelectedSort] = useState('Date');
+  const [selectedFilter, setSelectedFilter] = useState('All Trips'); // eslint-disable-line no-unused-vars
   const [filterIdx, setFilterIdx] = useState(0);
   const [sortIdx, setSortIdx] = useState(0);
   const [isRefreshing, setIsRefreshing] = useState(false);

@@ -416,18 +416,14 @@ export const demoAPI = {
     if (!__DEV__) {
       throw new Error('demoAPI is dev-only and cannot be used in production');
     }
-    try {
-      const response = await fetch(`${API_CONFIG.BASE_URL}/api/demo/traffic`);
-      const data = await response.json();
+    const response = await fetch(`${API_CONFIG.BASE_URL}/api/demo/traffic`);
+    const data = await response.json();
 
-      if (!response.ok) {
-        throw new Error(data.message || 'Failed to fetch traffic data');
-      }
-
-      return data;
-    } catch (error) {
-      throw error;
+    if (!response.ok) {
+      throw new Error(data.message || 'Failed to fetch traffic data');
     }
+
+    return data;
   },
 
   // Get demo route suggestions
@@ -435,18 +431,14 @@ export const demoAPI = {
     if (!__DEV__) {
       throw new Error('demoAPI is dev-only and cannot be used in production');
     }
-    try {
-      const response = await fetch(`${API_CONFIG.BASE_URL}/api/demo/routes`);
-      const data = await response.json();
+    const response = await fetch(`${API_CONFIG.BASE_URL}/api/demo/routes`);
+    const data = await response.json();
 
-      if (!response.ok) {
-        throw new Error(data.message || 'Failed to fetch route suggestions');
-      }
-
-      return data;
-    } catch (error) {
-      throw error;
+    if (!response.ok) {
+      throw new Error(data.message || 'Failed to fetch route suggestions');
     }
+
+    return data;
   },
 };
 
@@ -457,34 +449,26 @@ export const demoAPI = {
 export const healthAPI = {
   // Get server health status
   getHealth: async () => {
-    try {
-      const response = await fetch(`${API_CONFIG.BASE_URL}/health`);
-      const data = await response.json();
-      
-      if (!response.ok) {
-        throw new Error(data.message || 'Health check failed');
-      }
+    const response = await fetch(`${API_CONFIG.BASE_URL}/health`);
+    const data = await response.json();
 
-      return data;
-    } catch (error) {
-      throw error;
+    if (!response.ok) {
+      throw new Error(data.message || 'Health check failed');
     }
+
+    return data;
   },
 
   // Get server statistics
   getStats: async () => {
-    try {
-      const response = await fetch(`${API_CONFIG.BASE_URL}/api/stats`);
-      const data = await response.json();
-      
-      if (!response.ok) {
-        throw new Error(data.message || 'Failed to fetch server stats');
-      }
+    const response = await fetch(`${API_CONFIG.BASE_URL}/api/stats`);
+    const data = await response.json();
 
-      return data;
-    } catch (error) {
-      throw error;
+    if (!response.ok) {
+      throw new Error(data.message || 'Failed to fetch server stats');
     }
+
+    return data;
   },
 };
 
@@ -551,24 +535,16 @@ export const tokenManager = {
 export const authFlow = {
   // Complete login process
   login: async (credentials) => {
-    try {
-      const authData = await authAPI.login(credentials);
-      await tokenManager.storeAuthData(authData.token, authData.user);
-      return authData;
-    } catch (error) {
-      throw error;
-    }
+    const authData = await authAPI.login(credentials);
+    await tokenManager.storeAuthData(authData.token, authData.user);
+    return authData;
   },
 
   // Complete registration process
   register: async (userData) => {
-    try {
-      const authData = await authAPI.register(userData);
-      await tokenManager.storeAuthData(authData.token, authData.user);
-      return authData;
-    } catch (error) {
-      throw error;
-    }
+    const authData = await authAPI.register(userData);
+    await tokenManager.storeAuthData(authData.token, authData.user);
+    return authData;
   },
 
   // Complete logout process
