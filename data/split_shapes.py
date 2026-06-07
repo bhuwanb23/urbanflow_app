@@ -6,17 +6,20 @@ This script splits it into individual files, one per shape_id.
 
 USAGE:
     python split_shapes.py
+    # optional env override:
+    CITY=bengaluru python split_shapes.py   # writes to bengaluru/output/shapes/
 
-INPUT:  output/shapes.json
-OUTPUT: output/shapes/shape_001.json, shape_002.json ...
+DEFAULT INPUT:  bengaluru/output/shapes.json   (back-compat with v1 layout)
+DEFAULT OUTPUT: bengaluru/output/shapes/
 """
 
 import os
 import json
 from tqdm import tqdm
 
-INPUT_FILE  = "./output/shapes.json"
-OUTPUT_DIR  = "./output/shapes"
+CITY = os.environ.get("CITY", "bengaluru")
+INPUT_FILE  = f"./{CITY}/output/shapes.json"
+OUTPUT_DIR  = f"./{CITY}/output/shapes"
 
 os.makedirs(OUTPUT_DIR, exist_ok=True)
 
@@ -36,7 +39,7 @@ for shape_id, shape_data in tqdm(shapes.items(), desc="Writing"):
 # Delete the big original file
 os.remove(INPUT_FILE)
 
-print(f"\n✅ Done! {len(shapes)} shape files written to output/shapes/")
+print(f"\n✅ Done! {len(shapes)} shape files written to {OUTPUT_DIR}/")
 print("   Original shapes.json deleted.")
 print("\n   Now fetch shapes on demand:")
 print("   GET /api/shapes/:shape_id  → loads only that route's path")

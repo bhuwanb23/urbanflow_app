@@ -49,8 +49,8 @@ class CityManager {
         west: 77.4167
       },
       gtfs: {
-        staticDir: path.join(__dirname, '../../data/output'),
-        shapesDir: path.join(__dirname, '../../data/output/shapes')
+        staticDir: path.join(__dirname, '../../data/bengaluru/output'),
+        shapesDir: path.join(__dirname, '../../data/bengaluru/output/shapes')
       },
       gtfsRt: {
         source: 'bmtc',

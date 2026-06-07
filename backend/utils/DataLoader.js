@@ -4,9 +4,9 @@ const logger = require('../utils/logger');
 
 class DataLoader {
   constructor() {
-    this.dataDir = process.env.DATA_DIR || '../data/output';
-    this.scheduleDir = process.env.SCHEDULE_DIR || '../data/output/schedule';
-    this.shapesDir = process.env.SHAPES_DIR || '../data/output/shapes';
+    this.dataDir = process.env.DATA_DIR || '../data/delhi/output';
+    this.scheduleDir = process.env.SCHEDULE_DIR || '../data/delhi/output/schedule';
+    this.shapesDir = process.env.SHAPES_DIR || '../data/delhi/output/shapes';
     
     this.stops = null;
     this.routes = null;
