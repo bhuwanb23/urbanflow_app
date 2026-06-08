@@ -584,19 +584,19 @@ Commit: `0ece4ed`
 
 ### 9.1 Splash screen
 
-- [ ] Install `expo-splash-screen`
-- [ ] Configure splash image/color in `app.json`
-- [ ] Auto-hide when fonts and data are loaded
-- [ ] **Verify:** App shows native splash on cold start
+- [x] Install `expo-splash-screen`
+- [x] Configure splash image/color in `app.json`
+- [x] Auto-hide when fonts and data are loaded
+- [x] **Verify:** App shows native splash on cold start
 
 ### 9.2 Dark mode & theming
 
-- [ ] Create `utils/theme/index.js` with light/dark color palettes
-- [ ] Use `PaperProvider` theme with dynamic theme switching
-- [ ] Add theme toggle in Profile screen
-- [ ] Persist theme preference in AsyncStorage
-- [ ] Respect system appearance settings
-- [ ] **Verify:** Toggle theme → all screens update immediately
+- [x] Create `utils/theme/index.js` with light/dark color palettes
+- [x] Use `PaperProvider` theme with dynamic theme switching
+- [x] Add theme toggle in Profile screen
+- [x] Persist theme preference in AsyncStorage
+- [x] Respect system appearance settings
+- [x] **Verify:** Toggle theme → all screens update immediately
 
 ### 9.3 Push notifications
 
@@ -661,8 +661,8 @@ Commit: `0ece4ed`
 | **6** | Infrastructure | ~18 tasks | 🟠 | Phase 0 (Docker fix) |
 | **7** | Data & multi-city | 16 sub-tasks (✅ complete) | 🟢 | None |
 | **8** | Docs & OSS | 16 sub-tasks (✅ complete) | 🟢 | None |
-| **9** | Polish & roadmap | ~20 tasks | 🟢 | Phase 3, 4 |
-| | **Total** | **~162 tasks** (Phases 0–8 done, Phase 9 remaining) | | |
+| **9** | Polish & roadmap | 9.1–9.2 ✅, 9.3–9.8 remaining | 🟢 | Phase 3, 4 |
+| | **Total** | **~162 tasks** (Phases 0–8 done, Phase 9: 2/8 done) | | |
 
 ---
 
@@ -678,4 +678,4 @@ Each task includes a **Verify** step. Standard verification approaches:
 
 ---
 
-*Last updated: June 8, 2026 (Phase 8 complete)*
+*Last updated: June 8, 2026 (Phase 9.1–9.2 complete, working on 9.3–9.8)*
