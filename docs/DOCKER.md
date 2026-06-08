@@ -34,11 +34,11 @@ This guide explains how to run UrbanFlow using Docker containers for easy develo
 git clone https://github.com/yourusername/urbanflow.git
 cd urbanflow
 
-# Copy environment example
-cp .env.docker-example .env
+# Copy environment example from root
+cp .env.example .env
 
-# Edit .env and add your Delhi API key (optional)
-# DELHI_API_KEY=your_key_here
+# Edit .env and add your API keys (optional — static data works without)
+# See docs/API_KEYS.md for sign-up URLs and free-tier limits
 
 # Start backend container
 docker compose up backend
@@ -142,8 +142,7 @@ docker compose ps
 ### Initialize Database
 
 ```bash
-# Run database initialization
-docker compose exec backend npm run init
+# Seed database with demo data
 docker compose exec backend npm run seed
 ```
 
@@ -151,7 +150,7 @@ docker compose exec backend npm run seed
 
 ```bash
 # Copy SQLite database from container
-docker cp urbanflow-backend:/app/data/urbanflow.db ./backup.db
+docker cp urbanflow-backend:/app/data/urbanflow.sqlite ./backup.db
 ```
 
 ### Reset Database
@@ -165,7 +164,6 @@ docker compose down -v
 
 # Restart and reinitialize
 docker compose up -d
-docker compose exec backend npm run init
 docker compose exec backend npm run seed
 ```
 
@@ -190,21 +188,13 @@ docker compose exec backend npm run seed
 
 ### Environment Variables
 
-Edit `.env` file at project root:
+Edit `.env` file at project root (copy from `.env.example`):
 
 ```bash
-# GTFS-RT API Configuration
-DELHI_API_KEY=your_api_key_here
-
-# Backend Configuration
-NODE_ENV=development
-PORT=3000
-LOG_LEVEL=info
-
-# Optional: Switch to Bangalore DULT
-GTFS_RT_SOURCE=dult
-DULT_API_KEY=your_dult_key
+cp .env.example .env
 ```
+
+See `.env.example` for all available variables and [docs/API_KEYS.md](API_KEYS.md) for sign-up URLs and free-tier limits. Unset keys gracefully disable features.
 
 ### Volume Mounts
 
@@ -275,6 +265,23 @@ netstat -ano | findstr :3000
 docker rm -f urbanflow-backend
 ```
 
+### Volume Permission Errors (Linux/Mac)
+
+```bash
+# Problem: Container logs show 'EACCES: permission denied'
+# Solution: Fix ownership of mounted directories
+
+# Find the container user ID (often 1000)
+docker compose exec backend id -u
+
+# Fix ownership on host
+sudo chown -R 1000:1000 ./data
+sudo chown -R 1000:1000 ./backend
+
+# On SELinux-enabled systems, also run:
+sudo chcon -Rt svirt_sandbox_file_t ./data
+```
+
 ### Database Connection Errors
 
 ```bash
@@ -284,8 +291,8 @@ mkdir -p data/output
 # Check permissions
 chmod -R 755 data/
 
-# Reinitialize database
-docker compose exec backend npm run init
+# Re-seed database
+docker compose exec backend npm run seed
 ```
 
 ### API Not Responding
@@ -320,10 +327,10 @@ npm start
 
 ```bash
 # Build optimized images
-docker compose -f docker-compose.prod.yml build
+docker compose build
 
-# Use production configuration
-docker compose -f docker-compose.prod.yml up -d
+# Start in production mode
+docker compose up -d
 ```
 
 ### Security Considerations
@@ -336,13 +343,11 @@ docker compose -f docker-compose.prod.yml up -d
 
 ### Scaling
 
-For production scaling:
+For production scaling, use a reverse proxy:
 
 ```bash
-# Multiple backend instances
-docker compose up -d --scale backend=3
-
-# Use with reverse proxy (nginx, traefik)
+# Use with nginx or traefik in front of the backend
+# (SQLite is single-instance — scale with read-replica or switch to PostgreSQL)
 ```
 
 ---
