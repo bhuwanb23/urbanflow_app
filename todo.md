@@ -473,46 +473,50 @@ Tasks within a phase should be completed **in order** (earlier tasks are prerequ
 
 ## Phase 7 — 🗺️ Data & Multi-City
 
-> **Goal:** Complete GTFS data for all cities, fix city switching, configure real API keys.
+> **Goal:** Complete multi-city data pipeline, city switching, and documentation.
+> ✅ Fully implemented per Q&A decisions (June 8, 2026).
 
-### 7.1 GTFS data completeness
+### 7.1 Data pipeline hardening
 
-- [ ] Download Bengaluru metro GTFS (`bmrcl.zip`) and add to `data/raw/`
-- [ ] Run `preprocess.py` to regenerate Bengaluru output (with both bus + metro)
-- [ ] Move Bengaluru output from `data/output/` to `data/bengaluru/output/`
-- [ ] Download real Chennai MTC GTFS data and add to `data/chennai/raw/`
-- [ ] Run `preprocess_chennai.py` to regenerate Chennai output
-- [ ] Regenerate schedule and shape files for all cities:
-  - Run `split_shapes.py` for each city
-  - Generate per-route schedule JSONs
-- [ ] Fix empty `transfers.json` files
-- [ ] **Verify:** Each city has: `stops.json`, `routes.json`, `search_index.json`, `summary.json`, `transfers.json`, `schedule/*.json`, `shapes/*.json`
+> **Sub-tasks executed during Phase 7 implementation (June 2026):**
 
-### 7.2 API key configuration
+| # | Task | What | Commit |
+|---|------|------|--------|
+| a | `run-preprocess.js` wrapper | Spawns correct `preprocess_<city>.py` per `--city=` flag or `ACTIVE_CITY` env; `npm run preprocess` script | `6f92789` |
+| b | Rename `data/output/` → `data/bengaluru/output/` | Update `cityManager.js` bangalore entry, `DataLoader.js` defaults, `split_shapes.py` per-city paths | `358e0e6` |
+| c | `split_shapes_per_city.py` | Per-city shapes splitter with `--city=` flag; `split_shapes.py` updated with `CITY` env override for back-compat | `9545471` |
+| d | Transfer detection | Haversine grid-bucket in `preprocess.py` / `preprocess_delhi.py`; `generate-transfers.js` one-shot script; 91 Delhi bus↔metro, 0 Bengaluru (bus only), 0 Chennai (stub) | `682de12` |
+| e | Per-city path audit | `cityManager.validateCityData()` with per-file `[OK]`/`[MISS]` logging for `stops.json`, `routes.json`, `transfers.json`, `search_index.json`, `summary.json`, `shapes/`, `schedule/` | `acdffb3` |
+| f | `data/validate.js` | Walks all cities, reads `summary.json`, prints table; `--json` and single-city filter; wired into server startup | `892612f` |
+| stub | `bmrcl-source.md` | Placeholder doc with BMRCL metro GTFS source guide; `data/README.md` updated | `862118e` |
 
-- [ ] Register at `otd.delhi.gov.in` and obtain Delhi API key
-- [ ] Add real `DELHI_API_KEY` to `.env`
-- [ ] Register for TomTom API key (or alternative traffic API)
-- [ ] Add real `TOMTOM_API_KEY` to `.env`
-- [ ] Research CPCB AQI API access, add real `CPCB_API_KEY`
-- [ ] If no free AQI/Traffic APIs available, document sources and mark as "requires subscription"
-- [ ] **Verify:** Realtime endpoints return live data, not mock data
+### 7.2 API key documentation (no real keys configured — Q4 decision)
 
-### 7.3 City switch fixes
+- [x] Create root `.env.example` with all 16 documented env vars (server, JWT, rate-limit, per-city GTFS-RT, TomTom, CPCB, OTP, SSL) | `c8ecb3a`
+- [x] Create `docs/API_KEYS.md` with sign-up URLs, free tier limits, usage notes, and "which keys are required" matrix | `c8ecb3a`
+- [x] Create `urbanflow_app/.env.example` with `EXPO_PUBLIC_API_URL` placeholder and platform tips | `57bca3f`
+- [-] **Real API keys not configured** (per Q4 decision — keep current keys; document setup for future)
 
-- [ ] Implement persistent city storage (file-based or DB)
-- [ ] Fix OTP to be multi-city aware:
-  - Update `otp/build-config.json` to include all cities' OSM data
-  - Or: create per-city graph directories
-- [ ] Update router config to support per-city alert URLs
-- [ ] Add city-specific GTFS-RT API URLs to cityManager
-- [ ] **Verify:** Full flow: switch city → DataLoader reloads → stops/routes for new city
+### 7.3 City switch (unit → integration → frontend)
 
-### 7.4 Chennai setup script
+- [x] **7.3a** — `tests/unit/cityManager.test.js` (20 tests: registration, getCity, setActiveCity, env vars, DataLoader reload, validateCityData) | `09f68f5`
+- [x] **7.3b** — `tests/integration/cities.test.js` (7 tests: GET list, GET by id, POST switch, 404/400 errors, GET current); fix scheduleDir path bug | `e841af2`
+- [x] **7.3c** — `urbanflow_app/contexts/CityContext.js` (CityProvider + useCity hook), `citiesAPI` in `api.js`, wired into `App.js` and `ProfileScreen`; 5 tests (95/95 frontend core tests pass, lint clean) | `a9a384b`
 
-- [ ] Update `scripts/setup-chennai.js` to download real GTFS data (not just sample)
-- [ ] Add automated download from MTC Chennai portal
-- [ ] **Verify:** Script produces valid GTFS output
+### 7.4 Data honesty & documentation
+
+- [x] **7.4a** — Honesty pass on `setup-chennai.js`: rename `sample*` → `STUB_*`, add prominent STUB banner header, replace emoji log markers with ASCII `[INFO]`/`[OK]`, update next steps | `1e2937f`
+- [x] **7.4b** — `data/CHANGELOG.md` tracking all dataset changes per city (preprocess, transfer detection, stub creation, shape split, multi-city restructure, validation) | `5ae8425`
+- [x] **7.4c** — `docs/MULTI_CITY.md` end-to-end guide with Hyderabad example: GTFS acquisition, preprocessor creation, cityManager registration, shape split, transfer detection, validation, troubleshooting | `1009895`
+- [x] **7.5** — `todo.md` Phase 7 completion marker | `current`
+
+### Current data status (post-Phase 7)
+
+| City | Stops | Routes | Shapes | Transfers | Source |
+|------|-------|--------|--------|-----------|--------|
+| Delhi | 10,815 | 2,439 | 36 | **91** | Open Transit Data |
+| Bengaluru | 8,540 | 4,283 | 7,168 | **0** (bus only) | BMTC/DULT |
+| Chennai | 5 | 3 | 0 | **0** (stub) | `setup-chennai.js` |
 
 ---
 
@@ -648,10 +652,10 @@ Tasks within a phase should be completed **in order** (earlier tasks are prerequ
 | **4** | Dead code & quality | ~15 tasks | 🟡 | Phase 3 |
 | **5** | Testing | ~20 tasks | 🟡 | Phase 2, 3 |
 | **6** | Infrastructure | ~18 tasks | 🟠 | Phase 0 (Docker fix) |
-| **7** | Data & multi-city | ~12 tasks | 🟡 | None |
+| **7** | Data & multi-city | 16 sub-tasks (✅ complete) | 🟢 | None |
 | **8** | Docs & OSS | ~15 tasks | 🟢 | None |
 | **9** | Polish & roadmap | ~20 tasks | 🟢 | Phase 3, 4 |
-| | **Total** | **~162 tasks** | | |
+| | **Total** | **~162 tasks** (Phases 0–7 done, Phase 8–9 remaining) | | |
 
 ---
 
@@ -667,4 +671,4 @@ Each task includes a **Verify** step. Standard verification approaches:
 
 ---
 
-*Last updated: June 2, 2026*
+*Last updated: June 8, 2026*
