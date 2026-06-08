@@ -200,12 +200,13 @@ class CityManager {
   }
 
   /**
-   * Validate city data exists
+   * Validate city data exists — checks each expected file individually
    */
   async validateCityData(cityId) {
     const fs = require('fs').promises;
+    const path = require('path');
     const city = this.getCity(cityId);
-    
+
     if (!city) {
       return {
         valid: false,
@@ -213,30 +214,95 @@ class CityManager {
       };
     }
 
-    try {
-      // Check if GTFS directory exists
-      await fs.access(city.gtfs.staticDir);
-      
-      return {
-        valid: true,
-        city: city.displayName,
-        hasGtfs: true,
-        hasShapes: await this._directoryExists(city.gtfs.shapesDir)
-      };
-    } catch (error) {
+    const staticDir = city.gtfs.staticDir;
+    const shapesDir = city.gtfs.shapesDir;
+    const scheduleDir = staticDir.replace(/output$/, '') + 'schedule';
+    const expectedFiles = [
+      'stops.json', 'routes.json', 'transfers.json',
+      'search_index.json', 'summary.json'
+    ];
+
+    logger.info(`Validating data for ${city.displayName}...`);
+    logger.info(`  Static dir: ${staticDir}`);
+    logger.info(`  Shapes dir: ${shapesDir}`);
+
+    const missing = [];
+
+    // Check main data dir
+    const dirExists = await this._pathExists(staticDir);
+    if (!dirExists) {
+      logger.warn(`  [MISS] Output dir not found: ${staticDir}`);
       return {
         valid: false,
         city: city.displayName,
-        hasGtfs: false,
-        error: 'GTFS data not found'
+        staticDir,
+        shapesDir,
+        dirExists: false,
+        missing: [staticDir],
+        error: 'Output directory not found'
       };
     }
+    logger.info(`  [ OK ] Output dir: ${staticDir}`);
+
+    // Check each expected file
+    for (const file of expectedFiles) {
+      const exists = await this._pathExists(path.join(staticDir, file));
+      if (exists) {
+        logger.info(`  [ OK ] ${file}`);
+      } else {
+        logger.warn(`  [MISS] ${file}`);
+        missing.push(file);
+      }
+    }
+
+    // Check shapes dir
+    const shapesExist = await this._pathExists(shapesDir);
+    if (shapesExist) {
+      let shapeCount = 0;
+      try {
+        const files = await fs.readdir(shapesDir);
+        shapeCount = files.filter(f => f.endsWith('.json')).length;
+      } catch { /* ignore */ }
+      logger.info(`  [ OK ] shapes/ — ${shapeCount} files`);
+    } else {
+      logger.warn(`  [MISS] shapes/ dir: ${shapesDir}`);
+      missing.push('shapes/');
+    }
+
+    // Check schedule dir
+    const schedExists = await this._pathExists(scheduleDir);
+    if (schedExists) {
+      let schedCount = 0;
+      try {
+        const files = await fs.readdir(scheduleDir);
+        schedCount = files.filter(f => f.endsWith('.json')).length;
+      } catch { /* ignore */ }
+      logger.info(`  [ OK ] schedule/ — ${schedCount} files`);
+    } else {
+      logger.info(`  [INFO] schedule/ dir not found (optional): ${scheduleDir}`);
+    }
+
+    const valid = missing.length === 0;
+    if (valid) {
+      logger.info(`  => Data valid for ${city.displayName}`);
+    } else {
+      logger.warn(`  => Data INCOMPLETE for ${city.displayName}: missing ${missing.join(', ')}`);
+    }
+
+    return {
+      valid,
+      city: city.displayName,
+      staticDir,
+      shapesDir,
+      dirExists: true,
+      missing,
+    };
   }
 
-  async _directoryExists(dirPath) {
+  async _pathExists(p) {
     const fs = require('fs').promises;
     try {
-      await fs.access(dirPath);
+      await fs.access(p);
       return true;
     } catch {
       return false;
