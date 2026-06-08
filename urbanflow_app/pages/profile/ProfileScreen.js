@@ -1,11 +1,12 @@
 import React, { _useState, useMemo } from 'react';
-import { StyleSheet, ScrollView, SafeAreaView, ActivityIndicator } from 'react-native';
+import { StyleSheet, ScrollView, SafeAreaView, ActivityIndicator, Alert } from 'react-native';
 
 // Import Theme
 import profileTheme from './theme/profileTheme';
 
 // Import API Hooks
 import { useAuth, useTrips } from '../../utils/hooks/useAPI';
+import { useCity } from '../../contexts/CityContext';
 
 // Import Components
 import ProfileHeader from './components/ProfileHeader';
@@ -18,6 +19,7 @@ export default function ProfileScreen({ navigation }) {
   // Use real API data instead of mock
   const { user, loading: userLoading } = useAuth();
   const { trips } = useTrips();
+  const { currentCity, availableCities, switchCity } = useCity();
 
   // Calculate sustainability data from real trips
   const sustainabilityData = useMemo(() => {
@@ -52,6 +54,22 @@ export default function ProfileScreen({ navigation }) {
     { icon: 'target', label: 'Mobility Goals', route: 'MobilityGoalsScreen', bg: '#F8FAFC', color: ['#0F172A'] },
     { icon: 'earth', label: 'Language & Region', route: 'LanguageRegionScreen', bg: '#F8FAFC', color: ['#0F172A'] },
   ], []);
+
+  const citySettings = useMemo(() => [
+    { icon: 'city', label: currentCity?.displayName || 'Delhi NCR', route: null, bg: '#F0FDF4', color: ['#16A34A'] },
+  ], [currentCity]);
+
+  const handleCitySwitch = () => {
+    if (availableCities.length < 2) return;
+    const currentIdx = availableCities.findIndex(c => c.id === currentCity?.id);
+    const nextIdx = (currentIdx + 1) % availableCities.length;
+    const nextCity = availableCities[nextIdx];
+    switchCity(nextCity.id).then((res) => {
+      if (res?.success) {
+        Alert.alert('City Updated', `Switched to ${nextCity.name}`);
+      }
+    });
+  };
 
   // In a real app, fetch data here
   // useEffect removed — the previous setTimeout(500) fake delay was masking
@@ -119,6 +137,12 @@ export default function ProfileScreen({ navigation }) {
           title="Preferences" 
           settings={preferencesSettings} 
           onSettingPress={handleSettingPress} 
+        />
+
+        <SettingsCard 
+          title="City" 
+          settings={citySettings} 
+          onSettingPress={handleCitySwitch} 
         />
 
         <LogoutButton onLogout={handleLogout} />

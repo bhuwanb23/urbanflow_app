@@ -22,6 +22,7 @@ import RouteDetailsScreen from './pages/route/RouteDetailsScreen';
 import { tokenManager } from './utils/api';
 import ErrorBoundary from './components/ErrorBoundary';
 import OfflineBanner from './components/OfflineBanner';
+import { CityProvider } from './contexts/CityContext';
 import './utils/i18n';
 
 
@@ -291,6 +292,7 @@ export default function App() {
         <ErrorBoundary
           onError={(error, info) => console.error('App-level error caught:', error, info)}
         >
+          <CityProvider>
           <NavigationContainer>
             <StatusBar barStyle="dark-content" backgroundColor="#FFFFFF" translucent={false} />
             <Stack.Navigator
@@ -317,6 +319,7 @@ export default function App() {
               />
             </Stack.Navigator>
           </NavigationContainer>
+          </CityProvider>
         </ErrorBoundary>
       </PaperProvider>
     </SafeAreaProvider>

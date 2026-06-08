@@ -472,6 +472,27 @@ export const healthAPI = {
   },
 };
 
+export const citiesAPI = {
+  getCities: async () => {
+    return apiCall('/cities');
+  },
+
+  getCity: async (cityId) => {
+    return apiCall(`/cities/${cityId}`);
+  },
+
+  switchCity: async (cityId) => {
+    return apiCall('/cities/switch', {
+      method: 'POST',
+      body: JSON.stringify({ cityId }),
+    });
+  },
+
+  getCurrentCity: async () => {
+    return apiCall('/cities/current/info');
+  },
+};
+
 // ============================================================================
 // TOKEN MANAGEMENT
 // ============================================================================
@@ -592,6 +613,7 @@ export default {
   environmentAPI, // NEW - for AQI and weather
   notificationsAPI,
   journeyAPI, // Phase 2 OTP integration
+  citiesAPI,
   demoAPI,
   healthAPI,
   
