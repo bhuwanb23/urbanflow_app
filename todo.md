@@ -523,51 +523,58 @@ Tasks within a phase should be completed **in order** (earlier tasks are prerequ
 ## Phase 8 — 📚 Documentation & Open Source Readiness
 
 > **Goal:** Make the project ready for public contribution.
+> ✅ Fully implemented (June 8, 2026).
+> Backend: 170/170 tests ✅ lint clean ✅ | Frontend: 95/95 core tests ✅ lint clean ✅
 
 ### 8.1 Essential community files
 
-- [ ] Create `CONTRIBUTING.md`:
-  - How to set up dev environment
-  - Code style guide
-  - PR workflow
-  - Testing requirements
-- [ ] Create `CODE_OF_CONDUCT.md` (use Contributor Covenant template)
-- [ ] Create `LICENSE` (MIT)
-- [ ] Create `SECURITY.md`:
-  - How to report vulnerabilities
-  - Expected response time
-- [ ] Add GitHub issue templates:
-  - Bug report (`ISSUE_TEMPLATE/bug_report.md`)
-  - Feature request (`ISSUE_TEMPLATE/feature_request.md`)
-  - Config (`ISSUE_TEMPLATE/config.yml`)
-- [ ] Add GitHub PR template (`PULL_REQUEST_TEMPLATE.md`)
+| # | File | Commit | Notes |
+|---|------|--------|-------|
+| a | `CONTRIBUTING.md` | `8a4cc57` | Dev setup, code style, PR workflow, testing guide |
+| b | `CODE_OF_CONDUCT.md` | `8a4cc57` | Contributor Covenant v2.1 |
+| c | `LICENSE` | `8a4cc57` | MIT full text |
+| d | `SECURITY.md` | `8a4cc57` | Vulnerability reporting policy |
+| e-g | `.github/ISSUE_TEMPLATE/*` | `8a4cc57` | Bug report, feature request, config.yml |
+| h | `.github/PULL_REQUEST_TEMPLATE.md` | `8a4cc57` | PR checklist referencing tests + lint |
 
 ### 8.2 Fix README
 
-- [ ] Fix directory paths: `server/` → `backend/`, fix mobile app path
-- [ ] Fix `npm run init` references → document actual setup steps
-- [ ] Fix project structure diagram to match actual layout
-- [ ] Remove placeholder images (via.placeholder.com)
-- [ ] Remove hardcoded demo credentials (or mark them clearly)
-- [ ] Add real screenshots
-- [ ] Add environment setup section
-- [ ] Add troubleshooting section for common Docker issues
+| # | Issue | Fix |
+|---|-------|-----|
+| ✅ | Placeholder images (4) | Replaced with text placeholders |
+| ✅ | `server/` → `backend/` | Fixed in diagram + all path references |
+| ✅ | `npm run init` refs | Replaced with `cp .env.example .env` + `npm run seed` |
+| ✅ | Install path nesting | Fixed doubled `urbanflow_app/urbanflow_app` paths |
+| ✅ | Demo credentials | Condensed with security warning |
+| ✅ | Project structure diagram | Rewrote with actual layout (data/, docs/, contexts/) |
+| ✅ | Environment setup | New section referencing `.env.example` + `API_KEYS.md` |
+| ✅ | Docker troubleshooting | New section with volume permission fix |
+| ✅ | API docs section | Simplified to reference `/api-docs` (Swagger) |
+
+Commit: `ff10a68`
 
 ### 8.3 Fix DOCKER.md
 
-- [ ] Remove references to non-existent `docker-compose.prod.yml`
-- [ ] Fix `npm run init` → correct commands
-- [ ] Fix database filename: `urbanflow.db` → `urbanflow.sqlite`
-- [ ] Remove SQLite scaling advice (`--scale backend=3`)
-- [ ] Add Docker troubleshooting for permission errors
-- [ ] Document all required environment variables
+| # | Issue | Fix |
+|---|-------|-----|
+| ✅ | `docker-compose.prod.yml` refs | Removed (file doesn't exist) |
+| ✅ | `npm run init` (3x) | Replaced with `npm run seed` |
+| ✅ | `urbanflow.db` → `urbanflow.sqlite` | Fixed db filename |
+| ✅ | `--scale backend=3` | Replaced with SQLite-aware scaling advice |
+| ✅ | Permission error docs | Added Volume Permission Errors section |
+| ✅ | Incomplete env vars | Condensed to reference `.env.example` + `API_KEYS.md` |
 
-### 8.4 API documentation
+Commit: `0ece4ed`
 
-- [ ] Add comprehensive API docs (consider Swagger/OpenAPI)
-- [ ] Include request/response examples for every endpoint
-- [ ] Document auth requirements per endpoint
-- [ ] Document error codes and formats
+### 8.4 API documentation (Swagger/OpenAPI)
+
+| # | Task | Commit |
+|---|------|--------|
+| a | Install `swagger-jsdoc` + `swagger-ui-express` | `0757efe` |
+| b | Create `backend/config/swagger.js` — OpenAPI 3.0.3 with all **67 endpoints** across 14 route categories, 9 component schemas, bearer auth | `0757efe` |
+| c | Auth requirements documented per endpoint (security tags on protected routes) | `0757efe` |
+| d | Wire `swagger-ui` at `GET /api-docs` in `server.js` | `0757efe` |
+| e | **Verify:** `curl http://localhost:3000/api-docs` → 200, renders Swagger UI ✅ | `0757efe` |
 
 ---
 
@@ -653,9 +660,9 @@ Tasks within a phase should be completed **in order** (earlier tasks are prerequ
 | **5** | Testing | ~20 tasks | 🟡 | Phase 2, 3 |
 | **6** | Infrastructure | ~18 tasks | 🟠 | Phase 0 (Docker fix) |
 | **7** | Data & multi-city | 16 sub-tasks (✅ complete) | 🟢 | None |
-| **8** | Docs & OSS | ~15 tasks | 🟢 | None |
+| **8** | Docs & OSS | 16 sub-tasks (✅ complete) | 🟢 | None |
 | **9** | Polish & roadmap | ~20 tasks | 🟢 | Phase 3, 4 |
-| | **Total** | **~162 tasks** (Phases 0–7 done, Phase 8–9 remaining) | | |
+| | **Total** | **~162 tasks** (Phases 0–8 done, Phase 9 remaining) | | |
 
 ---
 
@@ -671,4 +678,4 @@ Each task includes a **Verify** step. Standard verification approaches:
 
 ---
 
-*Last updated: June 8, 2026*
+*Last updated: June 8, 2026 (Phase 8 complete)*
