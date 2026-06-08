@@ -15,6 +15,7 @@ data/
 ├── preprocess_chennai.py       # Chennai (MTC bus) — still a stub
 ├── split_shapes.py             # Back-compat shape splitter (CITY env override)
 ├── split_shapes_per_city.py    # Per-city shape splitter (--city= flag)
+├── bmrcl-source.md             # BMRCL metro GTFS source guide
 ├── raw/
 │   ├── bmtc.zip                # Bengaluru bus (from BMTC / Vonter mirror)
 │   └── (bmrcl.zip)             # Bengaluru metro — TODO: source from BMRCL portal
@@ -94,6 +95,7 @@ cd /opt/urbanflow && npm run preprocess -- --city=delhi
 ## Validation
 
 ```bash
-# Coming soon: npm run validate-data
+cd backend
+npm run validate-data
 # Walks all city output dirs and prints a summary table
 ```
