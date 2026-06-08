@@ -54,9 +54,8 @@
 ## 📱 Demo Preview
 
 <div align="center">
-  <img src="https://via.placeholder.com/800x400/3CB371/white?text=UrbanFlow+App+Demo" width="80%" alt="App Demo" />
-  
-  <p><em>💡 Replace with actual screenshots of Home, Routes, EcoStats, and Live screens</em></p>
+  <p><em>📸 Screenshots: Home · Route Planner · EcoStats · Live Tracking</em></p>
+  <p><em>(Add actual screenshots here)</em></p>
 </div>
 
 ---
@@ -90,6 +89,22 @@
 - **Expo CLI** (`npm install -g @expo/cli`)
 - **Git**
 
+### 🔐 Environment Setup
+
+UrbanFlow uses environment variables for API keys and configuration.
+
+```bash
+# Copy the example env files and fill in your values
+cp .env.example .env                  # root (backend defaults)
+cp urbanflow_app/.env.example urbanflow_app/.env   # mobile app
+
+# Edit .env with your preferred editor
+# See docs/API_KEYS.md for sign-up URLs and free-tier limits
+# Unset keys gracefully disable features (static data still works)
+```
+
+Refer to [docs/API_KEYS.md](docs/API_KEYS.md) for a full list of required keys, sign-up URLs, and free-tier limits.
+
 ### 🛠️ Installation
 
 #### 1. Clone the Repository
@@ -98,28 +113,15 @@ git clone https://github.com/yourusername/urbanflow.git
 cd urbanflow
 ```
 
-#### 2. Install Mobile App Dependencies
+#### 2. Backend Setup
 ```bash
-cd urbanflow_app/urbanflow_app
+cd backend
+cp .env.example .env   # fill in your API keys (or leave blank for static data)
 npm install
+npm run seed           # seed database with demo data
 ```
 
-#### 3. Install Server Dependencies
-```bash
-cd ../../server
-npm install
-```
-
-#### 4. Initialize the Server
-```bash
-# Create necessary directories and environment files
-npm run init
-
-# Populate database with sample data
-npm run seed
-```
-
-#### 5. Start the Backend Server
+#### 3. Start the Backend Server
 ```bash
 # Development mode (with auto-restart)
 npm run dev
@@ -128,27 +130,14 @@ npm run dev
 npm start
 ```
 
-The server will start on `http://localhost:3000`
+The server starts on `http://localhost:3000`
 
-#### 6. Access the Server Dashboard
-Open your browser and visit: `http://localhost:3000/dashboard`
-
-<div align="center">
-  <img src="https://via.placeholder.com/600x300/4682B4/white?text=Server+Dashboard" width="60%" alt="Server Dashboard" />
-</div>
-
-The dashboard provides:
-- 📊 **Real-time server statistics**
-- 🔍 **API endpoint documentation**
-- 🔐 **Demo credentials display**
-- 📈 **Request monitoring**
-- 🎨 **Beautiful, responsive interface**
-
-#### 7. Start the Mobile App
+#### 4. Mobile App Setup
 ```bash
-# In the urbanflow_app directory
-cd urbanflow_app/urbanflow_app
-npm start
+cd ../urbanflow_app
+cp .env.example .env
+npm install --legacy-peer-deps
+npx expo start
 ```
 
 ---
@@ -156,12 +145,12 @@ npm start
 ## 🔐 Testing the Application
 
 ### Demo Credentials
+
+After running `npm run seed`, you can log in with:
 - **Email:** `alex@urbanflow.com`
 - **Password:** `password123`
 
-### Alternative Demo Account
-- **Email:** `bhuwan.b@urbanflow.com`
-- **Password:** `password123`
+(These are seeded demo accounts — **do not use real passwords** in development.)
 
 ### Test Flow
 1. **Open the app** - You should see the Intro screen
@@ -174,47 +163,28 @@ npm start
 
 ## 🔌 API Documentation
 
-### Base URL
+After starting the server, interactive API docs are available at:
+
 ```
-http://localhost:3000
+http://localhost:3000/api-docs
 ```
 
-### Authentication Endpoints
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| `POST` | `/api/v1/auth/register` | Register a new user |
-| `POST` | `/api/v1/auth/login` | Login user |
-| `GET` | `/api/v1/auth/verify` | Verify JWT token |
-| `POST` | `/api/v1/auth/logout` | Logout user |
+Or browse the raw [backend API reference](backend/README.md).
 
-### User Management
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| `GET` | `/api/v1/user/profile` | Get user profile |
-| `PUT` | `/api/v1/user/profile` | Update profile |
+### Quick Endpoint Reference
 
-### Trips & Routes
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| `GET` | `/api/v1/trips` | Get user trips |
-| `POST` | `/api/v1/trips` | Create new trip |
-| `GET` | `/api/v1/routes` | Get saved routes |
-| `POST` | `/api/v1/routes` | Create new route |
-
-### Analytics & Stats
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| `GET` | `/api/v1/ecostats` | Get user eco stats |
-| `GET` | `/api/v1/ecostats/weekly` | Get weekly statistics |
-| `GET` | `/api/v1/traffic` | Get live traffic data |
-| `GET` | `/api/v1/notifications` | Get user notifications |
-
-### Health & Status
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| `GET` | `/health` | Server health check |
-| `GET` | `/api/v1` | API information |
-| `GET` | `/api/stats` | Server statistics |
+| Method | Endpoint | Auth | Description |
+|--------|----------|------|-------------|
+| `POST` | `/api/v1/auth/register` | No | Register new user |
+| `POST` | `/api/v1/auth/login` | No | Login user |
+| `GET` | `/api/v1/user/profile` | Yes | Get profile |
+| `PUT` | `/api/v1/user/profile` | Yes | Update profile |
+| `GET` | `/api/v1/trips` | Yes | List user trips |
+| `POST` | `/api/v1/trips` | Yes | Create trip |
+| `GET` | `/api/v1/ecostats` | Yes | Eco stats |
+| `GET` | `/api/v1/health` | No | Server health |
+| `GET` | `/api/v1` | No | API info |
+| `GET` | `/api/v1/cities` | No | List cities |
 
 ---
 
@@ -239,9 +209,8 @@ curl http://localhost:3000/health
 npx kill-port 3000
 
 # Problem: Database connection error
-# Solution: Reinitialize database
-npm run init
-npm run seed
+# Solution: Re-seed database
+cd backend && npm run seed
 ```
 
 #### 🔴 Mobile App Issues
@@ -256,17 +225,33 @@ rm -rf node_modules package-lock.json
 npm install
 ```
 
+#### 🐳 Docker Troubleshooting
+```bash
+# Problem: Container exits immediately
+# Solution: Check logs
+docker compose logs backend
+
+# Problem: Volume permission errors (Linux/Mac)
+# Solution: Ensure data directory permissions
+sudo chown -R 1000:1000 ./data
+
+# Problem: Port conflict
+# Solution: Change host port in docker-compose.yml
+```
+
+See [docs/DOCKER.md](docs/DOCKER.md) for complete Docker setup and troubleshooting.
+
 ---
 
 ## 📱 App Architecture
 
 <div align="center">
-  <img src="https://via.placeholder.com/800x400/FF6B6B/white?text=App+Architecture+Diagram" width="80%" alt="Architecture" />
+  <p><em>🗺️ Architecture diagram goes here</em></p>
 </div>
 
 ### 📁 Project Structure
 ```
-urbanflow_app/
+urbanflow-app/
 ├── 📱 urbanflow_app/          # React Native Mobile App
 │   ├── 📄 App.js             # Main app entry point
 │   ├── 📁 pages/             # Screen components
@@ -278,13 +263,30 @@ urbanflow_app/
 │   │   ├── 👤 profile/       # User profile
 │   │   └── 🔐 auth/          # Authentication
 │   ├── 📁 utils/             # Utility functions
+│   ├── 📁 contexts/          # React contexts (Route, City)
 │   └── 📁 assets/            # Images, fonts, etc.
-├── 🖥️ server/                # Node.js Backend
-│   ├── 📄 server.js          # Main server file
+├── 🖥️ backend/               # Node.js Express API
+│   ├── 📄 server.js          # Main server entry
 │   ├── 📁 routes/            # API route handlers
-│   ├── 📁 models/            # Database models
-│   ├── 📁 config/            # Configuration files
-│   └── 📁 seeders/           # Sample data
+│   ├── 📁 models/            # Sequelize models
+│   ├── 📁 middleware/        # Auth & security middleware
+│   ├── 📁 services/          # Business logic (GTFS-RT, alerts)
+│   ├── 📁 utils/             # DataLoader, cityManager, logger
+│   ├── 📁 scripts/           # Data-processing scripts
+│   ├── 📁 config/            # Configuration / Swagger
+│   └── 📁 tests/             # Jest unit + integration tests
+├── 📊 data/                  # GTFS data, pipelines, README
+│   ├── 📁 raw/               # Raw GTFS ZIPs
+│   ├── 📁 delhi/output/      # Delhi preprocessed data
+│   ├── 📁 bengaluru/output/  # Bengaluru preprocessed data
+│   ├── 📁 chennai/output/    # Chennai stub data
+│   └── 📄 validate.js        # Validation script
+├── 📚 docs/                  # Documentation
+├── 🐳 docker-compose.yml     # Docker orchestration
+├── 📄 Dockerfile             # Backend Dockerfile
+├── 📄 .env.example           # Environment template
+├── 📄 LICENSE                # MIT license
+├── 📄 CONTRIBUTING.md        # Contribution guide
 └── 📚 README.md              # This file
 ```
 
@@ -371,22 +373,12 @@ git push origin feature/awesome-feature
 # 8. Open a Pull Request
 ```
 
-### 🎯 Areas for Contribution
-
-- 🐛 **Bug Fixes** - Help us squash bugs
-- ✨ **New Features** - Add exciting functionality
-- 📚 **Documentation** - Improve our docs
-- 🎨 **UI/UX** - Enhance the user experience
-- 🧪 **Testing** - Add more test coverage
-- 🌐 **Localization** - Help with translations
-
 ### 📋 Contribution Guidelines
 
-- 📝 Follow our [Contribution Guidelines](CONTRIBUTING.md)
-- 🧾 Adhere to our [Code of Conduct](CODE_OF_CONDUCT.md)
-- ✅ Ensure all tests pass
+- 📝 Read our [CONTRIBUTING.md](CONTRIBUTING.md)
+- 🧾 Adhere to the [Code of Conduct](CODE_OF_CONDUCT.md)
+- ✅ Ensure all tests pass: `npm test` + `npm run lint`
 - 📚 Update documentation as needed
-- 🎨 Follow our coding standards
 
 ---
 
@@ -440,8 +432,6 @@ This project is licensed under the **MIT License**. See the [LICENSE](LICENSE) f
 ---
 
 <div align="center">
-  <img src="https://via.placeholder.com/120x120/3CB371/white?text=UF" width="120" alt="UrbanFlow Logo" />
-  
   <p><em>Made with 💚 for cities, commuters, and the climate</em></p>
   <p><strong>#DriveLess #FlowSmart #SustainableMobility</strong></p>
   
