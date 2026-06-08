@@ -3,7 +3,8 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { MD3LightTheme as DefaultTheme, Provider as PaperProvider } from 'react-native-paper';
-import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
+import * as SplashScreen from 'expo-splash-screen';
 import IntroScreen from './pages/home/IntroScreen';
 import LoginScreen from './pages/auth/LoginScreen';
 import PlannerScreen from './pages/planner/PlannerScreen';
@@ -11,8 +12,10 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { useFonts as useUrbanist, Urbanist_400Regular, Urbanist_700Bold } from '@expo-google-fonts/urbanist';
 import { useFonts as usePoppins, Poppins_400Regular, Poppins_700Bold } from '@expo-google-fonts/poppins';
 import { useFonts as useMontserrat, Montserrat_400Regular, Montserrat_700Bold } from '@expo-google-fonts/montserrat';
-import { View, ActivityIndicator, StatusBar } from 'react-native';
+import { View, StatusBar } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+
+SplashScreen.preventAutoHideAsync();
 import LiveScreen from './pages/live/LiveScreen';
 import ProfileScreen from './pages/profile/ProfileScreen';
 import EcoStatsScreen from './pages/ecostats/EcoStatsScreen';
@@ -246,15 +249,14 @@ export default function App() {
     }
   };
 
+  React.useEffect(() => {
+    if (fontsLoaded && !isLoading) {
+      SplashScreen.hideAsync();
+    }
+  }, [fontsLoaded, isLoading]);
+
   if (!fontsLoaded || isLoading) {
-    return (
-      <SafeAreaProvider>
-        <SafeAreaView style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: '#fff' }}>
-          <StatusBar barStyle="dark-content" backgroundColor="#FFFFFF" />
-          <ActivityIndicator size="large" color="#185a9d" />
-        </SafeAreaView>
-      </SafeAreaProvider>
-    );
+    return null;
   }
 
   const theme = {
