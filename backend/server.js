@@ -13,6 +13,8 @@ const DataLoader = require('./utils/DataLoader');
 const cityManager = require('./utils/cityManager');
 const { initializeDatabase, sequelize } = require('./models');
 const { authenticate } = require('./middleware/auth');
+const swaggerUi = require('swagger-ui-express');
+const swaggerSpec = require('./config/swagger');
 
 // Import routes
 const stopsRouter = require('./routes/stops');
@@ -85,6 +87,12 @@ app.use(express.urlencoded({ extended: true, limit: '1mb' }));
 
 // Compression middleware
 app.use(compression());
+
+// Swagger API docs
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec, {
+  customCss: '.swagger-ui .topbar { display: none }',
+  customSiteTitle: 'UrbanFlow API Docs',
+}));
 
 // Make dataLoader available to all routes
 app.use((req, res, next) => {
