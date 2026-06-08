@@ -4,19 +4,22 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { MotiView } from 'moti';
 import profileTheme from '../theme/profileTheme';
 
-export default function SettingsCard({ title, settings, onSettingPress }) {
+export default function SettingsCard({ title, settings, onSettingPress, theme: propTheme }) {
+  const t = propTheme || profileTheme;
+  const s = makeStyles(t);
+
   return (
-    <View style={styles.sectionWrap}>
+    <View style={s.sectionWrap}>
       <MotiView
         from={{ opacity: 0, translateY: 20 }}
         animate={{ opacity: 1, translateY: 0 }}
         transition={{ type: 'spring', damping: 12, delay: 400 }}
       >
-        <Text style={styles.sectionTitle}>{title}</Text>
+        <Text style={s.sectionTitle}>{title}</Text>
       </MotiView>
       
-      <View style={styles.settingsCardWrap}>
-        <View style={styles.settingsCard}>
+      <View style={s.settingsCardWrap}>
+        <View style={s.settingsCard}>
           {settings.map((setting, index) => (
             <MotiView
               key={setting.label}
@@ -30,7 +33,7 @@ export default function SettingsCard({ title, settings, onSettingPress }) {
               style={{ width: '100%' }}
             >
               <TouchableOpacity 
-                style={[styles.settingItem, index !== settings.length - 1 && styles.settingItemBorder]}
+                style={[s.settingItem, index !== settings.length - 1 && s.settingItemBorder]}
                 onPress={() => onSettingPress(setting)}
                 activeOpacity={0.6}
               >
@@ -43,11 +46,11 @@ export default function SettingsCard({ title, settings, onSettingPress }) {
                     delay: 700 + index * 100
                   }}
                 >
-                  <View style={styles.settingLeft}>
-                    <View style={[styles.settingIconWrap, { backgroundColor: setting.bg }]}>
+                  <View style={s.settingLeft}>
+                    <View style={[s.settingIconWrap, { backgroundColor: setting.bg }]}>
                       <Icon name={setting.icon} size={20} color={setting.color[0]} />
                     </View>
-                    <Text style={styles.settingLabel}>{setting.label}</Text>
+                    <Text style={s.settingLabel}>{setting.label}</Text>
                   </View>
                 </MotiView>
                 <MotiView
@@ -59,7 +62,7 @@ export default function SettingsCard({ title, settings, onSettingPress }) {
                     delay: 800 + index * 100
                   }}
                 >
-                  <Icon name="chevron-right" size={20} color={profileTheme.colors.textTertiary} />
+                  <Icon name="chevron-right" size={20} color={t.colors.textTertiary} />
                 </MotiView>
               </TouchableOpacity>
             </MotiView>
@@ -70,40 +73,40 @@ export default function SettingsCard({ title, settings, onSettingPress }) {
   );
 }
 
-const styles = StyleSheet.create({
+const makeStyles = (t) => StyleSheet.create({
   sectionWrap: {
-    marginTop: profileTheme.spacing.lg,
+    marginTop: t.spacing.lg,
   },
   sectionTitle: {
-    fontSize: profileTheme.typography.fontSize['xl'],
-    fontWeight: profileTheme.typography.fontWeight.bold,
-    color: profileTheme.colors.textPrimary,
-    fontFamily: profileTheme.typography.fontFamily.primary,
-    marginBottom: profileTheme.spacing.md,
+    fontSize: t.typography.fontSize['xl'],
+    fontWeight: t.typography.fontWeight.bold,
+    color: t.colors.textPrimary,
+    fontFamily: t.typography.fontFamily.primary,
+    marginBottom: t.spacing.md,
     letterSpacing: -0.5,
   },
   settingsCardWrap: {
-    marginBottom: profileTheme.spacing.sm,
+    marginBottom: t.spacing.sm,
   },
   settingsCard: {
-    borderRadius: profileTheme.borderRadius['2xl'],
-    backgroundColor: profileTheme.colors.surface,
+    borderRadius: t.borderRadius['2xl'],
+    backgroundColor: t.colors.surface,
     borderWidth: 1,
-    borderColor: profileTheme.colors.borderLight,
+    borderColor: t.colors.borderLight,
     overflow: 'hidden',
-    ...profileTheme.shadows.sm,
+    ...t.shadows.sm,
   },
   settingItem: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    paddingVertical: profileTheme.spacing.lg,
-    paddingHorizontal: profileTheme.spacing.xl,
+    paddingVertical: t.spacing.lg,
+    paddingHorizontal: t.spacing.xl,
     backgroundColor: 'transparent',
   },
   settingItemBorder: {
     borderBottomWidth: 1,
-    borderBottomColor: profileTheme.colors.borderLight,
+    borderBottomColor: t.colors.borderLight,
   },
   settingLeft: {
     flexDirection: 'row',
@@ -115,11 +118,11 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     justifyContent: 'center',
     alignItems: 'center',
-    marginRight: profileTheme.spacing.md,
+    marginRight: t.spacing.md,
   },
   settingLabel: {
-    fontSize: profileTheme.typography.fontSize.base,
-    color: profileTheme.colors.textPrimary,
+    fontSize: t.typography.fontSize.base,
+    color: t.colors.textPrimary,
     fontFamily: 'Urbanist_600SemiBold',
   },
 });

@@ -1,139 +1,111 @@
 /**
  * Route Theme Configuration
- * Based on the new route.html design with green primary colors
+ * Supports light and dark modes via createRouteTheme(isDark)
+ * Exports routeTheme (light) for backward compatibility.
  */
 
-export const routeTheme = {
-  colors: {
-    // Primary colors (Green Theme from HTML)
-    primary: '#006b2c',
-    onPrimary: '#ffffff',
-    primaryContainer: '#00873a',
-    onPrimaryContainer: '#f7fff2',
-    primaryFixed: '#7ffc97',
-    primaryFixedDim: '#62df7d',
-    onPrimaryFixed: '#002109',
-    onPrimaryFixedVariant: '#005320',
-    
-    // Secondary colors
-    secondary: '#31694b',
-    onSecondary: '#ffffff',
-    secondaryContainer: '#b4f0c9',
-    onSecondaryContainer: '#386f50',
-    secondaryFixed: '#b4f0c9',
-    secondaryFixedDim: '#99d4ae',
-    onSecondaryFixed: '#002111',
-    onSecondaryFixedVariant: '#175034',
-    
-    // Tertiary colors
-    tertiary: '#a72d51',
-    onTertiary: '#ffffff',
-    tertiaryContainer: '#c74668',
-    onTertiaryContainer: '#fffbff',
-    tertiaryFixed: '#ffd9de',
-    tertiaryFixedDim: '#ffb2bf',
-    onTertiaryFixed: '#3f0016',
-    onTertiaryFixedVariant: '#8a143c',
-    
-    // Error colors
-    error: '#ba1a1a',
-    onError: '#ffffff',
-    errorContainer: '#ffdad6',
-    onErrorContainer: '#93000a',
-    
-    // Background and Surface colors
-    background: '#f8f9fa',
-    onBackground: '#191c1d',
-    surface: '#f8f9fa',
-    onSurface: '#191c1d',
-    surfaceContainer: '#edeeef',
-    surfaceContainerLow: '#f3f4f5',
-    surfaceContainerHigh: '#e7e8e9',
-    surfaceContainerHighest: '#e1e3e4',
-    surfaceDim: '#d9dadb',
-    surfaceBright: '#f8f9fa',
-    surfaceVariant: '#e1e3e4',
-    onSurfaceVariant: '#3e4a3d',
-    
-    // Outline colors
-    outline: '#6e7b6c',
-    outlineVariant: '#bdcaba',
-    
-    // Inverse colors
-    inversePrimary: '#62df7d',
-    inverseSurface: '#2e3132',
-    inverseOnSurface: '#f0f1f2',
-    
-    // Additional colors
-    shadow: '#000000',
-    scrim: 'rgba(0, 0, 0, 0.25)',
-  },
-  
-  typography: {
-    fontFamily: {
-      headline: 'Poppins_700Bold',
-      body: 'Urbanist_400Regular',
-      label: 'Urbanist_400Regular',
-    },
-    fontSize: {
-      xs: 10,
-      sm: 12,
-      base: 14,
-      lg: 16,
-      xl: 18,
-      '2xl': 24,
-      '3xl': 32,
-    },
-    fontWeight: {
-      normal: 400,
-      medium: 500,
-      semibold: 600,
-      bold: 700,
-      extrabold: 800,
-    },
-  },
-  
-  spacing: {
-    xs: 4,
-    sm: 8,
-    base: 12,
-    md: 16,
-    lg: 20,
-    xl: 24,
-    '2xl': 32,
-  },
-  
-  borderRadius: {
-    sm: 4,
-    base: 8,
-    md: 12,
-    lg: 16,
-    xl: 20,
-    '2xl': 24,
-    full: 9999,
-  },
-  
-  shadows: {
-    sm: {
-      shadowColor: '#000',
-      shadowOffset: { width: 0, height: 1 },
-      shadowOpacity: 0.05,
-      shadowRadius: 2,
-      elevation: 1,
-    },
-    md: {
-      shadowColor: '#000',
-      shadowOffset: { width: 0, height: 2 },
-      shadowOpacity: 0.08,
-      shadowRadius: 4,
-      elevation: 2,
-    },
-    lg: {
-      shadowColor: '#000',
-      shadowOffset: { width: 0, height: 4 },
-      shadowOpacity: 0.1,
-      shadowRadius: 8,
-      elevation: 4,
-    },
-  },
+const lightColors = {
+  primary: '#006b2c',
+  onPrimary: '#ffffff',
+  primaryContainer: '#00873a',
+  onPrimaryContainer: '#f7fff2',
+  primaryFixed: '#7ffc97',
+  primaryFixedDim: '#62df7d',
+  onPrimaryFixed: '#002109',
+  onPrimaryFixedVariant: '#005320',
+  secondary: '#31694b',
+  onSecondary: '#ffffff',
+  secondaryContainer: '#b4f0c9',
+  onSecondaryContainer: '#386f50',
+  secondaryFixed: '#b4f0c9',
+  secondaryFixedDim: '#99d4ae',
+  onSecondaryFixed: '#002111',
+  onSecondaryFixedVariant: '#175034',
+  tertiary: '#a72d51',
+  onTertiary: '#ffffff',
+  tertiaryContainer: '#c74668',
+  onTertiaryContainer: '#fffbff',
+  tertiaryFixed: '#ffd9de',
+  tertiaryFixedDim: '#ffb2bf',
+  onTertiaryFixed: '#3f0016',
+  onTertiaryFixedVariant: '#8a143c',
+  error: '#ba1a1a',
+  onError: '#ffffff',
+  errorContainer: '#ffdad6',
+  onErrorContainer: '#93000a',
+  background: '#f8f9fa',
+  onBackground: '#191c1d',
+  surface: '#f8f9fa',
+  onSurface: '#191c1d',
+  surfaceContainer: '#edeeef',
+  surfaceContainerLow: '#f3f4f5',
+  surfaceContainerHigh: '#e7e8e9',
+  surfaceContainerHighest: '#e1e3e4',
+  surfaceDim: '#d9dadb',
+  surfaceBright: '#f8f9fa',
+  surfaceVariant: '#e1e3e4',
+  onSurfaceVariant: '#3e4a3d',
+  outline: '#6e7b6c',
+  outlineVariant: '#bdcaba',
+  inversePrimary: '#62df7d',
+  inverseSurface: '#2e3132',
+  inverseOnSurface: '#f0f1f2',
+  shadow: '#000000',
+  scrim: 'rgba(0, 0, 0, 0.25)',
 };
+
+const darkColors = {
+  primary: '#4ade80',
+  onPrimary: '#002109',
+  primaryContainer: '#005320',
+  onPrimaryContainer: '#7ffc97',
+  primaryFixed: '#62df7d',
+  primaryFixedDim: '#7ffc97',
+  onPrimaryFixed: '#002109',
+  onPrimaryFixedVariant: '#005320',
+  secondary: '#99d4ae',
+  onSecondary: '#002111',
+  secondaryContainer: '#175034',
+  onSecondaryContainer: '#b4f0c9',
+  secondaryFixed: '#99d4ae',
+  secondaryFixedDim: '#b4f0c9',
+  onSecondaryFixed: '#002111',
+  onSecondaryFixedVariant: '#175034',
+  tertiary: '#ffb2bf',
+  onTertiary: '#3f0016',
+  tertiaryContainer: '#8a143c',
+  onTertiaryContainer: '#ffd9de',
+  tertiaryFixed: '#ffb2bf',
+  tertiaryFixedDim: '#ffd9de',
+  onTertiaryFixed: '#3f0016',
+  onTertiaryFixedVariant: '#8a143c',
+  error: '#ffb4ab',
+  onError: '#690005',
+  errorContainer: '#93000a',
+  onErrorContainer: '#ffdad6',
+  background: '#0f172a',
+  onBackground: '#f1f5f9',
+  surface: '#1e293b',
+  onSurface: '#f1f5f9',
+  surfaceContainer: '#1e293b',
+  surfaceContainerLow: '#1a2332',
+  surfaceContainerHigh: '#253348',
+  surfaceContainerHighest: '#2d3d55',
+  surfaceDim: '#0f172a',
+  surfaceBright: '#1e293b',
+  surfaceVariant: '#2d3d55',
+  onSurfaceVariant: '#cbd5e1',
+  outline: '#64748b',
+  outlineVariant: '#334155',
+  inversePrimary: '#006b2c',
+  inverseSurface: '#f1f5f9',
+  inverseOnSurface: '#0f172a',
+  shadow: '#000000',
+  scrim: 'rgba(0, 0, 0, 0.5)',
+};
+
+export const routeTheme = { colors: lightColors };
+
+export function createRouteTheme(isDark) {
+  return { colors: isDark ? darkColors : lightColors };
+}

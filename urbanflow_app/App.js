@@ -2,7 +2,7 @@ import * as React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { MD3LightTheme as DefaultTheme, Provider as PaperProvider } from 'react-native-paper';
+import { Provider as PaperProvider } from 'react-native-paper';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import * as SplashScreen from 'expo-splash-screen';
 import IntroScreen from './pages/home/IntroScreen';
@@ -14,6 +14,7 @@ import { useFonts as usePoppins, Poppins_400Regular, Poppins_700Bold } from '@ex
 import { useFonts as useMontserrat, Montserrat_400Regular, Montserrat_700Bold } from '@expo-google-fonts/montserrat';
 import { View, StatusBar } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { useAppTheme } from './utils/theme';
 
 SplashScreen.preventAutoHideAsync();
 import LiveScreen from './pages/live/LiveScreen';
@@ -45,12 +46,13 @@ const ProfileStack = createStackNavigator();
 // Screen wrapper to add bottom padding for tab bar
 const ScreenWrapper = ({ children }) => {
   const _insets = useSafeAreaInsets();
+  const { isDark } = useAppTheme();
   return (
     <View style={{ 
       flex: 1, 
       paddingTop: 0,
       paddingBottom: 0,
-      backgroundColor: '#FFFFFF'
+      backgroundColor: isDark ? '#0f172a' : '#FFFFFF'
     }}>
       {children}
     </View>
@@ -111,6 +113,12 @@ function ProfileStackNavigator() {
 
 function MainTabs() {
   const insets = useSafeAreaInsets();
+  const { isDark } = useAppTheme();
+  const bg = isDark ? '#0f172a' : '#ffffff';
+  const headerBg = isDark ? '#0f172a' : '#FFFFFF';
+  const headerTint = isDark ? '#F1F5F9' : '#0F172A';
+  const inactiveColor = isDark ? '#64748B' : '#6B7280';
+  const activeColor = isDark ? '#4ade80' : '#34D399';
   
   return (
     <Tab.Navigator
@@ -120,8 +128,9 @@ function MainTabs() {
         tabBarShowLabel: true,
         tabBarStyle: { 
           height: 60 + insets.bottom,
-          backgroundColor: '#ffffff',
+          backgroundColor: bg,
           borderTopWidth: 0,
+          borderTopColor: isDark ? '#1e293b' : 'transparent',
           elevation: 8,
           shadowColor: '#000',
           shadowOffset: { width: 0, height: -2 },
@@ -138,11 +147,11 @@ function MainTabs() {
           paddingRight: 0,
         },
         headerStyle: {
-          backgroundColor: '#FFFFFF',
+          backgroundColor: headerBg,
           elevation: 0,
           shadowOpacity: 0,
         },
-        headerTintColor: '#0F172A',
+        headerTintColor: headerTint,
         headerTitleStyle: {
           fontFamily: 'Poppins_700Bold',
           fontSize: 24,
@@ -174,9 +183,9 @@ function MainTabs() {
             <Icon 
               name={iconName} 
               size={focused ? 26 : 22} 
-              color={focused ? '#34D399' : '#6B7280'} 
+              color={focused ? activeColor : inactiveColor} 
               style={{
-                shadowColor: focused ? '#34D399' : 'transparent',
+                shadowColor: focused ? activeColor : 'transparent',
                 shadowOffset: { width: 0, height: 0 },
                 shadowOpacity: focused ? 0.6 : 0,
                 shadowRadius: 8,
@@ -185,8 +194,8 @@ function MainTabs() {
             />
           );
         },
-        tabBarActiveTintColor: '#34D399',
-        tabBarInactiveTintColor: '#6B7280',
+        tabBarActiveTintColor: activeColor,
+        tabBarInactiveTintColor: inactiveColor,
       })}
     >
       <Tab.Screen 
@@ -216,6 +225,7 @@ function MainTabs() {
 export default function App() {
   const [isLoading, setIsLoading] = React.useState(true);
   const [isLoggedIn, setIsLoggedIn] = React.useState(false);
+  const { isDark, theme: appTheme } = useAppTheme();
 
   const [urbanistLoaded] = useUrbanist({
     Urbanist_400Regular,
@@ -260,15 +270,9 @@ export default function App() {
   }
 
   const theme = {
-    ...DefaultTheme,
-    colors: {
-      ...DefaultTheme.colors,
-      primary: '#16a34a', // Updated to green (Tailwind green-600)
-      secondary: '#10b981', // Emerald-500
-      accent: '#34d399', // Emerald-400
-    },
+    ...appTheme,
     fonts: {
-      ...DefaultTheme.fonts,
+      ...appTheme.fonts,
       displayLarge: { fontFamily: 'Poppins_700Bold', fontWeight: '700' },
       displayMedium: { fontFamily: 'Poppins_700Bold', fontWeight: '700' },
       displaySmall: { fontFamily: 'Poppins_700Bold', fontWeight: '700' },
@@ -296,7 +300,7 @@ export default function App() {
         >
           <CityProvider>
           <NavigationContainer>
-            <StatusBar barStyle="dark-content" backgroundColor="#FFFFFF" translucent={false} />
+            <StatusBar barStyle={isDark ? 'light-content' : 'dark-content'} backgroundColor={isDark ? '#0f172a' : '#FFFFFF'} translucent={false} />
             <Stack.Navigator
               initialRouteName={isLoggedIn ? "MainTabs" : "Intro"}
               screenOptions={{ headerShown: false }}

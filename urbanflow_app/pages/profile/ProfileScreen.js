@@ -2,7 +2,8 @@ import React, { _useState, useMemo } from 'react';
 import { StyleSheet, ScrollView, SafeAreaView, ActivityIndicator, Alert } from 'react-native';
 
 // Import Theme
-import profileTheme from './theme/profileTheme';
+import { useAppTheme } from '../../utils/theme';
+import { createProfileTheme } from './theme/profileTheme';
 
 // Import API Hooks
 import { useAuth, useTrips } from '../../utils/hooks/useAPI';
@@ -16,6 +17,9 @@ import SustainabilityCard from './components/SustainabilityCard';
 import LogoutButton from './components/LogoutButton';
 
 export default function ProfileScreen({ navigation }) {
+  const { isDark, toggleTheme, themeMode } = useAppTheme();
+  const profileTheme = createProfileTheme(isDark);
+  const styles = makeStyles(profileTheme);
   // Use real API data instead of mock
   const { user, loading: userLoading } = useAuth();
   const { trips } = useTrips();
@@ -49,11 +53,14 @@ export default function ProfileScreen({ navigation }) {
     { icon: 'shield-account', label: 'Privacy & Security', route: 'PrivacyScreen', bg: '#F8FAFC', color: ['#0F172A'] },
   ], []);
 
+  const themeModeLabel = themeMode === 'system' ? 'System' : themeMode === 'dark' ? 'Dark' : 'Light';
+
   const preferencesSettings = useMemo(() => [
-    { icon: 'bus', label: 'Preferred Transport', route: 'PreferredTransportScreen', bg: '#F8FAFC', color: ['#0F172A'] },
-    { icon: 'target', label: 'Mobility Goals', route: 'MobilityGoalsScreen', bg: '#F8FAFC', color: ['#0F172A'] },
-    { icon: 'earth', label: 'Language & Region', route: 'LanguageRegionScreen', bg: '#F8FAFC', color: ['#0F172A'] },
-  ], []);
+    { icon: themeMode === 'dark' ? 'weather-night' : themeMode === 'system' ? 'theme-light-dark' : 'white-balance-sunny', label: `Theme: ${themeModeLabel}`, route: null, bg: isDark ? '#1A2332' : '#F8FAFC', color: isDark ? ['#FBBF24'] : ['#0F172A'] },
+    { icon: 'bus', label: 'Preferred Transport', route: 'PreferredTransportScreen', bg: isDark ? '#1A2332' : '#F8FAFC', color: isDark ? ['#F1F5F9'] : ['#0F172A'] },
+    { icon: 'target', label: 'Mobility Goals', route: 'MobilityGoalsScreen', bg: isDark ? '#1A2332' : '#F8FAFC', color: isDark ? ['#F1F5F9'] : ['#0F172A'] },
+    { icon: 'earth', label: 'Language & Region', route: 'LanguageRegionScreen', bg: isDark ? '#1A2332' : '#F8FAFC', color: isDark ? ['#F1F5F9'] : ['#0F172A'] },
+  ], [themeMode, themeModeLabel, isDark]);
 
   const citySettings = useMemo(() => [
     { icon: 'city', label: currentCity?.displayName || 'Delhi NCR', route: null, bg: '#F0FDF4', color: ['#16A34A'] },
@@ -76,7 +83,9 @@ export default function ProfileScreen({ navigation }) {
   // the fact that useAuth/useTrips already manage loading state on their own.
 
   const handleSettingPress = (setting) => {
-    if (setting.route) {
+    if (setting.label && setting.label.startsWith('Theme:')) {
+      toggleTheme();
+    } else if (setting.route) {
       // navigation.navigate(setting.route);
       console.log(`Navigate to ${setting.route}`);
     }
@@ -131,18 +140,21 @@ export default function ProfileScreen({ navigation }) {
           title="Account" 
           settings={accountSettings} 
           onSettingPress={handleSettingPress} 
+          theme={profileTheme}
         />
 
         <SettingsCard 
           title="Preferences" 
           settings={preferencesSettings} 
           onSettingPress={handleSettingPress} 
+          theme={profileTheme}
         />
 
         <SettingsCard 
           title="City" 
           settings={citySettings} 
           onSettingPress={handleCitySwitch} 
+          theme={profileTheme}
         />
 
         <LogoutButton onLogout={handleLogout} />
@@ -152,20 +164,20 @@ export default function ProfileScreen({ navigation }) {
   );
 }
 
-const styles = StyleSheet.create({
+const makeStyles = (t) => StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: profileTheme.colors.background,
+    backgroundColor: t.colors.background,
   },
   loadingContainer: {
     flex: 1,
-    backgroundColor: profileTheme.colors.background,
+    backgroundColor: t.colors.background,
     justifyContent: 'center',
     alignItems: 'center',
   },
   scrollContent: {
-    paddingHorizontal: profileTheme.spacing.xl,
-    paddingTop: profileTheme.spacing.lg,
-    paddingBottom: profileTheme.spacing['4xl'],
+    paddingHorizontal: t.spacing.xl,
+    paddingTop: t.spacing.lg,
+    paddingBottom: t.spacing['4xl'],
   },
 });
