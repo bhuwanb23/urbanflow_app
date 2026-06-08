@@ -216,7 +216,7 @@ class CityManager {
 
     const staticDir = city.gtfs.staticDir;
     const shapesDir = city.gtfs.shapesDir;
-    const scheduleDir = staticDir.replace(/output$/, '') + 'schedule';
+    const scheduleDir = path.join(staticDir, 'schedule');
     const expectedFiles = [
       'stops.json', 'routes.json', 'transfers.json',
       'search_index.json', 'summary.json'
