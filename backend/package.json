@@ -16,6 +16,7 @@
     "preprocess": "node scripts/run-preprocess.js",
     "setup:chennai": "node scripts/setup-chennai.js",
     "validate-data": "node ../data/validate.js",
+    "generate-transfers": "node scripts/generate-transfers.js",
     "otp:download": "cd otp && pwsh -ExecutionPolicy Bypass -File download-data.ps1",
     "otp:start": "cd otp && pwsh -ExecutionPolicy Bypass -File start-otp.ps1",
     "otp:stop": "cd otp && pwsh -ExecutionPolicy Bypass -File stop-otp.ps1"

@@ -310,7 +310,47 @@ if not transfers.empty:
             "min_time_sec": safe_float(row.get("min_transfer_time")),
         })
 
-print(f"  Transfers: {len(transfers_out)}")
+# Auto-detect interchanges: stops from different modes within ~50m
+def haversine_km(lat1, lon1, lat2, lon2):
+    from math import radians, cos, sin, sqrt, asin
+    R = 6371
+    dlat = radians(lat2 - lat1)
+    dlon = radians(lon2 - lon1)
+    a = sin(dlat / 2) ** 2 + cos(radians(lat1)) * cos(radians(lat2)) * sin(dlon / 2) ** 2
+    return 2 * R * asin(sqrt(a))
+
+auto_transfer_count = 0
+if "_mode" in stops.columns:
+    seen_pairs = set()
+    buckets = {}
+    for _, s in stops.iterrows():
+        key = (round(s["stop_lat"], 2), round(s["stop_lon"], 2), s["_mode"])
+        buckets.setdefault(key, []).append({
+            "id": s["stop_id"], "lat": s["stop_lat"], "lon": s["stop_lon"],
+            "mode": s["_mode"], "name": s.get("stop_name", ""),
+        })
+
+    for (_, _, mode_a), stops_a in buckets.items():
+        for (_, _, mode_b), stops_b in buckets.items():
+            if mode_a >= mode_b:
+                continue
+            for sa in stops_a:
+                for sb in stops_b:
+                    dist_m = haversine_km(sa["lat"], sa["lon"], sb["lat"], sb["lon"]) * 1000
+                    if dist_m <= 50:
+                        pair_key = tuple(sorted([sa["id"], sb["id"]]))
+                        if pair_key not in seen_pairs:
+                            seen_pairs.add(pair_key)
+                            transfers_out.append({
+                                "from_stop_id": str(sa["id"]),
+                                "to_stop_id":   str(sb["id"]),
+                                "type":         "0",
+                                "min_time_sec": 120,
+                            })
+                            auto_transfer_count += 1
+
+print(f"  Transfers (GTFS): {len(transfers_out) - auto_transfer_count}")
+print(f"  Transfers (auto): {auto_transfer_count}")
 
 
 # ── Step 7: Build Search Index ────────────────────────────────────────────

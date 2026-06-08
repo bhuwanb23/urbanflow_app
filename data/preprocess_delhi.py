@@ -202,7 +202,38 @@ if not transfers.empty:
             "from_stop_id": clean_str(row.get("from_stop_id")), "to_stop_id": clean_str(row.get("to_stop_id")),
             "type": clean_str(row.get("transfer_type")), "min_time_sec": safe_float(row.get("min_transfer_time")),
         })
-print(f"  Transfers: {len(transfers_out)}")
+
+# Auto-detect interchanges: stops from different modes within ~50m
+def _haversine_km(lat1, lon1, lat2, lon2):
+    from math import radians, cos, sin, sqrt, asin
+    R = 6371
+    dlat = radians(lat2 - lat1); dlon = radians(lon2 - lon1)
+    a = sin(dlat / 2) ** 2 + cos(radians(lat1)) * cos(radians(lat2)) * sin(dlon / 2) ** 2
+    return 2 * R * asin(sqrt(a))
+
+auto_count = 0
+if "_mode" in stops.columns:
+    seen = set()
+    buckets = {}
+    for _, s in stops.iterrows():
+        key = (round(s["stop_lat"], 2), round(s["stop_lon"], 2), s["_mode"])
+        buckets.setdefault(key, []).append(s)
+    for (_, _, ma), sa in buckets.items():
+        for (_, _, mb), sb in buckets.items():
+            if ma >= mb:
+                continue
+            for a in sa:
+                for b in sb:
+                    dm = _haversine_km(a["stop_lat"], a["stop_lon"], b["stop_lat"], b["stop_lon"]) * 1000
+                    if dm <= 50:
+                        pk = tuple(sorted([a["stop_id"], b["stop_id"]]))
+                        if pk not in seen:
+                            seen.add(pk)
+                            transfers_out.append({"from_stop_id": str(a["stop_id"]), "to_stop_id": str(b["stop_id"]), "type": "0", "min_time_sec": 120})
+                            auto_count += 1
+
+print(f"  Transfers (GTFS): {len(transfers_out) - auto_count}")
+print(f"  Transfers (auto): {auto_count}")
 
 
 # ── Step 7: Build Search Index ────────────────────────────────────────────
