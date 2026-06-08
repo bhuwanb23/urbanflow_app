@@ -279,6 +279,13 @@ async function startServer() {
     // Load all GTFS data
     await dataLoader.loadAll();
 
+    // Log active city data summary
+    const summary = dataLoader.getSummary();
+    if (summary) {
+      logger.info(`Active city: ${cityManager.getCurrentCity()?.displayName || 'unknown'}`);
+      logger.info(`Data loaded: ${summary.total_stops} stops, ${summary.total_routes} routes, ${summary.total_shapes} shapes, ${summary.total_transfers || 0} transfers`);
+    }
+
     // Start listening (HTTPS if certs provided, HTTP otherwise)
     const sslCertPath = process.env.SSL_CERT_PATH;
     const sslKeyPath = process.env.SSL_KEY_PATH;
