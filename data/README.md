@@ -13,7 +13,8 @@ data/
 ├── preprocess.py               # Bengaluru (BMTC bus + BMRCL metro)
 ├── preprocess_delhi.py         # Delhi (DTC bus + DMRC metro)
 ├── preprocess_chennai.py       # Chennai (MTC bus) — still a stub
-├── split_shapes.py             # Bengaluru back-compat shape splitter
+├── split_shapes.py             # Back-compat shape splitter (CITY env override)
+├── split_shapes_per_city.py    # Per-city shape splitter (--city= flag)
 ├── raw/
 │   ├── bmtc.zip                # Bengaluru bus (from BMTC / Vonter mirror)
 │   └── (bmrcl.zip)             # Bengaluru metro — TODO: source from BMRCL portal
@@ -61,6 +62,17 @@ python preprocess_chennai.py           # Chennai
 ```
 
 Each run writes a `build.log` into the city's `output/` directory.
+
+## Splitting Shapes
+
+After preprocessing, split the large `shapes.json` into individual files:
+
+```bash
+python data/split_shapes_per_city.py --city=delhi
+python data/split_shapes_per_city.py --city=bangalore
+```
+
+This creates `data/<city>/output/shapes/<shape_id>.json` files and deletes the monolithic `shapes.json`.
 
 ## Raw Data Sources
 

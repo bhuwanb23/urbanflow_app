@@ -39,7 +39,7 @@ for shape_id, shape_data in tqdm(shapes.items(), desc="Writing"):
 # Delete the big original file
 os.remove(INPUT_FILE)
 
-print(f"\n✅ Done! {len(shapes)} shape files written to {OUTPUT_DIR}/")
+print(f"\n[OK] Done! {len(shapes)} shape files written to {OUTPUT_DIR}/")
 print("   Original shapes.json deleted.")
 print("\n   Now fetch shapes on demand:")
 print("   GET /api/shapes/:shape_id  → loads only that route's path")
