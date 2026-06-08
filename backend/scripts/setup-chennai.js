@@ -1,6 +1,10 @@
 /**
- * Chennai GTFS Data Setup Script
- * Downloads and processes Chennai MTC GTFS data
+ * ╔═══════════════════════════════════════════════════════════════╗
+ * ║  STUB — Chennai GTFS Test Data Generator                     ║
+ * ║  This script generates synthetic 5-stop / 3-route data for   ║
+ * ║  testing the multi-city architecture. It is NOT real MTC     ║
+ * ║  Chennai bus data. Replace with official GTFS before prod.   ║
+ * ╚═══════════════════════════════════════════════════════════════╝
  */
 
 const fs = require('fs').promises;
@@ -10,8 +14,8 @@ const CHENNAI_DATA_DIR = path.join(__dirname, '../../data/chennai');
 const GTFS_DIR = path.join(CHENNAI_DATA_DIR, 'gtfs');
 const SHAPES_DIR = path.join(CHENNAI_DATA_DIR, 'shapes');
 
-// Sample Chennai MTC data (to be replaced with real data)
-const sampleStops = [
+// STUB data (5 stops / 3 routes) — for testing only
+const STUB_stops = [
   { stop_id: "CHN001", stop_name: "Anna Nagar", stop_lat: 13.0850, stop_lon: 80.2101 },
   { stop_id: "CHN002", stop_name: "T. Nagar", stop_lat: 13.0418, stop_lon: 80.2341 },
   { stop_id: "CHN003", stop_name: "Mylapore", stop_lat: 13.0339, stop_lon: 80.2619 },
@@ -19,17 +23,17 @@ const sampleStops = [
   { stop_id: "CHN005", stop_name: "Velachery", stop_lat: 12.9750, stop_lon: 80.2212 }
 ];
 
-const sampleRoutes = [
+const STUB_routes = [
   { route_id: "C1", route_short_name: "C1", route_long_name: "Anna Nagar - T. Nagar", route_type: 3, route_color: "0066CC" },
   { route_id: "C2", route_short_name: "C2", route_long_name: "Mylapore - Adyar", route_type: 3, route_color: "00AA00" },
   { route_id: "C3", route_short_name: "C3", route_long_name: "Velachery - Anna Nagar", route_type: 3, route_color: "FF6600" }
 ];
 
 async function createDirectories() {
-  console.log('📁 Creating directories...');
+  console.log('[INFO] Creating directories...');
   await fs.mkdir(GTFS_DIR, { recursive: true });
   await fs.mkdir(SHAPES_DIR, { recursive: true });
-  console.log('✅ Directories created');
+  console.log('[OK] Directories created');
 }
 
 async function createAgencyFile() {
@@ -42,7 +46,7 @@ CHENNAI_MTC,"Chennai Metropolitan Transport Corporation",https://www.mtcbus.org,
 async function createStopsFile() {
   console.log('📍 Creating stops.txt...');
   const header = 'stop_id,stop_name,stop_desc,stop_lat,stop_lon,zone_id,stop_url,location_type,parent_station';
-  const rows = sampleStops.map(s => 
+  const rows = STUB_stops.map(s => 
     `${s.stop_id},"${s.stop_name}",,${s.stop_lat},${s.stop_lon},,,0,`
   );
   const content = [header, ...rows].join('\n');
@@ -52,7 +56,7 @@ async function createStopsFile() {
 async function createRoutesFile() {
   console.log('🚌 Creating routes.txt...');
   const header = 'route_id,agency_id,route_short_name,route_long_name,route_desc,route_type,route_url,route_color,route_text_color';
-  const rows = sampleRoutes.map(r => 
+  const rows = STUB_routes.map(r => 
     `${r.route_id},CHENNAI_MTC,"${r.route_short_name}","${r.route_long_name}",,${r.route_type},,${r.route_color},FFFFFF`
   );
   const content = [header, ...rows].join('\n');
@@ -65,7 +69,7 @@ async function createTripsFile() {
   const trips = [];
   
   // Create sample trips for each route
-  sampleRoutes.forEach((route) => {
+  STUB_routes.forEach((route) => {
     trips.push(`${route.route_id},WEEKDAY,${route.route_id}_T1,"${route.route_long_name}",0,,${route.route_id}_S1`);
     trips.push(`${route.route_id},WEEKDAY,${route.route_id}_T2,"${route.route_long_name}",1,,${route.route_id}_S1`);
   });
@@ -80,10 +84,10 @@ async function createStopTimesFile() {
   const stopTimes = [];
   
   // Create sample stop times
-  sampleRoutes.forEach(route => {
+  STUB_routes.forEach(route => {
     const tripIds = [`${route.route_id}_T1`, `${route.route_id}_T2`];
     tripIds.forEach(tripId => {
-      sampleStops.forEach((stop, idx) => {
+      STUB_stops.forEach((stop, idx) => {
         const arrival = `0${8 + idx}:00:00`;
         const departure = `0${8 + idx}:01:00`;
         stopTimes.push(`${tripId},${arrival},${departure},${stop.stop_id},${idx + 1},,,`);
@@ -107,11 +111,11 @@ async function createShapes() {
   console.log('🗺️ Creating shape files...');
   
   // Create simple shapes for each route
-  for (const route of sampleRoutes) {
+  for (const route of STUB_routes) {
     const shapeId = `${route.route_id}_S1`;
     const shapeData = {
       shape_id: shapeId,
-      points: sampleStops.slice(0, 3).map((stop, idx) => ({
+      points: STUB_stops.slice(0, 3).map((stop, idx) => ({
         lat: stop.stop_lat + (idx * 0.01),
         lon: stop.stop_lon + (idx * 0.01),
         sequence: idx + 1
@@ -127,7 +131,7 @@ async function createShapes() {
 
 async function setupChennaiData() {
   try {
-    console.log('🚀 Starting Chennai GTFS data setup...\n');
+    console.log('[INFO] Starting Chennai STUB data setup (5 stops / 3 routes)\n');
     
     await createDirectories();
     await createAgencyFile();
@@ -138,17 +142,19 @@ async function setupChennaiData() {
     await createCalendarFile();
     await createShapes();
     
-    console.log('\n✅ Chennai GTFS data setup complete!');
-    console.log(`📁 Data directory: ${CHENNAI_DATA_DIR}`);
-    console.log(`📍 Total stops: ${sampleStops.length}`);
-    console.log(`🚌 Total routes: ${sampleRoutes.length}`);
+    console.log('\n[OK] Chennai stub data setup complete!');
+    console.log(`[INFO] Data directory: ${CHENNAI_DATA_DIR}`);
+    console.log(`[INFO] Total stops: ${STUB_stops.length}`);
+    console.log(`[INFO] Total routes: ${STUB_routes.length}`);
     console.log('\nNext steps:');
-    console.log('1. Replace sample data with real Chennai MTC GTFS');
-    console.log('2. Run: npm run seed (in backend directory)');
-    console.log('3. Test: curl http://localhost:3000/api/v1/cities/chennai');
+    console.log('1. Run the preprocessor: cd .. && python data/preprocess_chennai.py');
+    console.log('2. Test: curl http://localhost:3000/api/v1/cities/chennai');
+    console.log('');
+    console.log('[INFO] This is STUB data for architecture testing only.');
+    console.log('[INFO] Replace with official Chennai MTC GTFS before production.');
     
   } catch (error) {
-    console.error('❌ Error setting up Chennai data:', error.message);
+    console.error('[FAIL] Chennai stub data setup error:', error.message);
     process.exit(1);
   }
 }
