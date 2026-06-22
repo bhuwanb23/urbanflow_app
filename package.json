@@ -7,6 +7,6 @@
     "validate:compose": "node scripts/validate-compose.js"
   },
   "devDependencies": {
-    "js-yaml": "^4.2.0"
+    "js-yaml": "^5.0.0"
   }
 }
