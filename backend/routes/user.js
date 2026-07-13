@@ -71,4 +71,24 @@ router.put('/preferences', async (req, res) => {
   }
 });
 
+// Save the device Expo push token for push notifications
+router.post('/push-token', async (req, res) => {
+  try {
+    const { token } = req.body || {};
+    if (!token || typeof token !== 'string') {
+      return res.status(400).json({ success: false, error: 'A valid push token is required' });
+    }
+    const user = await User.findByPk(req.user.id);
+    if (!user) {
+      return res.status(404).json({ success: false, error: 'User not found' });
+    }
+    user.pushToken = token;
+    await user.save();
+    res.json({ success: true, message: 'Push token saved successfully' });
+  } catch (error) {
+    logger.error('Error saving push token:', error);
+    res.status(500).json({ success: false, error: error.message });
+  }
+});
+
 module.exports = router;
