@@ -25,35 +25,11 @@ router.get('/', (req, res, next) => {
 });
 
 /**
- * GET /api/v1/stops/:id
- * Returns a single stop by ID
- */
-router.get('/:id', (req, res, next) => {
-  try {
-    const { id } = req.params;
-    const stops = req.dataLoader.getStops();
-    const stop = stops.find(s => s.id === id);
-    
-    if (!stop) {
-      return res.status(404).json({
-        success: false,
-        error: 'Stop not found'
-      });
-    }
-    
-    res.json({
-      success: true,
-      data: stop
-    });
-  } catch (error) {
-    next(error);
-  }
-});
-
-/**
  * GET /api/v1/stops/nearby
  * Returns stops within specified radius
  * Query params: lat, lon, radius (meters, default 500)
+ *
+ * NOTE: registered BEFORE '/:id' so it is not shadowed by the param route.
  */
 router.get('/nearby', (req, res, next) => {
   try {
@@ -78,6 +54,32 @@ router.get('/nearby', (req, res, next) => {
       success: true,
       count: stops.length,
       data: stops
+    });
+  } catch (error) {
+    next(error);
+  }
+});
+
+/**
+ * GET /api/v1/stops/:id
+ * Returns a single stop by ID
+ */
+router.get('/:id', (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const stops = req.dataLoader.getStops();
+    const stop = stops.find(s => s.id === id);
+
+    if (!stop) {
+      return res.status(404).json({
+        success: false,
+        error: 'Stop not found'
+      });
+    }
+
+    res.json({
+      success: true,
+      data: stop
     });
   } catch (error) {
     next(error);
