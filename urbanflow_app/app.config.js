@@ -1,6 +1,6 @@
 export default {
   expo: {
-    name: 'urbanflow_app',
+    name: 'UrbanFlow',
     slug: 'urbanflow_app',
     version: '1.0.0',
     orientation: 'portrait',
@@ -13,6 +13,7 @@ export default {
       backgroundColor: '#ffffff',
     },
     ios: {
+      bundleIdentifier: 'com.urbanflow.app',
       supportsTablet: true,
     },
     android: {
@@ -21,13 +22,26 @@ export default {
         backgroundColor: '#ffffff',
       },
       edgeToEdgeEnabled: true,
-      package: 'com.expoacc1.urbanflow_app',
+      package: 'com.urbanflow.app',
     },
     web: {
       favicon: './assets/favicon.png',
     },
     plugins: [
       'expo-font',
+      'expo-haptics',
+      [
+        'expo-location',
+        {
+          locationAlwaysAndWhenInUsePermission: 'Allow UrbanFlow to use your location for live route tracking.',
+        },
+      ],
+      [
+        'expo-notifications',
+        {
+          color: '#16a34a',
+        },
+      ],
     ],
     extra: {
       eas: {
