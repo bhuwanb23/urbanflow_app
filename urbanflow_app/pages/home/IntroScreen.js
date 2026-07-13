@@ -1,12 +1,12 @@
-import React, { _useEffect, _useState } from 'react';
-import { View, StyleSheet, Text, Dimensions, Platform, TouchableOpacity, StatusBar } from 'react-native';
+import React from 'react';
+import { View, StyleSheet, Text, Platform, TouchableOpacity, StatusBar } from 'react-native';
+import { useTranslation } from 'react-i18next';
 
 import { MotiView } from 'moti';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
-const { _width, _height } = Dimensions.get('window');
-
 export default function IntroScreen({ navigation }) {
+  const { t } = useTranslation();
 
   return (
     <>
@@ -30,12 +30,12 @@ export default function IntroScreen({ navigation }) {
           transition={{ type: 'timing', duration: 1000, delay: 200 }}
           style={styles.textContainer}
         >
-          <Text style={styles.title}>UrbanFlow</Text>
-          <Text style={styles.subtitle}>Smart Mobility.</Text>
-          <Text style={styles.subtitleGreener}>Zero Compromise.</Text>
+          <Text style={styles.title}>{t('intro.title')}</Text>
+          <Text style={styles.subtitle}>{t('intro.smartMobility')}</Text>
+          <Text style={styles.subtitleGreener}>{t('intro.zeroCompromise')}</Text>
           
           <Text style={styles.description}>
-            Navigate your city efficiently while reducing your carbon footprint. Intelligent routing for the modern commuter.
+            {t('intro.description')}
           </Text>
         </MotiView>
       </View>
@@ -51,7 +51,7 @@ export default function IntroScreen({ navigation }) {
           activeOpacity={0.8}
           onPress={() => navigation.replace('Login')}
         >
-          <Text style={styles.buttonText}>Get Started</Text>
+          <Text style={styles.buttonText}>{t('intro.getStarted')}</Text>
           <Icon name="arrow-right" size={20} color="#FFFFFF" style={styles.buttonIcon} />
         </TouchableOpacity>
       </MotiView>
