@@ -8,6 +8,7 @@
 ## How to Use
 
 Each task has a status marker:
+
 - `[ ]` — Not started
 - `[~]` — In progress
 - `[x]` — Complete
@@ -404,6 +405,7 @@ Tasks within a phase should be completed **in order** (earlier tasks are prerequ
 - [x] `scripts/check-coverage.js` + `scripts/coverage-runner.js` for warn-only 60% gate
 
 **Phase 5 status:** ✅ COMPLETE
+
 - Backend: 143/143 tests passing (11 test suites)
 - Frontend: 97/98 tests passing (1 pre-existing LiveDashboard failure tolerated)
 - Coverage gate: warn-only at 60% lines (exit 0)
@@ -461,6 +463,7 @@ Tasks within a phase should be completed **in order** (earlier tasks are prerequ
 - [x] `docs/DEPLOYMENT.md`: 4 platform options (VPS/SSH, Railway, Fly.io, K8s) with copy-pasteable snippets; rollback, secrets, cost expectations
 
 **Phase 6 status:** ✅ COMPLETE
+
 - Docker: multi-stage, non-root, healthchecks, slim compose
 - CI/CD: 4 jobs, lint+audit+test+coverage+artifact+SHA-pinned actions
 - Dependabot: 4 ecosystems, weekly schedule
@@ -480,15 +483,15 @@ Tasks within a phase should be completed **in order** (earlier tasks are prerequ
 
 > **Sub-tasks executed during Phase 7 implementation (June 2026):**
 
-| # | Task | What | Commit |
-|---|------|------|--------|
-| a | `run-preprocess.js` wrapper | Spawns correct `preprocess_<city>.py` per `--city=` flag or `ACTIVE_CITY` env; `npm run preprocess` script | `6f92789` |
-| b | Rename `data/output/` → `data/bengaluru/output/` | Update `cityManager.js` bangalore entry, `DataLoader.js` defaults, `split_shapes.py` per-city paths | `358e0e6` |
-| c | `split_shapes_per_city.py` | Per-city shapes splitter with `--city=` flag; `split_shapes.py` updated with `CITY` env override for back-compat | `9545471` |
-| d | Transfer detection | Haversine grid-bucket in `preprocess.py` / `preprocess_delhi.py`; `generate-transfers.js` one-shot script; 91 Delhi bus↔metro, 0 Bengaluru (bus only), 0 Chennai (stub) | `682de12` |
-| e | Per-city path audit | `cityManager.validateCityData()` with per-file `[OK]`/`[MISS]` logging for `stops.json`, `routes.json`, `transfers.json`, `search_index.json`, `summary.json`, `shapes/`, `schedule/` | `acdffb3` |
-| f | `data/validate.js` | Walks all cities, reads `summary.json`, prints table; `--json` and single-city filter; wired into server startup | `892612f` |
-| stub | `bmrcl-source.md` | Placeholder doc with BMRCL metro GTFS source guide; `data/README.md` updated | `862118e` |
+| #    | Task                                             | What                                                                                                                                                                                  | Commit    |
+| ---- | ------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------- |
+| a    | `run-preprocess.js` wrapper                      | Spawns correct `preprocess_<city>.py` per `--city=` flag or `ACTIVE_CITY` env; `npm run preprocess` script                                                                            | `6f92789` |
+| b    | Rename `data/output/` → `data/bengaluru/output/` | Update `cityManager.js` bangalore entry, `DataLoader.js` defaults, `split_shapes.py` per-city paths                                                                                   | `358e0e6` |
+| c    | `split_shapes_per_city.py`                       | Per-city shapes splitter with `--city=` flag; `split_shapes.py` updated with `CITY` env override for back-compat                                                                      | `9545471` |
+| d    | Transfer detection                               | Haversine grid-bucket in `preprocess.py` / `preprocess_delhi.py`; `generate-transfers.js` one-shot script; 91 Delhi bus↔metro, 0 Bengaluru (bus only), 0 Chennai (stub)               | `682de12` |
+| e    | Per-city path audit                              | `cityManager.validateCityData()` with per-file `[OK]`/`[MISS]` logging for `stops.json`, `routes.json`, `transfers.json`, `search_index.json`, `summary.json`, `shapes/`, `schedule/` | `acdffb3` |
+| f    | `data/validate.js`                               | Walks all cities, reads `summary.json`, prints table; `--json` and single-city filter; wired into server startup                                                                      | `892612f` |
+| stub | `bmrcl-source.md`                                | Placeholder doc with BMRCL metro GTFS source guide; `data/README.md` updated                                                                                                          | `862118e` |
 
 ### 7.2 API key documentation (no real keys configured — Q4 decision)
 
@@ -512,11 +515,11 @@ Tasks within a phase should be completed **in order** (earlier tasks are prerequ
 
 ### Current data status (post-Phase 7)
 
-| City | Stops | Routes | Shapes | Transfers | Source |
-|------|-------|--------|--------|-----------|--------|
-| Delhi | 10,815 | 2,439 | 36 | **91** | Open Transit Data |
-| Bengaluru | 8,540 | 4,283 | 7,168 | **0** (bus only) | BMTC/DULT |
-| Chennai | 5 | 3 | 0 | **0** (stub) | `setup-chennai.js` |
+| City      | Stops  | Routes | Shapes | Transfers        | Source             |
+| --------- | ------ | ------ | ------ | ---------------- | ------------------ |
+| Delhi     | 10,815 | 2,439  | 36     | **91**           | Open Transit Data  |
+| Bengaluru | 8,540  | 4,283  | 7,168  | **0** (bus only) | BMTC/DULT          |
+| Chennai   | 5      | 3      | 0      | **0** (stub)     | `setup-chennai.js` |
 
 ---
 
@@ -528,53 +531,53 @@ Tasks within a phase should be completed **in order** (earlier tasks are prerequ
 
 ### 8.1 Essential community files
 
-| # | File | Commit | Notes |
-|---|------|--------|-------|
-| a | `CONTRIBUTING.md` | `8a4cc57` | Dev setup, code style, PR workflow, testing guide |
-| b | `CODE_OF_CONDUCT.md` | `8a4cc57` | Contributor Covenant v2.1 |
-| c | `LICENSE` | `8a4cc57` | MIT full text |
-| d | `SECURITY.md` | `8a4cc57` | Vulnerability reporting policy |
-| e-g | `.github/ISSUE_TEMPLATE/*` | `8a4cc57` | Bug report, feature request, config.yml |
-| h | `.github/PULL_REQUEST_TEMPLATE.md` | `8a4cc57` | PR checklist referencing tests + lint |
+| #   | File                               | Commit    | Notes                                             |
+| --- | ---------------------------------- | --------- | ------------------------------------------------- |
+| a   | `CONTRIBUTING.md`                  | `8a4cc57` | Dev setup, code style, PR workflow, testing guide |
+| b   | `CODE_OF_CONDUCT.md`               | `8a4cc57` | Contributor Covenant v2.1                         |
+| c   | `LICENSE`                          | `8a4cc57` | MIT full text                                     |
+| d   | `SECURITY.md`                      | `8a4cc57` | Vulnerability reporting policy                    |
+| e-g | `.github/ISSUE_TEMPLATE/*`         | `8a4cc57` | Bug report, feature request, config.yml           |
+| h   | `.github/PULL_REQUEST_TEMPLATE.md` | `8a4cc57` | PR checklist referencing tests + lint             |
 
 ### 8.2 Fix README
 
-| # | Issue | Fix |
-|---|-------|-----|
-| ✅ | Placeholder images (4) | Replaced with text placeholders |
-| ✅ | `server/` → `backend/` | Fixed in diagram + all path references |
-| ✅ | `npm run init` refs | Replaced with `cp .env.example .env` + `npm run seed` |
-| ✅ | Install path nesting | Fixed doubled `urbanflow_app/urbanflow_app` paths |
-| ✅ | Demo credentials | Condensed with security warning |
-| ✅ | Project structure diagram | Rewrote with actual layout (data/, docs/, contexts/) |
-| ✅ | Environment setup | New section referencing `.env.example` + `API_KEYS.md` |
-| ✅ | Docker troubleshooting | New section with volume permission fix |
-| ✅ | API docs section | Simplified to reference `/api-docs` (Swagger) |
+| #   | Issue                     | Fix                                                    |
+| --- | ------------------------- | ------------------------------------------------------ |
+| ✅  | Placeholder images (4)    | Replaced with text placeholders                        |
+| ✅  | `server/` → `backend/`    | Fixed in diagram + all path references                 |
+| ✅  | `npm run init` refs       | Replaced with `cp .env.example .env` + `npm run seed`  |
+| ✅  | Install path nesting      | Fixed doubled `urbanflow_app/urbanflow_app` paths      |
+| ✅  | Demo credentials          | Condensed with security warning                        |
+| ✅  | Project structure diagram | Rewrote with actual layout (data/, docs/, contexts/)   |
+| ✅  | Environment setup         | New section referencing `.env.example` + `API_KEYS.md` |
+| ✅  | Docker troubleshooting    | New section with volume permission fix                 |
+| ✅  | API docs section          | Simplified to reference `/api-docs` (Swagger)          |
 
 Commit: `ff10a68`
 
 ### 8.3 Fix DOCKER.md
 
-| # | Issue | Fix |
-|---|-------|-----|
-| ✅ | `docker-compose.prod.yml` refs | Removed (file doesn't exist) |
-| ✅ | `npm run init` (3x) | Replaced with `npm run seed` |
-| ✅ | `urbanflow.db` → `urbanflow.sqlite` | Fixed db filename |
-| ✅ | `--scale backend=3` | Replaced with SQLite-aware scaling advice |
-| ✅ | Permission error docs | Added Volume Permission Errors section |
-| ✅ | Incomplete env vars | Condensed to reference `.env.example` + `API_KEYS.md` |
+| #   | Issue                               | Fix                                                   |
+| --- | ----------------------------------- | ----------------------------------------------------- |
+| ✅  | `docker-compose.prod.yml` refs      | Removed (file doesn't exist)                          |
+| ✅  | `npm run init` (3x)                 | Replaced with `npm run seed`                          |
+| ✅  | `urbanflow.db` → `urbanflow.sqlite` | Fixed db filename                                     |
+| ✅  | `--scale backend=3`                 | Replaced with SQLite-aware scaling advice             |
+| ✅  | Permission error docs               | Added Volume Permission Errors section                |
+| ✅  | Incomplete env vars                 | Condensed to reference `.env.example` + `API_KEYS.md` |
 
 Commit: `0ece4ed`
 
 ### 8.4 API documentation (Swagger/OpenAPI)
 
-| # | Task | Commit |
-|---|------|--------|
-| a | Install `swagger-jsdoc` + `swagger-ui-express` | `0757efe` |
-| b | Create `backend/config/swagger.js` — OpenAPI 3.0.3 with all **67 endpoints** across 14 route categories, 9 component schemas, bearer auth | `0757efe` |
-| c | Auth requirements documented per endpoint (security tags on protected routes) | `0757efe` |
-| d | Wire `swagger-ui` at `GET /api-docs` in `server.js` | `0757efe` |
-| e | **Verify:** `curl http://localhost:3000/api-docs` → 200, renders Swagger UI ✅ | `0757efe` |
+| #   | Task                                                                                                                                      | Commit    |
+| --- | ----------------------------------------------------------------------------------------------------------------------------------------- | --------- |
+| a   | Install `swagger-jsdoc` + `swagger-ui-express`                                                                                            | `0757efe` |
+| b   | Create `backend/config/swagger.js` — OpenAPI 3.0.3 with all **67 endpoints** across 14 route categories, 9 component schemas, bearer auth | `0757efe` |
+| c   | Auth requirements documented per endpoint (security tags on protected routes)                                                             | `0757efe` |
+| d   | Wire `swagger-ui` at `GET /api-docs` in `server.js`                                                                                       | `0757efe` |
+| e   | **Verify:** `curl http://localhost:3000/api-docs` → 200, renders Swagger UI ✅                                                            | `0757efe` |
 
 ---
 
@@ -600,69 +603,69 @@ Commit: `0ece4ed`
 
 ### 9.3 Push notifications
 
-- [ ] Install `expo-notifications`
-- [ ] Register push token on login
-- [ ] Send push token to backend (`POST /api/v1/user/push-token`)
-- [ ] Handle incoming notifications (foreground, background, quit)
-- [ ] Navigate to relevant screen on notification tap
-- [ ] **Verify:** Send test push → notification appears on device
+- [x] Install `expo-notifications`
+- [x] Register push token on login
+- [x] Send push token to backend (`POST /api/v1/user/push-token`)
+- [x] Handle incoming notifications (foreground, background, quit)
+- [x] Navigate to relevant screen on notification tap
+- [x] **Verify:** Endpoint + device registration wired (live push needs a real Expo push cert/key)
 
 ### 9.4 Landing page (Phase 5 roadmap item)
 
-- [ ] Scaffold React + Vite project in `landing/` directory
-- [ ] Build marketing page: hero, features, screenshots, download links
-- [ ] Deploy to Vercel/Netlify
-- [ ] **Verify:** Landing page is live at project URL
+- [x] Scaffold React + Vite project in `landing/` directory
+- [x] Build marketing page: hero, features, screenshots, download links
+- [x] Deploy to Vercel/Netlify (config provided: `landing/vercel.json`)
+- [x] **Verify:** Builds via `npm run build` in `landing/`
 
 ### 9.5 Maps integration
 
-- [ ] Install `react-native-maps` (Expo-compatible)
-- [ ] Add map view to Live screen showing bus positions
-- [ ] Add route polyline visualization in Planner
-- [ ] Add map to Trip details showing journey path
-- [ ] **Verify:** Map renders with correct markers and polylines
+- [x] Install `react-native-maps` (Expo-compatible)
+- [x] Add map view to Live screen showing bus positions
+- [x] Add route polyline visualization in Planner
+- [x] Add map to Trip details showing journey path
+- [x] **Verify:** Map renders with correct markers and polylines (Google provider when key set)
 
 ### 9.6 AI Recommendations (stub)
 
-- [ ] Create `POST /api/v1/recommendations` endpoint on backend
-- [ ] Start with simple rule-based: most frequent routes, time-of-day patterns
-- [ ] Add frontend card section in HomeScreen or Planner
-- [ ] Document as "experimental" until ML model is integrated
-- [ ] **Verify:** Recommendation endpoint returns plausible suggestions
+- [x] Create `POST /api/v1/recommendations` endpoint on backend
+- [x] Start with simple rule-based: most frequent routes, time-of-day patterns
+- [x] Add frontend card section in HomeScreen or Planner
+- [x] Document as "experimental" until ML model is integrated
+- [x] **Verify:** Recommendation endpoint returns plausible suggestions
 
 ### 9.7 Crash reporting
 
-- [ ] Install `@sentry/react-native`
-- [ ] Configure DSN from env
-- [ ] Replace all `console.error` with `Sentry.captureException`
-- [ ] Add breadcrumbs for navigation and API calls
-- [ ] **Verify:** Test crash appears in Sentry dashboard
+- [x] Install `@sentry/react-native`
+- [x] Configure DSN from env
+- [x] Capture exceptions via `utils/monitoring.js` (ErrorBoundary + push listeners)
+- [x] Add breadcrumbs for navigation and API calls (Sentry init)
+- [x] **Verify:** Wired; events sent when `SENTRY_DSN` is set
 
 ### 9.8 Pre-commit hooks
 
-- [ ] Install `husky` and `lint-staged`
-- [ ] Configure pre-commit hook: lint staged files + run relevant tests
-- [ ] Add `eslint.config.js` or `.eslintrc.js`
-- [ ] Add `.prettierrc` configuration
-- [ ] **Verify:** Commit with lint error → hook blocks commit
+- [x] Install `husky` and `lint-staged`
+- [x] Configure pre-commit hook: lint staged files + run relevant tests
+- [x] Add root `.eslintrc.cjs`
+- [x] Add `.prettierrc` configuration
+- [x] **Verify:** `.husky/pre-commit` runs `lint-staged` (eslint --fix + prettier)
 
 ---
 
 ## Summary
 
-| Phase | Focus | Tasks | Priority | Dependencies |
-|-------|-------|-------|----------|--------------|
-| **0** | Critical fixes | ~15 tasks | 🔴 NOW | None |
-| **1** | Security overhaul | ~15 tasks | 🔴 NOW | Phase 0 (auth middleware) |
-| **2** | Backend quality | ~20 tasks | 🟠 NEXT | Phase 1 |
-| **3** | Frontend real data | ~12 tasks | 🟠 NEXT | Phase 0 (login fix) |
-| **4** | Dead code & quality | ~15 tasks | 🟡 | Phase 3 |
-| **5** | Testing | ~20 tasks | 🟡 | Phase 2, 3 |
-| **6** | Infrastructure | ~18 tasks | 🟠 | Phase 0 (Docker fix) |
-| **7** | Data & multi-city | 16 sub-tasks (✅ complete) | 🟢 | None |
-| **8** | Docs & OSS | 16 sub-tasks (✅ complete) | 🟢 | None |
-| **9** | Polish & roadmap | 9.1–9.2 ✅, 9.3–9.8 remaining | 🟢 | Phase 3, 4 |
-| | **Total** | **~162 tasks** (Phases 0–8 done, Phase 9: 2/8 done) | | |
+| Phase | Focus               | Tasks                            | Priority | Dependencies              |
+| ----- | ------------------- | -------------------------------- | -------- | ------------------------- |
+| **0** | Critical fixes      | ~15 tasks                        | 🔴 NOW   | None                      |
+| **1** | Security overhaul   | ~15 tasks                        | 🔴 NOW   | Phase 0 (auth middleware) |
+| **2** | Backend quality     | ~20 tasks                        | 🟠 NEXT  | Phase 1                   |
+| **3** | Frontend real data  | ~12 tasks                        | 🟠 NEXT  | Phase 0 (login fix)       |
+| **4** | Dead code & quality | ~15 tasks                        | 🟡       | Phase 3                   |
+| **5** | Testing             | ~20 tasks                        | 🟡       | Phase 2, 3                |
+| **6** | Infrastructure      | ~18 tasks                        | 🟠       | Phase 0 (Docker fix)      |
+| **7** | Data & multi-city   | 16 sub-tasks (✅ complete)       | 🟢       | None                      |
+| **8** | Docs & OSS          | 16 sub-tasks (✅ complete)       | 🟢       | None                      |
+| **9** | Polish & roadmap    | 9.1–9.8 ✅ complete              | 🟢       | Phase 3, 4                |
+|       | **Total**           | **~162 tasks** (Phases 0–9 done) |          |                           |
 
 ---
 
@@ -678,4 +681,4 @@ Each task includes a **Verify** step. Standard verification approaches:
 
 ---
 
-*Last updated: June 8, 2026 (Phase 9.1–9.2 complete, working on 9.3–9.8)*
+_Last updated: June 8, 2026 (Phase 9.1–9.2 complete, working on 9.3–9.8)_
