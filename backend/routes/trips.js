@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const { Op } = require('sequelize');
 const { Trip } = require('../models');
-const { createTripSchema, validate } = require('../validators/trip');
+const { createTripSchema, updateTripSchema, validate } = require('../validators/trip');
 const logger = require('../utils/logger');
 
 router.get('/stats', async (req, res) => {
@@ -114,7 +114,7 @@ router.post('/', validate(createTripSchema), async (req, res) => {
   }
 });
 
-router.put('/:id', async (req, res) => {
+router.put('/:id', validate(updateTripSchema), async (req, res) => {
   try {
     const trip = await Trip.findByPk(req.params.id);
     if (!trip) return res.status(404).json({ success: false, error: 'Trip not found' });
