@@ -116,6 +116,7 @@ export const useTrips = () => {
   const [trips, setTrips] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [initialized, setInitialized] = useState(false);
 
   const fetchTrips = useCallback(async (params = {}) => {
     try {
@@ -130,6 +131,7 @@ export const useTrips = () => {
       throw err;
     } finally {
       setLoading(false);
+      setInitialized(true);
     }
   }, []);
 
@@ -201,6 +203,7 @@ export const useTrips = () => {
     trips,
     loading,
     error,
+    initialized,
     fetchTrips,
     createTrip,
     updateTrip,
@@ -544,6 +547,7 @@ export const useNotifications = () => {
   const [notifications, setNotifications] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [initialized, setInitialized] = useState(false);
 
   const fetchNotifications = useCallback(async (params = {}) => {
     try {
@@ -558,6 +562,7 @@ export const useNotifications = () => {
       throw err;
     } finally {
       setLoading(false);
+      setInitialized(true);
     }
   }, []);
 
@@ -649,6 +654,7 @@ export const useNotifications = () => {
     notifications,
     loading,
     error,
+    initialized,
     fetchNotifications,
     markAsRead,
     markAllAsRead,
