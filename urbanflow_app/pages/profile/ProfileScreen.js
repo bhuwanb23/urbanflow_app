@@ -1,4 +1,4 @@
-import React, { _useState, useMemo } from 'react';
+import React, { useMemo } from 'react';
 import { StyleSheet, ScrollView, SafeAreaView, ActivityIndicator, Alert } from 'react-native';
 
 // Import Theme
@@ -8,6 +8,7 @@ import { createProfileTheme } from './theme/profileTheme';
 // Import API Hooks
 import { useAuth, useTrips } from '../../utils/hooks/useAPI';
 import { useCity } from '../../contexts/CityContext';
+import { useTranslation } from 'react-i18next';
 
 // Import Components
 import ProfileHeader from './components/ProfileHeader';
@@ -17,11 +18,12 @@ import SustainabilityCard from './components/SustainabilityCard';
 import LogoutButton from './components/LogoutButton';
 
 export default function ProfileScreen({ navigation }) {
+  const { t } = useTranslation();
   const { isDark, toggleTheme, themeMode } = useAppTheme();
   const profileTheme = createProfileTheme(isDark);
   const styles = makeStyles(profileTheme);
   // Use real API data instead of mock
-  const { user, loading: userLoading } = useAuth();
+  const { user, loading: userLoading, logout } = useAuth();
   const { trips } = useTrips();
   const { currentCity, availableCities, switchCity } = useCity();
 
@@ -29,9 +31,9 @@ export default function ProfileScreen({ navigation }) {
   const sustainabilityData = useMemo(() => {
     if (!trips || !trips.length) {
       return [
-        { icon: 'leaf', label: 'CO₂ Saved', value: '0 kg', percent: '+0%', percentColor: '#10B981', bg: '#ECFDF5', color: ['#10B981'] },
-        { icon: 'tree', label: 'Trees Equivalent', value: '0', percent: '+0', percentColor: '#10B981', bg: '#ECFDF5', color: ['#10B981'] },
-        { icon: 'star-circle', label: 'Eco Score', value: '0', percent: 'N/A', percentColor: '#F59E0B', bg: '#FFFBEB', color: ['#F59E0B'] },
+        { icon: 'leaf', label: t('profile.co2Saved'), value: '0 kg', percent: '+0%', percentColor: '#10B981', bg: '#ECFDF5', color: ['#10B981'] },
+        { icon: 'tree', label: t('profile.treesEquivalent'), value: '0', percent: '+0', percentColor: '#10B981', bg: '#ECFDF5', color: ['#10B981'] },
+        { icon: 'star-circle', label: t('profile.ecoScore'), value: '0', percent: 'N/A', percentColor: '#F59E0B', bg: '#FFFBEB', color: ['#F59E0B'] },
       ];
     }
 
@@ -40,11 +42,11 @@ export default function ProfileScreen({ navigation }) {
     const ecoScore = Math.min(1000, Math.round(carbonSaved * 20));
 
     return [
-      { icon: 'leaf', label: 'CO₂ Saved', value: `${carbonSaved} kg`, percent: '+12%', percentColor: '#10B981', bg: '#ECFDF5', color: ['#10B981'] },
-      { icon: 'tree', label: 'Trees Equivalent', value: treesEquivalent, percent: `+${treesEquivalent}`, percentColor: '#10B981', bg: '#ECFDF5', color: ['#10B981'] },
-      { icon: 'star-circle', label: 'Eco Score', value: ecoScore.toString(), percent: ecoScore > 800 ? 'Top 5%' : 'Keep Going!', percentColor: ecoScore > 800 ? '#F59E0B' : '#10B981', bg: ecoScore > 800 ? '#FFFBEB' : '#ECFDF5', color: [ecoScore > 800 ? '#F59E0B' : '#10B981'] },
+      { icon: 'leaf', label: t('profile.co2Saved'), value: `${carbonSaved} kg`, percent: '+12%', percentColor: '#10B981', bg: '#ECFDF5', color: ['#10B981'] },
+      { icon: 'tree', label: t('profile.treesEquivalent'), value: treesEquivalent, percent: `+${treesEquivalent}`, percentColor: '#10B981', bg: '#ECFDF5', color: ['#10B981'] },
+      { icon: 'star-circle', label: t('profile.ecoScore'), value: ecoScore.toString(), percent: ecoScore > 800 ? 'Top 5%' : 'Keep Going!', percentColor: ecoScore > 800 ? '#F59E0B' : '#10B981', bg: ecoScore > 800 ? '#FFFBEB' : '#ECFDF5', color: [ecoScore > 800 ? '#F59E0B' : '#10B981'] },
     ];
-  }, [trips]);
+  }, [trips, t]);
 
   // Dynamic settings based on user preferences
   const accountSettings = useMemo(() => [
@@ -86,19 +88,22 @@ export default function ProfileScreen({ navigation }) {
     if (setting.label && setting.label.startsWith('Theme:')) {
       toggleTheme();
     } else if (setting.route) {
-      // navigation.navigate(setting.route);
-      console.log(`Navigate to ${setting.route}`);
+      navigation.navigate(setting.route);
     }
   };
 
-  const handleLogout = () => {
-    console.log('Logging out...');
-    navigation.replace('Login');
+  const handleLogout = async () => {
+    try {
+      await logout();
+    } catch (err) {
+      console.error('Logout error:', err);
+    } finally {
+      navigation.replace('Login');
+    }
   };
 
   const handleEditProfile = () => {
-    console.log('Edit profile clicked');
-    // navigation.navigate('EditProfileScreen');
+    navigation.navigate('EditProfileScreen');
   };
 
   const handleEditAvatar = () => {
@@ -117,7 +122,7 @@ export default function ProfileScreen({ navigation }) {
   return (
     <SafeAreaView style={styles.container}>
       <ProfileHeader 
-        title="My Profile" 
+        title={t('profile.title')} 
         onMenu={() => console.log('Menu clicked')} 
       />
       
@@ -132,26 +137,26 @@ export default function ProfileScreen({ navigation }) {
         />
 
         <SustainabilityCard 
-          title="Sustainability Impact" 
+          title={t('profile.sustainabilityImpact')} 
           sustainabilityData={sustainabilityData} 
         />
 
         <SettingsCard 
-          title="Account" 
+          title={t('profile.account')} 
           settings={accountSettings} 
           onSettingPress={handleSettingPress} 
           theme={profileTheme}
         />
 
         <SettingsCard 
-          title="Preferences" 
+          title={t('profile.preferences')} 
           settings={preferencesSettings} 
           onSettingPress={handleSettingPress} 
           theme={profileTheme}
         />
 
         <SettingsCard 
-          title="City" 
+          title={t('profile.city')} 
           settings={citySettings} 
           onSettingPress={handleCitySwitch} 
           theme={profileTheme}
