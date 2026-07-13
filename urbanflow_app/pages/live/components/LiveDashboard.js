@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, ScrollView, Image, TouchableOpacity, Dimensions } from 'react-native';
+import { useTranslation } from 'react-i18next';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { MotiView } from 'moti';
 
@@ -76,6 +77,7 @@ const formatFeedTime = (timestamp) => {
 };
 
 const LiveDashboard = () => {
+  const { t } = useTranslation();
   const [_lastUpdated, setLastUpdated] = useState(new Date());
   const [_refreshing, setRefreshing] = useState(false);
 
@@ -227,10 +229,10 @@ const LiveDashboard = () => {
                 <Icon name="access-point" size={20} color="#006b2c" />
               </View>
             </MotiView>
-            <Text style={styles.feedTitle}>Real-Time Activity</Text>
+            <Text style={styles.feedTitle}>{t('live.realtimeActivity')}</Text>
           </View>
           <TouchableOpacity onPress={() => console.log('View Archive pressed')}>
-            <Text style={styles.feedLink}>VIEW ARCHIVE</Text>
+            <Text style={styles.feedLink}>{t('live.viewArchive')}</Text>
           </TouchableOpacity>
         </View>
 
@@ -309,8 +311,8 @@ const LiveDashboard = () => {
                   <Icon name="check-circle" size={24} color="#006b2c" />
                 </View>
                 <View>
-                  <Text style={styles.feedItemTitle}>All clear</Text>
-                  <Text style={styles.feedItemDesc}>No active alerts right now</Text>
+                  <Text style={styles.feedItemTitle}>{t('live.allClear')}</Text>
+                  <Text style={styles.feedItemDesc}>{t('live.noActiveAlerts')}</Text>
                 </View>
               </View>
               <View style={styles.feedItemRight}>
