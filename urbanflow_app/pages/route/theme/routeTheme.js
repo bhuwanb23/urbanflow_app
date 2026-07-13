@@ -48,10 +48,12 @@ const lightColors = {
   outline: '#6e7b6c',
   outlineVariant: '#bdcaba',
   inversePrimary: '#62df7d',
-  inverseSurface: '#2e3132',
-  inverseOnSurface: '#f0f1f2',
+  inverseSurface: '#f1f5f9',
+  inverseOnSurface: '#0f172a',
   shadow: '#000000',
   scrim: 'rgba(0, 0, 0, 0.25)',
+  text: '#191c1d',
+  textMuted: '#64748b',
 };
 
 const darkColors = {
@@ -102,10 +104,106 @@ const darkColors = {
   inverseOnSurface: '#0f172a',
   shadow: '#000000',
   scrim: 'rgba(0, 0, 0, 0.5)',
+  text: '#f1f5f9',
+  textMuted: '#94a3b8',
 };
 
-export const routeTheme = { colors: lightColors };
+// Non-color theme tokens shared across light and dark modes.
+const themeBase = {
+  spacing: {
+    xs: 4,
+    sm: 8,
+    base: 12,
+    md: 16,
+    lg: 20,
+    xl: 24,
+    '2xl': 32,
+    '3xl': 40,
+  },
+  borderRadius: {
+    none: 0,
+    sm: 4,
+    base: 8,
+    md: 12,
+    lg: 16,
+    xl: 20,
+    '2xl': 24,
+    '3xl': 32,
+    full: 9999,
+  },
+  typography: {
+    fontFamily: {
+      primary: 'Poppins_700Bold',
+      secondary: 'Urbanist_400Regular',
+      mono: 'System',
+      headline: 'Poppins_700Bold',
+      label: 'Urbanist_400Regular',
+      body: 'Urbanist_400Regular',
+    },
+    fontSize: {
+      xs: 12,
+      sm: 14,
+      base: 16,
+      md: 18,
+      lg: 20,
+      xl: 24,
+      '2xl': 28,
+      '3xl': 32,
+      '4xl': 40,
+      '5xl': 48,
+    },
+    fontWeight: {
+      thin: '100',
+      extralight: '200',
+      light: '300',
+      normal: '400',
+      medium: '500',
+      semibold: '600',
+      bold: '700',
+      extrabold: '800',
+      black: '900',
+    },
+  },
+  shadows: {
+    none: {
+      shadowColor: 'transparent',
+      shadowOffset: { width: 0, height: 0 },
+      shadowOpacity: 0,
+      shadowRadius: 0,
+      elevation: 0,
+    },
+    sm: {
+      shadowColor: '#64748B',
+      shadowOffset: { width: 0, height: 1 },
+      shadowOpacity: 0.05,
+      shadowRadius: 2,
+      elevation: 1,
+    },
+    md: {
+      shadowColor: '#64748B',
+      shadowOffset: { width: 0, height: 2 },
+      shadowOpacity: 0.05,
+      shadowRadius: 8,
+      elevation: 2,
+    },
+    lg: {
+      shadowColor: '#64748B',
+      shadowOffset: { width: 0, height: 4 },
+      shadowOpacity: 0.1,
+      shadowRadius: 12,
+      elevation: 4,
+    },
+  },
+};
+
+export const routeTheme = {
+  ...themeBase,
+  colors: lightColors,
+};
 
 export function createRouteTheme(isDark) {
-  return { colors: isDark ? darkColors : lightColors };
+  return {
+    ...themeBase,
+    colors: isDark ? darkColors : lightColors,
+  };
 }
