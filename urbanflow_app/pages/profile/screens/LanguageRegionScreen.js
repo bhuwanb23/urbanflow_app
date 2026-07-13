@@ -1,9 +1,14 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { SafeAreaView, View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
 import { Card } from 'react-native-paper';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { MotiView } from 'moti';
 import ProfileHeader from '../components/ProfileHeader';
+import { changeLanguage } from '../../../utils/i18n';
+
+const LANGUAGE_STORAGE_KEY = 'urbanflow.language';
+const REGION_STORAGE_KEY = 'urbanflow.region';
 
 const languages = [
   { code: 'en', name: 'English', flag: '🇺🇸', selected: true },
@@ -27,12 +32,37 @@ export default function LanguageRegionScreen({ navigation }) {
   const [selectedLanguage, setSelectedLanguage] = useState('en');
   const [selectedRegion, setSelectedRegion] = useState('US');
 
-  const handleLanguageSelect = (code) => {
+  useEffect(() => {
+    const loadPrefs = async () => {
+      try {
+        const lang = await AsyncStorage.getItem(LANGUAGE_STORAGE_KEY);
+        const region = await AsyncStorage.getItem(REGION_STORAGE_KEY);
+        if (lang) setSelectedLanguage(lang);
+        if (region) setSelectedRegion(region);
+      } catch (err) {
+        console.error('Error loading language/region prefs:', err);
+      }
+    };
+    loadPrefs();
+  }, []);
+
+  const handleLanguageSelect = async (code) => {
     setSelectedLanguage(code);
+    try {
+      await changeLanguage(code);
+      await AsyncStorage.setItem(LANGUAGE_STORAGE_KEY, code);
+    } catch (err) {
+      console.error('Error changing language:', err);
+    }
   };
 
-  const handleRegionSelect = (code) => {
+  const handleRegionSelect = async (code) => {
     setSelectedRegion(code);
+    try {
+      await AsyncStorage.setItem(REGION_STORAGE_KEY, code);
+    } catch (err) {
+      console.error('Error saving region:', err);
+    }
   };
 
   return (
