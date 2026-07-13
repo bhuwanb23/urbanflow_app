@@ -30,6 +30,7 @@ const ecostatsRouter = require('./routes/ecostats');
 const userRouter = require('./routes/user');
 const tripsRouter = require('./routes/trips');
 const notificationsRouter = require('./routes/notifications');
+const recommendationsRouter = require('./routes/recommendations');
 const authRouter = require('./routes/auth');
 
 // Import Phase 4 realtime routes
@@ -140,6 +141,7 @@ app.use('/api/v1/cities', citiesRouter);
 app.use('/api/v1/environment', environmentRouter);
 app.use('/api/v1/traffic', trafficRouter);
 app.use('/api/v1/ecostats', authenticate, ecostatsRouter);
+app.use('/api/v1/recommendations', authenticate, recommendationsRouter);
 
 // Mount Phase 4 realtime routes
 app.use('/api/v1/live/vehicles', liveVehiclesRouter);
@@ -195,6 +197,7 @@ app.get('/api/v1', (req, res) => {
       environment: '/api/v1/environment/aqi',
       traffic: '/api/v1/traffic',
       ecostats: '/api/v1/ecostats',
+      recommendations: '/api/v1/recommendations (experimental)',
       // Phase 4 realtime endpoints
       'live/vehicles': '/api/v1/live/vehicles',
       'live/delays': '/api/v1/live/delays',
