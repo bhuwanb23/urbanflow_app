@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { SafeAreaView, ScrollView, Dimensions, Alert, RefreshControl, View } from 'react-native';
+import { useTranslation } from 'react-i18next';
 
 // Import components
 import {
@@ -53,6 +54,7 @@ const MOCK_ROUTES = [
 const { _width } = Dimensions.get('window');
 
 export default function PlannerScreen({ navigation }) {
+  const { t } = useTranslation();
   const [selectedMode, setSelectedMode] = useState('all');
   const [searchQuery, setSearchQuery] = useState('');
   const [routes, setRoutes] = useState([]);
@@ -125,7 +127,7 @@ export default function PlannerScreen({ navigation }) {
         }
       } catch (err) {
         console.error('Search error:', err);
-        Alert.alert('Search Error', 'Unable to search routes. Please try again.');
+        Alert.alert(t('planner.searchErrorTitle'), t('planner.searchErrorMessage'));
       } finally {
         setLoading(false);
       }
