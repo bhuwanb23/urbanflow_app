@@ -2,6 +2,9 @@ module.exports = {
   preset: 'react-native',
   clearMocks: true,
   moduleNameMapper: {
+    '^react-native-maps$': '<rootDir>/__mocks__/reactNativeMaps.js',
+    '^@sentry/react-native$': '<rootDir>/__mocks__/sentryMock.js',
+    '^expo-device$': '<rootDir>/__mocks__/expoDeviceMock.js',
     '\\.(png|jpg|jpeg|gif|webp|svg|ttf|otf|woff2?|mp3|wav)$':
       '<rootDir>/__mocks__/fileMock.js',
   },
