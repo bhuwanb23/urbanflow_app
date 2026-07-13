@@ -47,12 +47,16 @@ export default function SearchAutocomplete({ onLocationSelect, placeholder = "Se
         const response = await routesAPI.searchRoutes({ q: searchQuery });
         items = normalize(response);
       } catch (primaryErr) {
-        const fallback = await fetch(
-          `${require('../../../utils/api').API_CONFIG.BASE_URL}/api/demo/routes`
-        )
-          .then((r) => (r.ok ? r.json() : null))
-          .catch(() => null);
-        items = normalize(fallback);
+        if (!__DEV__) {
+          items = [];
+        } else {
+          const fallback = await fetch(
+            `${require('../../../utils/api').API_CONFIG.BASE_URL}/api/demo/routes`
+          )
+            .then((r) => (r.ok ? r.json() : null))
+            .catch(() => null);
+          items = normalize(fallback);
+        }
       }
 
       const filtered = items.filter((item) =>
