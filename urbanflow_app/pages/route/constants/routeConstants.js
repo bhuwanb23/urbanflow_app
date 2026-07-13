@@ -1,65 +1,7 @@
 /**
- * Route Constants and Mock Data
+ * Route Constants
  * Based on the route.html prototype design
  */
-
-// Mock route data matching the HTML design
-export const MOCK_ROUTE_DATA = {
-  id: 'route-001',
-  from: 'Central St.',
-  to: 'Airport Terminal',
-  duration: '42 min',
-  arrivalTime: '09:15 AM',
-  distance: '5.2 miles',
-  ecoScore: 8.5,
-  cost: '$4.50',
-  hasMapPreview: true,
-  mapPreviewIndex: 2, // After bus segment
-  segments: [
-    {
-      id: 'seg-1',
-      type: 'walk',
-      title: 'Walk to Central St.',
-      duration: '8 mins',
-      distance: '0.4 miles',
-      status: 'on-time',
-      features: ['On Time'],
-      accessibility: true,
-    },
-    {
-      id: 'seg-2',
-      type: 'bus',
-      title: 'Bus 102',
-      duration: '12 mins',
-      stops: 6,
-      status: 'delayed',
-      delayInfo: '2m delay',
-      laneInfo: 'LANE 4',
-      liveTracking: true,
-      features: ['2m delay'],
-    },
-    {
-      id: 'seg-3',
-      type: 'metro',
-      title: 'Blue Line (U3)',
-      duration: '15 mins',
-      stops: 4,
-      status: 'on-time',
-      occupancy: 'low',
-      features: ['On Time'],
-    },
-    {
-      id: 'seg-4',
-      type: 'bike',
-      title: 'FlowBike Rental',
-      duration: '7 mins',
-      distance: '0.8 miles',
-      status: 'available',
-      features: ['Available'],
-      nearbyStation: true,
-    },
-  ],
-};
 
 // Transport mode configurations
 export const TRANSPORT_MODES = {
