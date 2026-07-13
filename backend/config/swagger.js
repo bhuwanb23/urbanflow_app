@@ -45,7 +45,7 @@ const options = {
         Trip: {
           type: 'object',
           properties: {
-            id: { type: 'integer' },
+            id: { type: 'string', format: 'uuid' },
             userId: { type: 'integer' },
             from: { type: 'object' },
             to: { type: 'object' },
@@ -61,7 +61,7 @@ const options = {
         Notification: {
           type: 'object',
           properties: {
-            id: { type: 'integer' },
+            id: { type: 'string', format: 'uuid' },
             type: { type: 'string' },
             title: { type: 'string' },
             message: { type: 'string' },
