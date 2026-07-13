@@ -48,6 +48,9 @@ export default {
         projectId: 'd1f97f39-5370-4ab6-91ba-adf5a74e7bc4',
       },
       apiUrl: process.env.EXPO_PUBLIC_API_URL || 'http://localhost:3000',
+      EXPO_PUBLIC_GOOGLE_MAPS_API_KEY: process.env.GOOGLE_MAPS_API_KEY || '',
+      SENTRY_DSN: process.env.SENTRY_DSN || '',
+      SENTRY_ENV: process.env.SENTRY_ENV || 'production',
     },
   },
 };
