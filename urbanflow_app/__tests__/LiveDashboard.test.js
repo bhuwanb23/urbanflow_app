@@ -8,6 +8,23 @@ jest.mock('moti', () => ({
   MotiView: 'MotiView',
 }));
 
+// LiveDashboard uses react-i18next; without a real instance `t` returns the
+// key. Provide a tiny mock that resolves the keys used by the dashboard so the
+// rendered English labels can be asserted.
+jest.mock('react-i18next', () => {
+  const en = {
+    'live.realtimeActivity': 'Real-Time Activity',
+    'live.viewArchive': 'VIEW ARCHIVE',
+  };
+  return {
+    useTranslation: () => ({
+      t: (key) => en[key] || key,
+      i18n: { language: 'en', changeLanguage: jest.fn(), on: jest.fn(), off: jest.fn() },
+    }),
+    initReactI18next: { type: '3rdParty', init: () => {} },
+  };
+});
+
 // The AQI/Traffic widgets render their labels only after a successful
 // network load; in the test environment they fall back to "--". Mock them
 // so the dashboard's labels are present without depending on the network.
