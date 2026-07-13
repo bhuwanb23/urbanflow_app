@@ -9,6 +9,7 @@ import { useTrips, useRoutes } from '../../utils/hooks/useAPI';
 import FeedSkeleton from '../live/components/FeedSkeleton';
 import EmptyState from '../../components/EmptyState';
 import ErrorState from '../../components/ErrorState';
+import RouteMap from '../planner/components/RouteMap';
 
 const { _width, _height } = Dimensions.get('window');
 
@@ -184,6 +185,16 @@ export default function TripsScreen({ navigation }) {
             </TouchableOpacity>
           </View>
           <View style={styles.favoritesGrid}>
+            {favoriteRoutes.length > 0 && favoriteRoutes[0] && (
+              <RouteMap
+                shapeId={favoriteRoutes[0].shapeId}
+                title={
+                  favoriteRoutes[0].from && favoriteRoutes[0].to
+                    ? `${favoriteRoutes[0].from} → ${favoriteRoutes[0].to}`
+                    : 'Saved route'
+                }
+              />
+            )}
             {favoriteRoutes.length === 0 ? (
               <Text style={{ color: '#94A3B8', fontStyle: 'italic', paddingVertical: 20 }}>{t('trips.noSavedRoutes')}</Text>
             ) : (
