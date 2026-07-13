@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, ScrollView, SafeAreaView, Alert } from 'react-native';
+import { useTranslation } from 'react-i18next';
 import FeedSkeleton from '../live/components/FeedSkeleton';
 import ErrorState from '../../components/ErrorState';
 
@@ -15,6 +16,7 @@ import AchievementCard from './components/AchievementCard';
 import GoalCard from './components/GoalCard';
 
 export default function EcoStatsScreen() {
+    const { t } = useTranslation();
     const { 
         ecoStats, 
         fetchEcoStats, 
@@ -68,9 +70,9 @@ export default function EcoStatsScreen() {
     // Show error alert if there's an API error
     useEffect(() => {
         if (error) {
-            Alert.alert('Error', error, [
-                { text: 'Retry', onPress: loadEcoStats },
-                { text: 'OK' }
+            Alert.alert(t('common.error'), error, [
+                { text: t('common.retry'), onPress: loadEcoStats },
+                { text: t('common.ok') }
             ]);
         }
     }, [error]);
@@ -87,7 +89,7 @@ export default function EcoStatsScreen() {
         return (
             <SafeAreaView style={styles.loadingContainer}>
                 <ErrorState
-                    message={typeof error === 'string' ? error : 'Couldn’t load your eco stats.'}
+                    message={typeof error === 'string' ? error : t('ecostats.loadError')}
                     onRetry={loadEcoStats}
                 />
             </SafeAreaView>
