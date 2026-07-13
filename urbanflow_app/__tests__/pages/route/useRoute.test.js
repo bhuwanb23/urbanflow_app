@@ -1,6 +1,6 @@
 import { renderHook, act } from '@testing-library/react-native';
-import { useRoute } from '../pages/route/context/RouteContext';
-import { RouteProvider } from '../pages/route/context/RouteContext';
+import { useRoute } from '../../../pages/route/context/RouteContext';
+import { RouteProvider } from '../../../pages/route/context/RouteContext';
 
 // Mock route data
 const mockRouteData = {
@@ -18,7 +18,7 @@ const mockRouteData = {
 
 describe('useRoute', () => {
   const wrapper = ({ children }) => (
-    <RouteProvider>{children}</RouteProvider>
+    <RouteProvider initialRoute={mockRouteData}>{children}</RouteProvider>
   );
 
   it('initializes with default route data', () => {
