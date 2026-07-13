@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, ScrollView, Image, TouchableOpacity, Dimensions } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Dimensions } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { MotiView } from 'moti';
@@ -11,6 +11,7 @@ import TransitStatus from './TransitStatus';
 import TrafficConditions from './TrafficConditions';
 import RecentUpdates from './RecentUpdates';
 import PopularRoutes from './PopularRoutes';
+import LiveMap from './LiveMap';
 
 // Import Phase 4 hooks
 import { useLiveAlerts } from '../../../hooks/useLiveAlerts';
@@ -197,24 +198,8 @@ const LiveDashboard = () => {
         </View>
       </View>
 
-      {/* Compact Map Widget */}
-      <View style={styles.mapWidget}>
-        <View style={styles.mapPlaceholder}>
-          <Image 
-            source={{ uri: 'https://lh3.googleusercontent.com/aida-public/AB6AXuC1XkdmOxVrQWtbED7wlX10SlMl11OQxS9rk0NbRAVWnl-UDLsvCwQpHdYrV5wcU28eNCGIy0CXFNpYUNf8nA1VRGKghuX3_N-I2X4_kWWNreJ1QtXlRGZFCDhJ31BJ27IRS4IL1UBNaYjHa9y0757h1JcCT1nlcCHX-zaEjfbKd2ndroMVVjbeRMjDD5dJ6UhjZ_d_KmQhoofK3NFyaneSWCFmh7fRUw_mA26AGFL5_hYcbkRA-sTBbQa_Tex6ab4TKqRGtwiG4IPj' }}
-            style={styles.mapImage}
-          />
-          <View style={styles.mapOverlay}>
-            <View style={styles.mapDot} />
-            <Text style={styles.mapOverlayText}>ZONE A-1 COVERAGE</Text>
-          </View>
-          <View style={styles.mapControls}>
-            <TouchableOpacity style={styles.mapBtn}><Icon name="plus" size={24} color="#191c1d" /></TouchableOpacity>
-            <TouchableOpacity style={styles.mapBtn}><Icon name="minus" size={24} color="#191c1d" /></TouchableOpacity>
-            <TouchableOpacity style={[styles.mapBtn, { backgroundColor: '#006b2c' }]}><Icon name="crosshairs-gps" size={20} color="#ffffff" /></TouchableOpacity>
-          </View>
-        </View>
-      </View>
+      {/* Live Vehicle Map */}
+      <LiveMap />
 
       {/* Live Feed Section */}
       <View style={styles.feedSection}>
