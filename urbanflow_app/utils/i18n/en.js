@@ -109,6 +109,85 @@ export const en = {
     approachingDestination: 'Approaching destination.',
     delayDetected: 'Delay detected on your route.',
   },
+
+  profile: {
+    title: 'My Profile',
+    sustainabilityImpact: 'Sustainability Impact',
+    account: 'Account',
+    preferences: 'Preferences',
+    city: 'City',
+    editProfile: 'Edit Profile',
+    notifications: 'Notifications',
+    privacy: 'Privacy & Security',
+    preferredTransport: 'Preferred Transport',
+    mobilityGoals: 'Mobility Goals',
+    languageRegion: 'Language & Region',
+    logout: 'Log Out',
+    co2Saved: 'CO₂ Saved',
+    treesEquivalent: 'Trees Equivalent',
+    ecoScore: 'Eco Score',
+  },
+
+  planner: {
+    title: 'Plan Your Journey',
+    searchPlaceholder: 'Search destination...',
+    quickActions: 'Quick Actions',
+    popularRoutes: 'Popular Routes',
+    searchErrorTitle: 'Search Error',
+    searchErrorMessage: 'Unable to search routes. Please try again.',
+  },
+
+  live: {
+    title: 'Live Transit',
+    trafficConditions: 'Traffic Conditions',
+    recentUpdates: 'Recent Updates',
+    popularRoutes: 'Popular Routes',
+    transitStatus: 'Transit Status',
+    airQuality: 'Air Quality',
+    realtimeActivity: 'Real-Time Activity',
+    viewArchive: 'VIEW ARCHIVE',
+    allClear: 'All clear',
+    noActiveAlerts: 'No active alerts right now',
+  },
+
+  ecostats: {
+    title: 'Eco Stats',
+    achievements: 'Achievements',
+    weekly: 'Weekly',
+    monthly: 'Monthly',
+    yearly: 'Yearly',
+    carbonFootprint: 'Carbon Footprint',
+    loadError: 'Couldn’t load your eco stats.',
+  },
+
+  notifications: {
+    title: 'Notifications',
+    emptyTitle: 'No notifications yet',
+    emptyMessage: 'Stay tuned for updates about your routes, traffic conditions, and transit information.',
+    today: 'Today',
+    yesterday: 'Yesterday',
+    older: 'Older',
+  },
+
+  trips: {
+    title: 'Your Trips',
+    subtitle: 'Track your journey history',
+    savedRoutes: 'Saved Routes',
+    recentTrips: 'Recent Trips',
+    noTrips: 'No trips yet',
+    noTripsMessage: 'Plan a route to start building your journey history.',
+    noSavedRoutes: 'No saved routes yet. Start planning journeys!',
+    seeAll: 'See All',
+    viewAllHistory: 'View All History',
+  },
+
+  intro: {
+    title: 'UrbanFlow',
+    smartMobility: 'Smart Mobility.',
+    zeroCompromise: 'Zero Compromise.',
+    description: 'Navigate your city efficiently while reducing your carbon footprint. Intelligent routing for the modern commuter.',
+    getStarted: 'Get Started',
+  },
 };
 
 export default en;
