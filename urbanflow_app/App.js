@@ -84,12 +84,6 @@ const WrappedTripsScreen = (props) => (
   </ScreenWrapper>
 );
 
-const _WrappedRouteDetailsScreen = (props) => (
-  <ScreenWrapper>
-    <RouteDetailsScreen {...props} />
-  </ScreenWrapper>
-);
-
 const WrappedProfileStackNavigator = (props) => (
   <ScreenWrapper>
     <ProfileStackNavigator {...props} />
