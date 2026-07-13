@@ -5,6 +5,7 @@ const otpService = require('../services/otpService');
 const carbonCalculator = require('../utils/carbonCalculator');
 const fareCalculator = require('../utils/fareCalculator');
 const modeMapper = require('../utils/modeMapper');
+const cityManager = require('../utils/cityManager');
 const { journeyPlanSchema, validate } = require('../validators/plan');
 
 /**
@@ -66,7 +67,8 @@ router.post('/', validate(journeyPlanSchema), async (req, res, next) => {
       const ecoScore = carbonCalculator.getEcoScore(carbonSaved, totalDistanceKm);
 
       // Calculate fare
-      const fareInfo = fareCalculator.calculateTotalFare(itinerary.legs);
+      const activeCity = cityManager.getCurrentCity()?.id;
+      const fareInfo = fareCalculator.calculateTotalFare(itinerary.legs, null, activeCity);
       const fareWithDiscount = fareCalculator.applyTransferDiscount(
         itinerary.legs,
         fareInfo.total
