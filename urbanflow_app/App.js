@@ -28,6 +28,10 @@ import ErrorBoundary from './components/ErrorBoundary';
 import OfflineBanner from './components/OfflineBanner';
 import { CityProvider } from './contexts/CityContext';
 import './utils/i18n';
+import { initSentry, captureException } from './utils/monitoring';
+import { registerForPushNotifications, registerNotificationListeners } from './utils/pushNotifications';
+
+initSentry();
 
 
 
@@ -220,6 +224,7 @@ export default function App() {
   const [isLoading, setIsLoading] = React.useState(true);
   const [isLoggedIn, setIsLoggedIn] = React.useState(false);
   const { isDark, theme: appTheme } = useAppTheme();
+  const navigationRef = React.useRef(null);
 
   const [urbanistLoaded] = useUrbanist({
     Urbanist_400Regular,
@@ -240,6 +245,19 @@ export default function App() {
   React.useEffect(() => {
     checkAuthStatus();
   }, []);
+
+  // Register push notification listeners once on mount
+  React.useEffect(() => {
+    const cleanup = registerNotificationListeners(navigationRef);
+    return cleanup;
+  }, []);
+
+  // When the user logs in, register the device for push notifications
+  React.useEffect(() => {
+    if (isLoggedIn) {
+      registerForPushNotifications();
+    }
+  }, [isLoggedIn]);
 
   const checkAuthStatus = async () => {
     try {
@@ -290,10 +308,10 @@ export default function App() {
       <PaperProvider theme={theme}>
         <OfflineBanner onRetry={() => checkAuthStatus()} />
         <ErrorBoundary
-          onError={(error, info) => console.error('App-level error caught:', error, info)}
+          onError={(error, info) => captureException(error, { info })}
         >
           <CityProvider>
-          <NavigationContainer>
+          <NavigationContainer ref={navigationRef}>
             <StatusBar barStyle={isDark ? 'light-content' : 'dark-content'} backgroundColor={isDark ? '#0f172a' : '#FFFFFF'} translucent={false} />
             <Stack.Navigator
               initialRouteName={isLoggedIn ? "MainTabs" : "Intro"}
