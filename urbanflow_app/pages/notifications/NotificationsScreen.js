@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { View, ScrollView, SafeAreaView, StyleSheet, RefreshControl, Alert } from 'react-native';
+import { useTranslation } from 'react-i18next';
 import notificationTheme from './theme/notificationTheme';
 
 // Import API hook
@@ -13,6 +14,7 @@ import FeedSkeleton from '../live/components/FeedSkeleton';
 import ErrorState from '../../components/ErrorState';
 
 const NotificationsScreen = ({ navigation }) => {
+  const { t } = useTranslation();
   const [refreshing, setRefreshing] = useState(false);
   const [activeFilter, setActiveFilter] = useState('all');
   
@@ -24,7 +26,8 @@ const NotificationsScreen = ({ navigation }) => {
     markAllAsRead,
     deleteNotification,
     loading,
-    error 
+    error,
+    initialized
   } = useNotifications();
 
   // Calculate stats from real data
@@ -146,7 +149,7 @@ const NotificationsScreen = ({ navigation }) => {
       sections.push(
         <NotificationSection
           key="today"
-          title="Today"
+          title={t('notifications.today')}
           notifications={groupedNotifications.today}
           icon="calendar-today"
           iconColor={notificationTheme.colors.primary}
@@ -163,7 +166,7 @@ const NotificationsScreen = ({ navigation }) => {
       sections.push(
         <NotificationSection
           key="yesterday"
-          title="Yesterday"
+          title={t('notifications.yesterday')}
           notifications={groupedNotifications.yesterday}
           icon="calendar-yesterday"
           iconColor={notificationTheme.colors.secondary}
@@ -197,7 +200,7 @@ const NotificationsScreen = ({ navigation }) => {
       sections.push(
         <NotificationSection
           key="older"
-          title="Older"
+          title={t('notifications.older')}
           notifications={groupedNotifications.older}
           icon="calendar"
           iconColor={notificationTheme.colors.textSecondary}
@@ -213,7 +216,7 @@ const NotificationsScreen = ({ navigation }) => {
   };
 
   // Show loading state
-  if (loading && !notifications) {
+  if (loading && !initialized) {
     return (
       <SafeAreaView style={styles.container}>
         <FeedSkeleton itemCount={5} />
@@ -221,7 +224,7 @@ const NotificationsScreen = ({ navigation }) => {
     );
   }
 
-  if (error && !notifications) {
+  if (error && !initialized) {
     return (
       <SafeAreaView style={styles.container}>
         <ErrorState
@@ -232,7 +235,7 @@ const NotificationsScreen = ({ navigation }) => {
     );
   }
 
-  if (notifications && notifications.length === 0) {
+  if (initialized && notifications && notifications.length === 0) {
     return (
       <SafeAreaView style={styles.container}>
         <NotificationHeader
@@ -243,8 +246,8 @@ const NotificationsScreen = ({ navigation }) => {
         />
         <View style={styles.emptyContainer}>
           <EmptyState
-            title="No notifications yet"
-            message="Stay tuned for updates about your routes, traffic conditions, and transit information."
+            title={t('notifications.emptyTitle')}
+            message={t('notifications.emptyMessage')}
             icon="bell-off"
             onRefresh={handleRefresh}
           />
@@ -279,8 +282,8 @@ const NotificationsScreen = ({ navigation }) => {
       >
         {notifications && notifications.length === 0 ? (
           <EmptyState
-            title="No notifications yet"
-            message="Stay tuned for updates about your routes, traffic conditions, and transit information."
+            title={t('notifications.emptyTitle')}
+            message={t('notifications.emptyMessage')}
             icon="bell-off"
             onRefresh={handleRefresh}
           />
