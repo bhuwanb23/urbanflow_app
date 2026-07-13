@@ -53,6 +53,10 @@ module.exports = (sequelize) => {
         quietHours: { enabled: true, start: '22:00', end: '07:00' }
       }
     },
+    pushToken: {
+      type: DataTypes.STRING,
+      allowNull: true
+    },
     createdAt: {
       type: DataTypes.DATE,
       defaultValue: DataTypes.NOW
