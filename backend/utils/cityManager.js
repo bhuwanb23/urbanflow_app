@@ -4,12 +4,16 @@
  */
 
 const path = require('path');
+const fs = require('fs');
 const logger = require('./logger');
+
+// Persisted active-city file (repo-root relative, robust across cwd/OS)
+const ACTIVE_CITY_FILE = path.join(__dirname, '..', '..', 'data', 'active-city.json');
 
 class CityManager {
   constructor() {
     this.cities = new Map();
-    this.currentCity = process.env.ACTIVE_CITY || 'delhi';
+    this.currentCity = this._loadPersistedCity() || process.env.ACTIVE_CITY || 'delhi';
     this.dataLoader = null;
     
     // Register default cities
@@ -153,7 +157,44 @@ class CityManager {
     }
 
     logger.info(`🌆 Switched to city: ${city.displayName}`);
+    this._persistCity(cityId);
     return city;
+  }
+
+  /**
+   * Read persisted active city id from disk (best-effort).
+   * Skipped under test so test runs never leak persisted state.
+   * @returns {string|null}
+   */
+  _loadPersistedCity() {
+    if (process.env.NODE_ENV === 'test') return null;
+    try {
+      const raw = fs.readFileSync(ACTIVE_CITY_FILE, 'utf8');
+      const { cityId } = JSON.parse(raw);
+      if (cityId && typeof cityId === 'string') {
+        return cityId;
+      }
+    } catch {
+      // File missing or unreadable — fall back to env/default
+    }
+    return null;
+  }
+
+  /**
+   * Persist active city id to disk (best-effort).
+   * Skipped under test so test runs never write project files.
+   */
+  _persistCity(cityId) {
+    if (process.env.NODE_ENV === 'test') return;
+    try {
+      const dir = path.dirname(ACTIVE_CITY_FILE);
+      if (!fs.existsSync(dir)) {
+        fs.mkdirSync(dir, { recursive: true });
+      }
+      fs.writeFileSync(ACTIVE_CITY_FILE, JSON.stringify({ cityId }), 'utf8');
+    } catch (error) {
+      logger.warn(`Could not persist active city: ${error.message}`);
+    }
   }
 
   /**
