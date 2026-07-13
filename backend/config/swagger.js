@@ -69,6 +69,18 @@ const options = {
             createdAt: { type: 'string', format: 'date-time' },
           },
         },
+        Recommendation: {
+          type: 'object',
+          properties: {
+            id: { type: 'string', example: 'rec-frequent-route' },
+            title: { type: 'string', example: 'Your usual route 45E' },
+            description: { type: 'string' },
+            mode: { type: 'string', example: 'bus' },
+            routeId: { type: 'string', nullable: true, example: '45E' },
+            confidence: { type: 'number', format: 'float', minimum: 0, maximum: 1, example: 0.62 },
+            reason: { type: 'string' },
+          },
+        },
         EcoStats: {
           type: 'object',
           properties: {
@@ -237,6 +249,26 @@ const options = {
           summary: 'Update user preferences',
           security: [{ bearerAuth: [] }],
           responses: { 200: { description: 'Preferences updated' } },
+        },
+      },
+      '/api/v1/user/push-token': {
+        post: {
+          tags: ['User'],
+          summary: 'Save device push token',
+          security: [{ bearerAuth: [] }],
+          requestBody: {
+            required: true,
+            content: {
+              'application/json': {
+                schema: { type: 'object', properties: { token: { type: 'string' } }, required: ['token'] },
+              },
+            },
+          },
+          responses: {
+            200: { description: 'Push token saved' },
+            400: { description: 'Invalid token' },
+            401: { description: 'Unauthorized' },
+          },
         },
       },
 
@@ -557,6 +589,45 @@ const options = {
           summary: 'Compact weekly summary',
           security: [{ bearerAuth: [] }],
           responses: { 200: { description: 'Summary object' } },
+        },
+      },
+
+      // ── Recommendations (experimental) ────────────────────────────
+      '/api/v1/recommendations': {
+        get: {
+          tags: ['Recommendations'],
+          summary: 'Get personalized trip recommendations (experimental)',
+          description: 'Rule-based recommendations derived from the authenticated user\'s trip history (frequent routes, time-of-day patterns, eco-friendlier alternatives).',
+          security: [{ bearerAuth: [] }],
+          responses: {
+            200: {
+              description: 'Personalized recommendations',
+              content: {
+                'application/json': {
+                  schema: {
+                    type: 'object',
+                    properties: {
+                      success: { type: 'boolean', example: true },
+                      data: {
+                        type: 'object',
+                        properties: {
+                          recommendations: {
+                            type: 'array',
+                            items: { '$ref': '#/components/schemas/Recommendation' },
+                          },
+                          experimental: { type: 'boolean', example: true },
+                          message: { type: 'string', nullable: true },
+                          generatedAt: { type: 'string', format: 'date-time' },
+                        },
+                      },
+                    },
+                  },
+                },
+              },
+            },
+            401: { description: 'Unauthorized', content: { 'application/json': { schema: { '$ref': '#/components/schemas/Error' } } } },
+            500: { description: 'Server error', content: { 'application/json': { schema: { '$ref': '#/components/schemas/Error' } } } },
+          },
         },
       },
 
