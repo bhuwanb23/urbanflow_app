@@ -42,6 +42,7 @@ const livePredictionsRouter = require('./routes/livePredictions');
 const vehiclePositionService = require('./services/vehiclePositionService');
 const tripUpdateService = require('./services/tripUpdateService');
 const alertsService = require('./services/alertsService');
+const tokenBlacklist = require('./utils/tokenBlacklist');
 
 // Initialize Express app
 const app = express();
@@ -260,6 +261,7 @@ async function shutdown(signal) {
     vehiclePositionService.stopAutoRefresh();
     tripUpdateService.stopAutoRefresh();
     alertsService.stopAutoRefresh();
+    tokenBlacklist.stopCleanup();
 
     if (server) {
       await new Promise((resolve) => server.close(resolve));
