@@ -3,3 +3,4 @@ export { default as SearchBar } from './SearchBar';
 export { default as ModeFilters } from './ModeFilters';
 export { default as QuickActions } from './QuickActions';
 export { default as PopularRoutes } from './PopularRoutes';
+export { default as RecommendationsCard } from './RecommendationsCard';
