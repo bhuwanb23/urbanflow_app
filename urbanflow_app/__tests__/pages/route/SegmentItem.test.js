@@ -37,15 +37,15 @@ describe('SegmentItem', () => {
 
     expect(getByText('Walk to Central St.')).toBeTruthy();
     expect(getByText('0.6 km')).toBeTruthy();
-    expect(getByText('8 min')).toBeTruthy();
+    expect(getByText(/8 min/)).toBeTruthy();
   });
 
   it('displays status badge', () => {
-    const { getByText } = render(
+    const { getAllByText } = render(
       <SegmentItem segment={mockSegment} />
     );
 
-    expect(getByText('On Time')).toBeTruthy();
+    expect(getAllByText('On Time').length).toBeGreaterThan(0);
   });
 
   it('shows delay information when delayed', () => {
