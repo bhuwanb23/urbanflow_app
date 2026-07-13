@@ -109,6 +109,85 @@ export const es = {
     approachingDestination: 'Acercándose al destino.',
     delayDetected: 'Retraso detectado en tu ruta.',
   },
+
+  profile: {
+    title: 'Mi Perfil',
+    sustainabilityImpact: 'Impacto de Sostenibilidad',
+    account: 'Cuenta',
+    preferences: 'Preferencias',
+    city: 'Ciudad',
+    editProfile: 'Editar Perfil',
+    notifications: 'Notificaciones',
+    privacy: 'Privacidad y Seguridad',
+    preferredTransport: 'Transporte Preferido',
+    mobilityGoals: 'Objetivos de Movilidad',
+    languageRegion: 'Idioma y Región',
+    logout: 'Cerrar Sesión',
+    co2Saved: 'CO₂ Ahorrado',
+    treesEquivalent: 'Árboles Equivalentes',
+    ecoScore: 'Puntuación Eco',
+  },
+
+  planner: {
+    title: 'Planifica tu Viaje',
+    searchPlaceholder: 'Buscar destino...',
+    quickActions: 'Acciones Rápidas',
+    popularRoutes: 'Rutas Populares',
+    searchErrorTitle: 'Error de Búsqueda',
+    searchErrorMessage: 'No se pudieron buscar rutas. Inténtalo de nuevo.',
+  },
+
+  live: {
+    title: 'Tránsito en Vivo',
+    trafficConditions: 'Condiciones de Tráfico',
+    recentUpdates: 'Actualizaciones Recientes',
+    popularRoutes: 'Rutas Populares',
+    transitStatus: 'Estado del Tránsito',
+    airQuality: 'Calidad del Aire',
+    realtimeActivity: 'Actividad en Tiempo Real',
+    viewArchive: 'VER ARCHIVO',
+    allClear: 'Todo despejado',
+    noActiveAlerts: 'No hay alertas activas ahora mismo',
+  },
+
+  ecostats: {
+    title: 'Estadísticas Eco',
+    achievements: 'Logros',
+    weekly: 'Semanal',
+    monthly: 'Mensual',
+    yearly: 'Anual',
+    carbonFootprint: 'Huella de Carbono',
+    loadError: 'No pudimos cargar tus estadísticas eco.',
+  },
+
+  notifications: {
+    title: 'Notificaciones',
+    emptyTitle: 'Aún no hay notificaciones',
+    emptyMessage: 'Mantente atento a novedades sobre tus rutas, condiciones de tráfico e información de tránsito.',
+    today: 'Hoy',
+    yesterday: 'Ayer',
+    older: 'Anteriores',
+  },
+
+  trips: {
+    title: 'Tus Viajes',
+    subtitle: 'Sigue el historial de tus trayectos',
+    savedRoutes: 'Rutas Guardadas',
+    recentTrips: 'Viajes Recientes',
+    noTrips: 'Aún no hay viajes',
+    noTripsMessage: 'Planifica una ruta para empezar a construir tu historial.',
+    noSavedRoutes: 'Aún no hay rutas guardadas. ¡Empieza a planificar viajes!',
+    seeAll: 'Ver Todo',
+    viewAllHistory: 'Ver Todo el Historial',
+  },
+
+  intro: {
+    title: 'UrbanFlow',
+    smartMobility: 'Movilidad Inteligente.',
+    zeroCompromise: 'Sin Concesiones.',
+    description: 'Navega tu ciudad de forma eficiente reduciendo tu huella de carbono. Enrutamiento inteligente para el commuter moderno.',
+    getStarted: 'Comenzar',
+  },
 };
 
 export default es;
