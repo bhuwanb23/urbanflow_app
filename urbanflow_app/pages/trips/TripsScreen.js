@@ -2,6 +2,7 @@ import React, { useState, useEffect, useMemo } from 'react';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity, SafeAreaView, Dimensions, Platform, RefreshControl } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { MotiView } from 'moti';
+import { useTranslation } from 'react-i18next';
 
 // Import API hooks
 import { useTrips, useRoutes } from '../../utils/hooks/useAPI';
@@ -21,8 +22,9 @@ export default function TripsScreen({ navigation }) {
   const [isRefreshing, setIsRefreshing] = useState(false);
 
   // Use real API data
-  const { trips, fetchTrips, loading: tripsLoading, error: tripsError } = useTrips();
+  const { trips, fetchTrips, loading: tripsLoading, error: tripsError, initialized } = useTrips();
   const { routes, fetchRoutes } = useRoutes();
+  const { t } = useTranslation();
 
   // Get favorite routes from API
   const favoriteRoutes = useMemo(() => {
@@ -81,7 +83,7 @@ export default function TripsScreen({ navigation }) {
   const handleSort = () => setSortIdx((sortIdx + 1) % SORTS.length);
 
   // Show loading state
-  if (tripsLoading && !trips) {
+  if (tripsLoading && !initialized) {
     return (
       <SafeAreaView style={{ flex: 1, backgroundColor: '#FFFFFF' }}>
         <FeedSkeleton itemCount={5} />
@@ -89,7 +91,7 @@ export default function TripsScreen({ navigation }) {
     );
   }
 
-  if (tripsError && !trips) {
+  if (tripsError && !initialized) {
     return (
       <SafeAreaView style={{ flex: 1, backgroundColor: '#FFFFFF' }}>
         <ErrorState
@@ -108,16 +110,16 @@ export default function TripsScreen({ navigation }) {
           <View style={styles.headerRow}>
             <View style={styles.headerLeft}>
               <Text style={styles.headerTitle}>
-                Your Trips <Text style={{ fontSize: 24 }}>🗺️</Text>
+                {t('trips.title')} <Text style={{ fontSize: 24 }}>🗺️</Text>
               </Text>
-              <Text style={styles.headerSubtitle}>Track your journey history</Text>
+              <Text style={styles.headerSubtitle}>{t('trips.subtitle')}</Text>
             </View>
           </View>
         </View>
         <EmptyState
           icon="map-marker-path"
-          title="No trips yet"
-          message="Plan a route to start building your journey history."
+          title={t('trips.noTrips')}
+          message={t('trips.noTripsMessage')}
           onRefresh={handleRefresh}
         />
       </SafeAreaView>
@@ -176,14 +178,14 @@ export default function TripsScreen({ navigation }) {
         {/* Saved Routes Section */}
         <View style={styles.section}>
           <View style={styles.sectionHeader}>
-            <Text style={styles.sectionTitle}>Saved Routes</Text>
+            <Text style={styles.sectionTitle}>{t('trips.savedRoutes')}</Text>
             <TouchableOpacity>
-              <Text style={styles.seeAllText}>See All</Text>
+              <Text style={styles.seeAllText}>{t('trips.seeAll')}</Text>
             </TouchableOpacity>
           </View>
           <View style={styles.favoritesGrid}>
             {favoriteRoutes.length === 0 ? (
-              <Text style={{ color: '#94A3B8', fontStyle: 'italic', paddingVertical: 20 }}>No saved routes yet. Start planning journeys!</Text>
+              <Text style={{ color: '#94A3B8', fontStyle: 'italic', paddingVertical: 20 }}>{t('trips.noSavedRoutes')}</Text>
             ) : (
               favoriteRoutes.map((route, index) => (
                 <MotiView
@@ -221,7 +223,7 @@ export default function TripsScreen({ navigation }) {
         {/* Trip History Section */}
         <View style={styles.section}>
           <View style={styles.sectionHeader}>
-            <Text style={styles.sectionTitle}>Recent Trips</Text>
+            <Text style={styles.sectionTitle}>{t('trips.recentTrips')}</Text>
             <Text style={styles.sectionSubtitle}>
               {filteredTrips?.length || 0} trips{selectedFilter !== 'All Trips' ? ` in ${selectedFilter.toLowerCase()}` : ''}
             </Text>
@@ -309,7 +311,7 @@ export default function TripsScreen({ navigation }) {
           
           {filteredTrips && filteredTrips.length > 0 && (
             <TouchableOpacity style={styles.loadMoreBtn}>
-              <Text style={styles.loadMoreText}>View All History</Text>
+              <Text style={styles.loadMoreText}>{t('trips.viewAllHistory')}</Text>
               <Icon name="arrow-down" size={16} color="#10B981" style={{marginLeft: 4}} />
             </TouchableOpacity>
           )}
