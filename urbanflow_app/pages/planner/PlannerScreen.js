@@ -8,11 +8,13 @@ import {
   SearchBar,
   ModeFilters,
   QuickActions,
-  PopularRoutes
+  PopularRoutes,
+  RecommendationsCard
 } from './components';
 import FeedSkeleton from '../live/components/FeedSkeleton';
 import MapSkeleton from '../live/components/MapSkeleton';
 import ErrorState from '../../components/ErrorState';
+import RouteMap from './components/RouteMap';
 
 // Import styles
 import { plannerStyles } from './styles/plannerStyles';
@@ -61,6 +63,7 @@ export default function PlannerScreen({ navigation }) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [refreshing, setRefreshing] = useState(false);
+  const [selectedRoute, setSelectedRoute] = useState(null);
 
   // Load popular routes on mount
   useEffect(() => {
@@ -138,6 +141,7 @@ export default function PlannerScreen({ navigation }) {
   };
 
   const handleRoutePress = (route) => {
+    setSelectedRoute(route);
     navigation.navigate('RouteDetailsScreen', { route });
   };
 
@@ -179,6 +183,23 @@ export default function PlannerScreen({ navigation }) {
 
             {/* Quick Actions Component */}
             <QuickActions />
+
+            {/* Selected Route Map (polyline) */}
+            {selectedRoute && (
+              <View style={{ marginBottom: 16 }}>
+                <RouteMap
+                  shapeId={selectedRoute.shapeId}
+                  title={
+                    selectedRoute.from && selectedRoute.to
+                      ? `${selectedRoute.from} → ${selectedRoute.to}`
+                      : 'Selected route'
+                  }
+                />
+              </View>
+            )}
+
+            {/* AI Recommendations (experimental) */}
+            <RecommendationsCard />
 
             {/* Popular Routes Component */}
             <PopularRoutes 
