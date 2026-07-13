@@ -1,5 +1,6 @@
 import React from 'react';
 import { View, StyleSheet } from 'react-native';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { routeTheme } from '../theme/routeTheme';
 import { TRANSPORT_MODES } from '../constants/routeConstants';
 
@@ -12,22 +13,22 @@ export default function SegmentIcon({ type, size = 48 }) {
   const iconSize = size * 0.5;
 
   return (
-    <View 
+    <View
       style={[
-        styles.iconContainer, 
-        { 
-          width: size, 
+        styles.iconContainer,
+        {
+          width: size,
           height: size,
           backgroundColor: routeTheme.colors[modeConfig.iconBg] || routeTheme.colors.primaryFixed,
-        }
+        },
       ]}
       accessibilityRole="image"
       accessibilityLabel={modeConfig.label}
     >
-      <Icon 
-        name={modeConfig.icon} 
-        size={iconSize} 
-        color={routeTheme.colors[modeConfig.iconColor] || routeTheme.colors.onPrimaryFixed} 
+      <Icon
+        name={modeConfig.icon}
+        size={iconSize}
+        color={routeTheme.colors[modeConfig.iconColor] || routeTheme.colors.onPrimaryFixed}
       />
     </View>
   );
@@ -41,6 +42,3 @@ const styles = StyleSheet.create({
     ...routeTheme.shadows.sm,
   },
 });
-
-// Import Icon after component definition to avoid circular dependency
-const Icon = require('react-native-vector-icons/MaterialCommunityIcons').default;
