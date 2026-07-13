@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useRef, useEffect } from 'react';
 import * as Location from 'expo-location';
 
 /**
@@ -10,6 +10,17 @@ export function useLiveTracking() {
   const [currentLocation, setCurrentLocation] = useState(null);
   const [speed, setSpeed] = useState(null);
   const [locationHistory, setLocationHistory] = useState([]);
+  const subscriptionRef = useRef(null);
+
+  // Ensure any active position subscription is cleaned up on unmount.
+  useEffect(() => {
+    return () => {
+      if (subscriptionRef.current) {
+        subscriptionRef.current.remove();
+        subscriptionRef.current = null;
+      }
+    };
+  }, []);
 
   /**
    * Start location tracking
@@ -38,7 +49,7 @@ export function useLiveTracking() {
       setSpeed(location.coords.speed || 0);
 
       // Subscribe to location updates
-      await Location.watchPositionAsync(
+      subscriptionRef.current = await Location.watchPositionAsync(
         {
           accuracy: Location.Accuracy.High,
           timeInterval: 5000, // Update every 5 seconds
@@ -68,7 +79,10 @@ export function useLiveTracking() {
    */
   const stopTracking = useCallback(() => {
     setIsTracking(false);
-    // Note: In a real implementation, we would unsubscribe from the watch
+    if (subscriptionRef.current) {
+      subscriptionRef.current.remove();
+      subscriptionRef.current = null;
+    }
   }, []);
 
   /**
