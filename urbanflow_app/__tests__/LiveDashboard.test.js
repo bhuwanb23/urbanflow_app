@@ -12,10 +12,12 @@ jest.mock('moti', () => ({
 // network load; in the test environment they fall back to "--". Mock them
 // so the dashboard's labels are present without depending on the network.
 jest.mock('../pages/live/components/AQIWidget', () => {
+  const React = require('react');
   const { Text } = require('react-native');
   return () => React.createElement(Text, null, 'AIR QUALITY INDEX');
 });
 jest.mock('../pages/live/components/TrafficWidget', () => {
+  const React = require('react');
   const { Text } = require('react-native');
   return () => React.createElement(Text, null, 'TRAFFIC LOAD');
 });
