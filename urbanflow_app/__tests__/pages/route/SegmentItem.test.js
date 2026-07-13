@@ -1,34 +1,31 @@
 import React from 'react';
-import { render } from '@testing-library/react-native';
-import SegmentItem from '../pages/route/components/SegmentItem';
+import { render, fireEvent } from '@testing-library/react-native';
+import SegmentItem from '../../../pages/route/components/SegmentItem';
 
 // Mock dependencies
 jest.mock('react-native-vector-icons/MaterialCommunityIcons', () => 'Icon');
-jest.mock('../pages/route/components/SegmentIcon', () => {
-  return function MockSegmentIcon({ type }) {
-    return <MockIcon data-testid="segment-icon" data-type={type} />;
-  };
+jest.mock('../../../pages/route/components/SegmentIcon', () => {
+  const { View } = require('react-native');
+  return ({ type }) => View ? require('react').createElement(View, { testID: 'segment-icon', 'data-type': type }) : null;
 });
-jest.mock('../pages/route/components/SegmentConnector', () => {
-  return function MockSegmentConnector() {
-    return null;
-  };
+jest.mock('../../../pages/route/components/SegmentConnector', () => {
+  const { View } = require('react-native');
+  return () => require('react').createElement(View, { testID: 'segment-connector' });
 });
-jest.mock('../pages/route/hooks/useAccessibility', () => ({
+jest.mock('../../../pages/route/hooks/useAccessibility', () => ({
   useAccessibility: () => ({
     triggerHapticFeedback: jest.fn(),
-  })
+    announceForAccessibility: jest.fn(),
+  }),
 }));
-
-const MockIcon = require('react').createContext(null);
 
 describe('SegmentItem', () => {
   const mockSegment = {
     id: 'seg-1',
     type: 'walk',
     title: 'Walk to Central St.',
-    duration: '8 mins',
-    distance: '0.4 miles',
+    duration: 480, // seconds -> 8 min
+    distance: 640, // meters -> 0.6 km
     status: 'on-time',
     features: ['On Time'],
   };
@@ -37,17 +34,17 @@ describe('SegmentItem', () => {
     const { getByText } = render(
       <SegmentItem segment={mockSegment} />
     );
-    
+
     expect(getByText('Walk to Central St.')).toBeTruthy();
-    expect(getByText('0.4 miles')).toBeTruthy();
-    expect(getByText('8 mins')).toBeTruthy();
+    expect(getByText('0.6 km')).toBeTruthy();
+    expect(getByText('8 min')).toBeTruthy();
   });
 
   it('displays status badge', () => {
     const { getByText } = render(
       <SegmentItem segment={mockSegment} />
     );
-    
+
     expect(getByText('On Time')).toBeTruthy();
   });
 
@@ -61,7 +58,7 @@ describe('SegmentItem', () => {
     const { getByText } = render(
       <SegmentItem segment={delayedSegment} />
     );
-    
+
     expect(getByText('5m delay')).toBeTruthy();
   });
 
@@ -75,7 +72,7 @@ describe('SegmentItem', () => {
     const { getByText } = render(
       <SegmentItem segment={liveSegment} />
     );
-    
+
     expect(getByText('LIVE TRACKING ACTIVE')).toBeTruthy();
   });
 
@@ -89,7 +86,7 @@ describe('SegmentItem', () => {
     const { getByText } = render(
       <SegmentItem segment={busySegment} />
     );
-    
+
     expect(getByText('High occupancy')).toBeTruthy();
   });
 
@@ -103,20 +100,19 @@ describe('SegmentItem', () => {
     const { getByText } = render(
       <SegmentItem segment={bikeSegment} />
     );
-    
+
     expect(getByText('STATION NEARBY')).toBeTruthy();
   });
 
   it('calls onPress when tapped', () => {
     const mockOnPress = jest.fn();
-    
-    const { getByText } = render(
+
+    const { getByLabelText } = render(
       <SegmentItem segment={mockSegment} onPress={mockOnPress} />
     );
-    
-    const card = getByText('Walk to Central St.').parent;
-    card.props.onPress();
-    
+
+    fireEvent.press(getByLabelText('walk segment: Walk to Central St.'));
+
     expect(mockOnPress).toHaveBeenCalledTimes(1);
   });
 
@@ -124,17 +120,23 @@ describe('SegmentItem', () => {
     const { getByLabelText } = render(
       <SegmentItem segment={mockSegment} />
     );
-    
+
     expect(getByLabelText('walk segment: Walk to Central St.')).toBeTruthy();
   });
 
-  it('applies isLast prop correctly', () => {
-    // When isLast is true, connector should not be shown
+  it('hides the connector when isLast is true', () => {
     const { queryByTestId } = render(
       <SegmentItem segment={mockSegment} isLast={true} />
     );
-    
-    // Connector should not be rendered
+
     expect(queryByTestId('segment-connector')).toBeNull();
+  });
+
+  it('renders the connector when not last', () => {
+    const { queryByTestId } = render(
+      <SegmentItem segment={mockSegment} isLast={false} />
+    );
+
+    expect(queryByTestId('segment-connector')).toBeTruthy();
   });
 });
