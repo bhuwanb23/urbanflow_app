@@ -135,6 +135,14 @@ export const userAPI = {
       body: JSON.stringify(profileData),
     });
   },
+
+  // Save the device Expo push token for push notifications
+  savePushToken: async (token) => {
+    return await apiCall('/user/push-token', {
+      method: 'POST',
+      body: JSON.stringify({ token }),
+    });
+  },
 };
 
 // ============================================================================
@@ -270,6 +278,17 @@ export const ecoStatsAPI = {
   // Get carbon footprint summary
   getCarbonFootprint: async () => {
     return await apiCall('/ecostats/carbon-footprint');
+  },
+};
+
+// ============================================================================
+// RECOMMENDATIONS API (Phase 9.6 - experimental)
+// ============================================================================
+
+export const recommendationsAPI = {
+  // Get personalized trip recommendations for the authenticated user
+  getRecommendations: async () => {
+    return await apiCall('/recommendations');
   },
 };
 
@@ -472,6 +491,30 @@ export const healthAPI = {
   },
 };
 
+// ============================================================================
+// MAPS API (Phase 9.5 - react-native-maps integration)
+// ============================================================================
+
+export const mapsAPI = {
+  // Get real-time vehicle positions
+  // GET /api/v1/live/vehicles -> { data: { vehicles: [...] } }
+  // Each vehicle has latitude, longitude, vehicleId, routeId
+  getVehicles: async (params = {}) => {
+    const queryString = new URLSearchParams(params).toString();
+    const endpoint = queryString ? `/live/vehicles?${queryString}` : '/live/vehicles';
+    return await apiCall(endpoint);
+  },
+
+  // Get a route shape (GeoJSON / coordinate pairs) for drawing polylines
+  // GET /api/v1/shapes/:shapeId -> { data: <shape> }
+  getShape: async (shapeId) => {
+    if (!shapeId) {
+      throw new Error('shapeId is required');
+    }
+    return await apiCall(`/shapes/${shapeId}`);
+  },
+};
+
 export const citiesAPI = {
   getCities: async () => {
     return apiCall('/cities');
@@ -609,11 +652,13 @@ export default {
   tripsAPI,
   routesAPI,
   ecoStatsAPI,
+  recommendationsAPI,
   trafficAPI,
   environmentAPI, // NEW - for AQI and weather
   notificationsAPI,
   journeyAPI, // Phase 2 OTP integration
   citiesAPI,
+  mapsAPI, // Phase 9.5 - react-native-maps
   demoAPI,
   healthAPI,
   
